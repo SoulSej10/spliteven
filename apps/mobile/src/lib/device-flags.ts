@@ -27,6 +27,15 @@ export async function setOnboardingTourShown(): Promise<void> {
   await AsyncStorage.setItem(ONBOARDING_TOUR_KEY, "true");
 }
 
+/** Whether the per-page guided tour identified by `key` (e.g. "dashboard", "groups") has already been shown on this device. Each page's tour is independent so replaying one doesn't affect the others. */
+export async function hasSeenPageTour(key: string): Promise<boolean> {
+  return (await AsyncStorage.getItem(`evensplit:page-tour-shown:${key}`)) === "true";
+}
+
+export async function setPageTourShown(key: string): Promise<void> {
+  await AsyncStorage.setItem(`evensplit:page-tour-shown:${key}`, "true");
+}
+
 const NOTIF_NUDGE_KEY = "evensplit:notification-nudge-shown";
 
 /** Whether the one-time "enable notifications?" nudge has already been shown on this device. */

@@ -68,7 +68,7 @@ export function OnboardingTour() {
           </Pressable>
 
           <View className="mt-4 h-16 w-16 items-center justify-center rounded-full bg-primary-light">
-            <Icon color="#16A88F" size={28} />
+            <Icon color="#2F8F7D" size={28} />
           </View>
 
           <Text className="text-center text-lg font-bold text-neutral-900 dark:text-neutral-100">

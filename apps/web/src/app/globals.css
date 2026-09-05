@@ -55,23 +55,24 @@
 }
 
 :root {
-  /* SplitEven brand tokens v7 - reverted off the plum/indigo retheme back
-     to the original teal-green brand per direct feedback ("go back on the
-     green theme, I'm not satisfied with the new one"). The amber accent
-     and positive/negative/warning semantics introduced alongside personal
-     budgeting stay as-is - those aren't the brand-chrome complaint. */
+  /* SplitEven brand tokens v8 - same teal-green family kept (a prior
+     plum/indigo hue swap was tried and reverted per feedback), but
+     desaturated per "too strong, not the right vibe, do a friendlier
+     makeover" - the old primary (#16a88f) read as neon. The amber accent
+     and positive/negative/warning semantics stay as-is - those aren't the
+     brand-chrome complaint. */
   --background: #f4f5f3;
   --foreground: #0a0a0a;
   --card: #ffffff; /* surface */
   --card-foreground: #0a0a0a;
   --popover: #ffffff;
   --popover-foreground: #0a0a0a;
-  --primary: #16a88f;
+  --primary: #2f8f7d;
   --primary-foreground: #ffffff;
-  --primary-light: #e3fbf6;
-  --primary-deep: #0f7a68;
-  --secondary: #e3fbf6; /* primary-light */
-  --secondary-foreground: #16a88f;
+  --primary-light: #e8f4f0;
+  --primary-deep: #1f6355;
+  --secondary: #e8f4f0; /* primary-light */
+  --secondary-foreground: #2f8f7d;
   --muted: #ececea;
   --muted-foreground: #6b7169; /* neutral-500 */
   --accent: #f5a524; /* warm amber - highlights, streaks, CTAs distinct from primary */
@@ -83,8 +84,8 @@
   --warning: #e0a63a; /* warm amber */
   --border: #e3e6e1;
   --input: #e3e6e1;
-  --ring: #16a88f;
-  --chart-1: #16a88f;
+  --ring: #2f8f7d;
+  --chart-1: #2f8f7d;
   --chart-2: #f5a524;
   --chart-3: #009b87;
   --chart-4: #d95f5f;
@@ -92,54 +93,54 @@
   --radius: 0.4rem;
   --sidebar: #ffffff;
   --sidebar-foreground: #0a0a0a;
-  --sidebar-primary: #16a88f;
+  --sidebar-primary: #2f8f7d;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #e3fbf6;
-  --sidebar-accent-foreground: #16a88f;
+  --sidebar-accent: #e8f4f0;
+  --sidebar-accent-foreground: #2f8f7d;
   --sidebar-border: #e3e6e1;
-  --sidebar-ring: #16a88f;
+  --sidebar-ring: #2f8f7d;
 }
 
 .dark {
-  /* Dark mode is now the default theme (see providers.tsx) - back to the
-     brand's true near-black background with the brighter teal primary. */
-  --background: #0a120d; /* deep green-black, not flat black */
+  /* Softened per "too strong, not the right vibe" feedback: background
+     lightened off near-black and the primary de-neoned, same brand hue. */
+  --background: #16211b; /* softened dark green-charcoal, not near-black */
   --foreground: #f5f5f5;
-  --card: #15251c; /* surface (dark) - a visible step lighter than background */
+  --card: #1e2e27; /* surface (dark) - a visible step lighter than background */
   --card-foreground: #f5f5f5;
-  --popover: #15251c;
+  --popover: #1e2e27;
   --popover-foreground: #f5f5f5;
-  --primary: #35d6b5;
-  --primary-foreground: #0a120d;
-  --primary-light: rgba(53, 214, 181, 0.14);
-  --primary-deep: #63e7ce;
-  --secondary: rgba(53, 214, 181, 0.14);
-  --secondary-foreground: #63e7ce;
-  --muted: #1b2a22;
-  --muted-foreground: #9fada5;
-  --accent: #f7b955;
-  --accent-foreground: #0a120d;
-  --accent-light: rgba(247, 185, 85, 0.14);
+  --primary: #5fbba5;
+  --primary-foreground: #16211b;
+  --primary-light: rgba(95, 187, 165, 0.16);
+  --primary-deep: #86cdbb;
+  --secondary: rgba(95, 187, 165, 0.16);
+  --secondary-foreground: #86cdbb;
+  --muted: #223229;
+  --muted-foreground: #a3b0a8;
+  --accent: #f0b768;
+  --accent-foreground: #16211b;
+  --accent-light: rgba(240, 183, 104, 0.14);
   --destructive: #e07b7b;
   --positive: #34c98f;
   --negative: #e07b7b;
   --warning: #e6b45c;
   --border: rgba(255, 255, 255, 0.1);
   --input: rgba(255, 255, 255, 0.14);
-  --ring: #35d6b5;
-  --chart-1: #35d6b5;
-  --chart-2: #f7b955;
+  --ring: #5fbba5;
+  --chart-1: #5fbba5;
+  --chart-2: #f0b768;
   --chart-3: #34c98f;
   --chart-4: #e07b7b;
-  --chart-5: #9fada5;
-  --sidebar: #15251c;
+  --chart-5: #a3b0a8;
+  --sidebar: #1e2e27;
   --sidebar-foreground: #f5f5f5;
-  --sidebar-primary: #35d6b5;
-  --sidebar-primary-foreground: #0a120d;
-  --sidebar-accent: rgba(53, 214, 181, 0.16);
-  --sidebar-accent-foreground: #63e7ce;
+  --sidebar-primary: #5fbba5;
+  --sidebar-primary-foreground: #16211b;
+  --sidebar-accent: rgba(95, 187, 165, 0.16);
+  --sidebar-accent-foreground: #86cdbb;
   --sidebar-border: rgba(255, 255, 255, 0.1);
-  --sidebar-ring: #35d6b5;
+  --sidebar-ring: #5fbba5;
 }
 
 @layer base {

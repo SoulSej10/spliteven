@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert, Pressable, Text, View } from "react-native";
+import { Alert, KeyboardAvoidingView, Platform, Pressable, Text, View } from "react-native";
 import { router } from "expo-router";
 import { useColorScheme } from "nativewind";
 import { ArrowLeft, Envelope as Mail } from "phosphor-react-native";
@@ -33,14 +33,16 @@ export default function ForgotPasswordScreen() {
   }
 
   return (
-    <View className="flex-1 justify-center bg-neutral-100 px-6 dark:bg-neutral-900">
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      className="flex-1 justify-center bg-neutral-100 px-6 dark:bg-neutral-900">
       <Pressable onPress={() => router.back()} className="absolute left-6 top-14 h-9 w-9 items-center justify-center rounded-full bg-white dark:bg-surface-dark">
         <ArrowLeft size={18} color={iconColor} />
       </Pressable>
 
       <View className="mb-8 items-center gap-3">
         <View className="h-14 w-14 items-center justify-center rounded-card bg-primary-light">
-          <Mail color="#16A88F" size={24} />
+          <Mail color="#2F8F7D" size={24} />
         </View>
         <Text className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
           Reset your password
@@ -69,6 +71,6 @@ export default function ForgotPasswordScreen() {
           Back to log in
         </Button>
       )}
-    </View>
+    </KeyboardAvoidingView>
   );
 }

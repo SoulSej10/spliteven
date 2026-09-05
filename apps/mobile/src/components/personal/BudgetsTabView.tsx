@@ -61,14 +61,16 @@ export function BudgetsTabView() {
         <View className="gap-2">
           <View className="flex-row items-center gap-1.5">
             <Sparkle color="#6B7169" size={13} />
-            <Text className="text-xs font-medium text-neutral-500">Suggested, based on last month</Text>
+            <Text className="text-xs font-medium text-neutral-500">
+              {suggestions[0]?.is_starter ? "Try a starter budget" : "Suggested, based on last month"}
+            </Text>
           </View>
           {suggestions.map((s) => (
             <Card key={s.category_id} className="flex-row items-center justify-between gap-3 py-3">
               <View className="flex-1">
                 <Text className="font-medium text-neutral-900 dark:text-neutral-100">{s.category_name}</Text>
                 <Text className="text-xs text-neutral-500">
-                  Spent {formatMoney(s.last_month_spent, currency)} last month
+                  {s.is_starter ? "A common starting point" : `Spent ${formatMoney(s.last_month_spent, currency)} last month`}
                 </Text>
               </View>
               <Button
@@ -87,7 +89,7 @@ export function BudgetsTabView() {
       {progress.length === 0 && suggestions.length === 0 && (
         <View className="items-center gap-2 py-14">
           <View className="h-14 w-14 items-center justify-center rounded-full bg-primary-light">
-            <PiggyBank color="#16A88F" size={22} />
+            <PiggyBank color="#2F8F7D" size={22} />
           </View>
           <Text className="text-sm text-neutral-500">Set a monthly limit for a category to track it here.</Text>
         </View>

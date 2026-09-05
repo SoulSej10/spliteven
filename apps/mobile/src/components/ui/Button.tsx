@@ -59,7 +59,7 @@ export function Button({
       {...props}
     >
       {loading ? (
-        <ActivityIndicator color={variant === "primary" || variant === "destructive" ? "#fff" : "#16A88F"} />
+        <ActivityIndicator color={variant === "primary" || variant === "destructive" ? "#fff" : "#2F8F7D"} />
       ) : typeof children === "string" ? (
         <Text className={cn("font-semibold text-base", VARIANT_TEXT[variant], textClassName)}>
           {children}

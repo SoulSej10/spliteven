@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
@@ -13,6 +13,7 @@ import { ErrorState } from "@/components/ui/ErrorState";
 import { useAuth } from "@/hooks/use-auth";
 import { useSettingsDrawer } from "@/context/settings-drawer";
 import { useMyGroups } from "@/hooks/use-groups";
+import { PageTour, usePageTour } from "@/components/onboarding/PageTour";
 
 /**
  * The "Groups" tab - every group the user belongs to, plus the entry
@@ -26,6 +27,10 @@ export default function GroupsListScreen() {
   const { data: groups, isLoading, isError, refetch, isRefetching } = useMyGroups();
   const [sheetOpen, setSheetOpen] = useState(false);
   const [joinSheetOpen, setJoinSheetOpen] = useState(false);
+  const quickActionsRef = useRef<View>(null);
+  const groupsListRef = useRef<View>(null);
+  const fabRef = useRef<View>(null);
+  const { replaySignal } = usePageTour("groups");
 
   return (
     <SafeAreaView className="flex-1 bg-neutral-100 dark:bg-neutral-900" edges={["top"]}>
@@ -59,7 +64,9 @@ export default function GroupsListScreen() {
               : "No groups yet"}
         </Text>
 
-        <QuickActions onCreateGroup={() => setSheetOpen(true)} onJoinGroup={() => setJoinSheetOpen(true)} />
+        <View ref={quickActionsRef} collapsable={false}>
+          <QuickActions onCreateGroup={() => setSheetOpen(true)} onJoinGroup={() => setJoinSheetOpen(true)} />
+        </View>
 
         {isLoading && <SkeletonCardRows count={3} />}
 
@@ -73,7 +80,7 @@ export default function GroupsListScreen() {
         {!isLoading && !isError && groups?.length === 0 && (
           <View className="mt-10 items-center gap-3">
             <View className="h-16 w-16 items-center justify-center rounded-full bg-primary-light">
-              <Users color="#16A88F" size={28} />
+              <Users color="#2F8F7D" size={28} />
             </View>
             <Text className="text-base font-medium text-neutral-900 dark:text-neutral-100">
               No groups yet
@@ -90,9 +97,11 @@ export default function GroupsListScreen() {
           </View>
         )}
 
-        {!isLoading &&
-          !isError &&
-          groups?.map((g) => <GroupCard key={g.id} group={g} />)}
+        <View ref={groupsListRef} collapsable={false}>
+          {!isLoading &&
+            !isError &&
+            groups?.map((g) => <GroupCard key={g.id} group={g} />)}
+        </View>
 
         {isRefetching && !isLoading && (
           <Text className="mt-2 text-center text-xs text-neutral-500">Refreshing…</Text>
@@ -100,10 +109,12 @@ export default function GroupsListScreen() {
       </ScrollView>
 
       <Pressable
+        ref={fabRef}
+        collapsable={false}
         onPress={() => setSheetOpen(true)}
         className="absolute bottom-5 right-5 h-16 w-16 items-center justify-center rounded-full bg-primary active:opacity-90"
         style={{
-          shadowColor: "#16A88F",
+          shadowColor: "#2F8F7D",
           shadowOpacity: 0.35,
           shadowRadius: 12,
           shadowOffset: { width: 0, height: 6 },
@@ -115,6 +126,28 @@ export default function GroupsListScreen() {
 
       <CreateGroupSheet visible={sheetOpen} onClose={() => setSheetOpen(false)} />
       <JoinGroupSheet visible={joinSheetOpen} onClose={() => setJoinSheetOpen(false)} />
+
+      <PageTour
+        tourKey="groups"
+        replaySignal={replaySignal}
+        steps={[
+          {
+            ref: quickActionsRef,
+            title: "Create or join a group",
+            body: "Start a new group for a trip or household, or join an existing one with an invite code.",
+          },
+          {
+            ref: groupsListRef,
+            title: "All your groups",
+            body: "Tap any group to see its expenses, members, and who owes who.",
+          },
+          {
+            ref: fabRef,
+            title: "Quick create",
+            body: "This button always starts a new group, no matter where you've scrolled to.",
+          },
+        ]}
+      />
     </SafeAreaView>
   );
 }

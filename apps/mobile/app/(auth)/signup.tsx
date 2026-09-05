@@ -10,10 +10,19 @@ import { signUpSchema, type SignUpInput } from "@evensplit/shared";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { BottomActionBar } from "@/components/ui/BottomActionBar";
+import { AlertModal } from "@/components/ui/AlertModal";
+import { AcceptTermsGate } from "@/components/legal/AcceptTermsGate";
 import { getSupabaseClient } from "@/lib/supabase/client";
 
 export default function SignUpScreen() {
   const [submitting, setSubmitting] = useState(false);
+  const [checkEmailVisible, setCheckEmailVisible] = useState(false);
+  // Re-gated on every signup regardless of the device-level first-run flag
+  // (app/(auth)/privacy-policy.tsx) - creating a specific new account should
+  // never be reachable without fresh, explicit consent, per standard
+  // practice, not just a one-time device setting from whenever the app was
+  // first installed.
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === "dark" ? "#F4F5F3" : "#0A0A0A";
   const { handleSubmit, formState, setValue, watch } = useForm<SignUpInput>({
@@ -37,11 +46,7 @@ export default function SignUpScreen() {
         // evensplit://auth/callback (app/auth/callback.tsx), which signs
         // them straight in - but they may confirm from another device, so
         // send them to log in as a fallback in the meantime.
-        Alert.alert(
-          "Check your email",
-          "We've sent a confirmation link to your email. Tap it to finish creating your account."
-        );
-        router.replace("/(auth)/login");
+        setCheckEmailVisible(true);
         return;
       }
       router.replace("/(auth)/profile-setup");
@@ -50,6 +55,25 @@ export default function SignUpScreen() {
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (!agreedToTerms) {
+    return (
+      <View className="flex-1 bg-neutral-100 pt-14 dark:bg-neutral-900">
+        <View className="flex-row items-center gap-3 px-5 pb-3">
+          <Pressable
+            onPress={() => router.back()}
+            className="h-9 w-9 items-center justify-center rounded-full bg-white dark:bg-surface-dark"
+          >
+            <ArrowLeft size={18} color={iconColor} />
+          </Pressable>
+          <Text className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
+            Privacy Policy &amp; Terms
+          </Text>
+        </View>
+        <AcceptTermsGate onAgree={() => setAgreedToTerms(true)} />
+      </View>
+    );
   }
 
   return (
@@ -121,6 +145,17 @@ export default function SignUpScreen() {
           .
         </Text>
       </BottomActionBar>
+
+      <AlertModal
+        visible={checkEmailVisible}
+        tone="success"
+        title="Check your email"
+        message="We've sent a confirmation link to your email. Tap it to finish creating your account."
+        onDismiss={() => {
+          setCheckEmailVisible(false);
+          router.replace("/(auth)/login");
+        }}
+      />
     </KeyboardAvoidingView>
   );
 }

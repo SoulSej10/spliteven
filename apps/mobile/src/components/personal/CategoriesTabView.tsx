@@ -60,7 +60,7 @@ export function CategoriesTabView() {
       {categories?.length === 0 && (
         <View className="items-center gap-2 py-14">
           <View className="h-14 w-14 items-center justify-center rounded-full bg-primary-light">
-            <Tag color="#16A88F" size={22} />
+            <Tag color="#2F8F7D" size={22} />
           </View>
           <Text className="text-sm text-neutral-500">No categories yet.</Text>
         </View>

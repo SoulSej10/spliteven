@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
@@ -24,8 +24,9 @@ import { useMyGroups, useAllExpenses } from "@/hooks/use-groups";
 import { usePersonalAccounts, usePersonalCategories, usePersonalTransactions } from "@/hooks/use-personal";
 import { formatMoney } from "@/lib/format";
 import { cn } from "@/lib/cn";
+import { PageTour, usePageTour } from "@/components/onboarding/PageTour";
 
-const DONUT_COLORS = ["#16A88F", "#35D6B5", "#F5A524", "#009B87", "#D95F5F", "#726C7D"];
+const DONUT_COLORS = ["#2F8F7D", "#5FBBA5", "#F5A524", "#009B87", "#D95F5F", "#726C7D"];
 const CATEGORY_ALL = "__all__";
 
 function CategoryDonut({
@@ -87,6 +88,11 @@ export default function InsightsScreen() {
   const [view, setView] = useState<"charts" | "calendar">("charts");
   const [categoryFilter, setCategoryFilter] = useState<string>(CATEGORY_ALL);
   const [calendarDate, setCalendarDate] = useState(() => new Date());
+
+  const statsRef = useRef<View>(null);
+  const viewToggleRef = useRef<View>(null);
+  const chartsRef = useRef<View>(null);
+  const { replaySignal } = usePageTour("insights");
 
   const personalCurrency = personalAccounts?.[0]?.currency ?? "PHP";
 
@@ -211,16 +217,16 @@ export default function InsightsScreen() {
         )}
 
         {!isLoading && !isError && (
-          <View className="flex-row gap-3">
+          <View ref={statsRef} collapsable={false} className="flex-row gap-3">
             <Card className="flex-1 items-start gap-1">
-              <Layers color="#16A88F" size={18} />
+              <Layers color="#2F8F7D" size={18} />
               <Text className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
                 {groups?.length ?? 0}
               </Text>
               <Text className="text-xs text-neutral-500">Active groups</Text>
             </Card>
             <Card className="flex-1 items-start gap-1">
-              <Receipt color="#16A88F" size={18} />
+              <Receipt color="#2F8F7D" size={18} />
               <Text className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
                 {expenses?.length ?? 0}
               </Text>
@@ -230,17 +236,20 @@ export default function InsightsScreen() {
         )}
 
         {!isLoading && !isError && (
-          <SegmentedControl
-            value={view}
-            onChange={setView}
-            options={[
-              { label: "Charts", value: "charts" },
-              { label: "Calendar", value: "calendar" },
-            ]}
-          />
+          <View ref={viewToggleRef} collapsable={false}>
+            <SegmentedControl
+              value={view}
+              onChange={setView}
+              options={[
+                { label: "Charts", value: "charts" },
+                { label: "Calendar", value: "calendar" },
+              ]}
+            />
+          </View>
         )}
 
         {!isLoading && !isError && view === "charts" && hasNarrative && (
+          <View ref={chartsRef} collapsable={false}>
           <Card className="gap-1.5">
             <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">This month</Text>
             {personalMonthTotal > 0.005 && (
@@ -263,6 +272,7 @@ export default function InsightsScreen() {
               </Text>
             )}
           </Card>
+          </View>
         )}
 
         {!isLoading && !isError && view === "charts" && personalBreakdown.length > 0 && (
@@ -367,6 +377,28 @@ export default function InsightsScreen() {
           </>
         )}
       </ScrollView>
+
+      <PageTour
+        tourKey="insights"
+        replaySignal={replaySignal}
+        steps={[
+          {
+            ref: statsRef,
+            title: "Your activity at a glance",
+            body: "A quick count of your active groups and how many expenses you've logged across all of them.",
+          },
+          {
+            ref: viewToggleRef,
+            title: "Charts or Calendar",
+            body: "Switch between category breakdowns and a day-by-day calendar view of your spending.",
+          },
+          {
+            ref: chartsRef,
+            title: "Personal + shared spending",
+            body: "See how much you spent personally this month, plus your share of group expenses, all in one place.",
+          },
+        ]}
+      />
     </SafeAreaView>
   );
 }

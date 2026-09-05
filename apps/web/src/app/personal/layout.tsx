@@ -11,10 +11,10 @@ import { cn } from "@/lib/utils";
 const TABS = [
   { href: "/personal/overview", label: "Overview", icon: LayoutGrid },
   { href: "/personal", label: "Transactions", icon: ListChecks },
-  { href: "/personal/analysis", label: "Analysis", icon: PieChart },
-  { href: "/personal/budgets", label: "Budgets", icon: PiggyBank },
   { href: "/personal/accounts", label: "Accounts", icon: Wallet },
+  { href: "/personal/budgets", label: "Budgets", icon: PiggyBank },
   { href: "/personal/categories", label: "Categories", icon: Tag },
+  { href: "/personal/analysis", label: "Analysis", icon: PieChart },
 ];
 
 /**

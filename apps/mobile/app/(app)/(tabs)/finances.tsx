@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
@@ -19,16 +19,17 @@ import { AddCategorySheet } from "@/components/personal/AddCategorySheet";
 import { useAuth } from "@/hooks/use-auth";
 import { useSettingsDrawer } from "@/context/settings-drawer";
 import { usePersonalAccounts } from "@/hooks/use-personal";
+import { PageTour, usePageTour } from "@/components/onboarding/PageTour";
 
 type Tab = "overview" | "records" | "analysis" | "budgets" | "accounts" | "categories";
 
 const TABS: { label: string; value: Tab; icon: React.ComponentType<{ color: string; size: number }> }[] = [
   { label: "Overview", value: "overview", icon: LayoutGrid },
   { label: "Transactions", value: "records", icon: ListChecks },
-  { label: "Analysis", value: "analysis", icon: PieChart },
-  { label: "Budgets", value: "budgets", icon: PiggyBank },
   { label: "Accounts", value: "accounts", icon: Wallet },
+  { label: "Budgets", value: "budgets", icon: PiggyBank },
   { label: "Categories", value: "categories", icon: Tag },
+  { label: "Analysis", value: "analysis", icon: PieChart },
 ];
 
 /** Which sheet the floating action button opens for each tab; tabs with no create action are omitted (FAB hides). */
@@ -56,6 +57,10 @@ export default function FinancesScreen() {
   const params = useLocalSearchParams<{ tab?: string }>();
   const [tab, setTab] = useState<Tab>("overview");
   const [sheet, setSheet] = useState<Tab | null>(null);
+  const summaryRef = useRef<View>(null);
+  const tabsRef = useRef<View>(null);
+  const fabRef = useRef<View>(null);
+  const { replaySignal } = usePageTour("finances");
 
   // Lets the Settings drawer's "Manage" shortcuts (Accounts/Categories/
   // Budgets/Transactions) jump straight to the right sub-tab instead of
@@ -98,26 +103,32 @@ export default function FinancesScreen() {
         Finances
       </Text>
 
-      <FinancesSummaryCard />
+      <View ref={summaryRef} collapsable={false}>
+        <FinancesSummaryCard />
+      </View>
 
-      <PillTabs options={TABS} value={tab} onChange={setTab} />
+      <View ref={tabsRef} collapsable={false}>
+        <PillTabs options={TABS} value={tab} onChange={setTab} />
+      </View>
 
       <ScrollView contentContainerClassName="px-5 pb-24" showsVerticalScrollIndicator={false}>
         {tab === "overview" && <OverviewTabView onNavigateTab={setTab} />}
         {tab === "records" && <RecordsTabView />}
-        {tab === "analysis" && <AnalysisTabView />}
-        {tab === "budgets" && <BudgetsTabView />}
         {tab === "accounts" && <AccountsTabView />}
+        {tab === "budgets" && <BudgetsTabView />}
         {tab === "categories" && <CategoriesTabView />}
+        {tab === "analysis" && <AnalysisTabView />}
       </ScrollView>
 
       {CREATE_LABEL[tab] && (
         <Pressable
+          ref={fabRef}
+          collapsable={false}
           onPress={onFabPress}
           accessibilityLabel={CREATE_LABEL[tab]}
           className="absolute bottom-5 right-5 h-16 w-16 items-center justify-center rounded-full bg-primary active:opacity-90"
           style={{
-            shadowColor: "#16A88F",
+            shadowColor: "#2F8F7D",
             shadowOpacity: 0.35,
             shadowRadius: 12,
             shadowOffset: { width: 0, height: 6 },
@@ -132,6 +143,28 @@ export default function FinancesScreen() {
       <AddAccountSheet visible={sheet === "accounts"} onClose={() => setSheet(null)} />
       <AddBudgetSheet visible={sheet === "budgets"} onClose={() => setSheet(null)} />
       <AddCategorySheet visible={sheet === "categories"} onClose={() => setSheet(null)} defaultKind="expense" />
+
+      <PageTour
+        tourKey="finances"
+        replaySignal={replaySignal}
+        steps={[
+          {
+            ref: summaryRef,
+            title: "Your finances summary",
+            body: "Total balance across your personal accounts, always visible no matter which tab below you're on.",
+          },
+          {
+            ref: tabsRef,
+            title: "Overview, Transactions, Accounts, Budgets, Categories, Analysis",
+            body: "Swipe through these tabs to log transactions, manage accounts, set budgets, and see spending analysis.",
+          },
+          {
+            ref: fabRef,
+            title: "Add for the current tab",
+            body: "This button always adds something for whichever tab is open — a transaction, account, budget, or category.",
+          },
+        ]}
+      />
     </SafeAreaView>
   );
 }

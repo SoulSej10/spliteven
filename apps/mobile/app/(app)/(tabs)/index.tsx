@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { ScrollView, Text, View, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
@@ -24,6 +24,7 @@ import { usePersonalAccounts, usePersonalBudgets, usePersonalCategories, usePers
 import { formatMoney } from "@/lib/format";
 import { CreateGroupSheet } from "@/components/groups/CreateGroupSheet";
 import { JoinGroupSheet } from "@/components/groups/JoinGroupSheet";
+import { PageTour, usePageTour } from "@/components/onboarding/PageTour";
 
 const GROUPS_PREVIEW_COUNT = 3;
 const ACTIVITY_PREVIEW_COUNT = 5;
@@ -51,6 +52,12 @@ export default function HomeScreen() {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [joinSheetOpen, setJoinSheetOpen] = useState(false);
   const [quickAddKind, setQuickAddKind] = useState<"income" | "expense" | "transfer" | null>(null);
+
+  const financesCardRef = useRef<View>(null);
+  const quickActionsRef = useRef<View>(null);
+  const quickAddRef = useRef<View>(null);
+  const groupsRef = useRef<View>(null);
+  const { replaySignal } = usePageTour("dashboard");
 
   const preview = (groups ?? []).slice(0, GROUPS_PREVIEW_COUNT);
 
@@ -123,7 +130,9 @@ export default function HomeScreen() {
           {profile?.display_name ? `Good to see you, ${profile.display_name.split(" ")[0]}` : "Home"}
         </Text>
 
-        <FinancesSummaryCard />
+        <View ref={financesCardRef} collapsable={false}>
+          <FinancesSummaryCard />
+        </View>
 
         <SettlementReceiptBanner
           unconfirmed={unconfirmedSettlements}
@@ -159,9 +168,11 @@ export default function HomeScreen() {
           </View>
         )}
 
-        <QuickActions onCreateGroup={() => setSheetOpen(true)} onJoinGroup={() => setJoinSheetOpen(true)} />
+        <View ref={quickActionsRef} collapsable={false}>
+          <QuickActions onCreateGroup={() => setSheetOpen(true)} onJoinGroup={() => setJoinSheetOpen(true)} />
+        </View>
 
-        <View className="mb-6 flex-row gap-3">
+        <View ref={quickAddRef} collapsable={false} className="mb-6 flex-row gap-3">
           <Pressable
             onPress={() => setQuickAddKind("income")}
             className="flex-1 items-center gap-1.5 rounded-card bg-surface py-3 active:opacity-80 dark:bg-surface-dark"
@@ -189,7 +200,7 @@ export default function HomeScreen() {
           <Pressable onPress={() => router.navigate("/(app)/(tabs)/finances")}>
             <Card className="mb-4 gap-2">
               <View className="flex-row items-center gap-2">
-                <PiggyBank color="#16A88F" size={16} />
+                <PiggyBank color="#2F8F7D" size={16} />
                 <Text className="flex-1 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                   {budgetHighlight.category_name} budget
                 </Text>
@@ -229,14 +240,14 @@ export default function HomeScreen() {
           </View>
         )}
 
-        <View className="mb-2 flex-row items-center justify-between">
+        <View ref={groupsRef} collapsable={false} className="mb-2 flex-row items-center justify-between">
           <Text className="text-base font-bold text-neutral-900 dark:text-neutral-100">Your groups</Text>
           <Pressable
             onPress={() => router.navigate("/(app)/(tabs)/groups")}
             className="flex-row items-center gap-1 active:opacity-70"
           >
             <Text className="text-sm font-semibold text-primary">See all</Text>
-            <ArrowRight color="#16A88F" size={14} />
+            <ArrowRight color="#2F8F7D" size={14} />
           </Pressable>
         </View>
 
@@ -259,7 +270,7 @@ export default function HomeScreen() {
                 className="flex-row items-center gap-1 active:opacity-70"
               >
                 <Text className="text-sm font-semibold text-primary">See all</Text>
-                <ArrowRight color="#16A88F" size={14} />
+                <ArrowRight color="#2F8F7D" size={14} />
               </Pressable>
             </View>
             {recentActivity.map((item) => (
@@ -288,6 +299,33 @@ export default function HomeScreen() {
         visible={quickAddKind !== null}
         onClose={() => setQuickAddKind(null)}
         initialKind={quickAddKind ?? "expense"}
+      />
+
+      <PageTour
+        tourKey="dashboard"
+        replaySignal={replaySignal}
+        steps={[
+          {
+            ref: financesCardRef,
+            title: "Your money at a glance",
+            body: "This card shows your personal balance across all accounts, updated as you log transactions.",
+          },
+          {
+            ref: quickActionsRef,
+            title: "Start or join a group",
+            body: "Create a group for a trip or household, or join one someone already started with an invite code.",
+          },
+          {
+            ref: quickAddRef,
+            title: "Log money in one tap",
+            body: "Quickly add income, an expense, or a transfer between your own accounts, right from home.",
+          },
+          {
+            ref: groupsRef,
+            title: "Your groups",
+            body: "Every group you're in shows up here — tap one to see its expenses and who owes who.",
+          },
+        ]}
       />
     </SafeAreaView>
   );

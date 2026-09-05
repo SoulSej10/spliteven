@@ -97,7 +97,7 @@ export function OverviewTabView({ onNavigateTab }: { onNavigateTab: (tab: "accou
         <Pressable onPress={() => onNavigateTab("budgets")}>
           <Card className="gap-2">
             <View className="flex-row items-center gap-2">
-              <PiggyBank color="#16A88F" size={16} />
+              <PiggyBank color="#2F8F7D" size={16} />
               <Text className="flex-1 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                 {budgetHighlight.category_name} budget
               </Text>

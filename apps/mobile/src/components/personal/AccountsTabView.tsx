@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Alert, Pressable, Text, View } from "react-native";
-import { computeAllAccountBalances, type PersonalAccount } from "@evensplit/shared";
-import { Pencil, Wallet } from "phosphor-react-native";
+import { computeAllAccountBalances, type PersonalAccount, type PersonalAccountType } from "@evensplit/shared";
+import { Pencil, Plus, Sparkle, Wallet } from "phosphor-react-native";
 import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 import { MoneyText } from "@/components/ui/MoneyText";
 import { SkeletonCardRows } from "@/components/ui/Skeleton";
 import { ErrorState } from "@/components/ui/ErrorState";
@@ -11,7 +12,19 @@ import {
   usePersonalAccounts,
   usePersonalTransactions,
 } from "@/hooks/use-personal";
-import { AddAccountSheet } from "@/components/personal/AddAccountSheet";
+import { AddAccountSheet, type AccountPrefill } from "@/components/personal/AddAccountSheet";
+
+/**
+ * Common account types most people have, shown as inactive "template" cards
+ * with an Add button whenever the user doesn't already have one of that
+ * type - only becomes a real account once they actually add it (see
+ * BudgetsTabView's matching "starter suggestion" pattern for budgets).
+ */
+const ACCOUNT_SUGGESTIONS: AccountPrefill[] = [
+  { name: "Savings", type: "savings", icon: "🏦" },
+  { name: "Credit/Debit Card", type: "card", icon: "💳" },
+  { name: "E-wallet", type: "wallet", icon: "👛" },
+];
 
 /** The "Add account" action lives in finances.tsx's floating action button, not inline here - editing an existing account is inline (tap the pencil), archiving is a long-press. */
 export function AccountsTabView() {
@@ -19,6 +32,10 @@ export function AccountsTabView() {
   const { data: transactions } = usePersonalTransactions();
   const archiveAccount = useArchivePersonalAccount();
   const [editing, setEditing] = useState<PersonalAccount | null>(null);
+  const [addingSuggestion, setAddingSuggestion] = useState<AccountPrefill | null>(null);
+
+  const existingTypes = new Set<PersonalAccountType>((accounts ?? []).map((a) => a.type));
+  const suggestions = ACCOUNT_SUGGESTIONS.filter((s) => !existingTypes.has(s.type));
 
   const balances = computeAllAccountBalances(accounts ?? [], transactions ?? []);
 
@@ -37,7 +54,7 @@ export function AccountsTabView() {
       {accounts?.length === 0 && (
         <View className="items-center gap-2 py-14">
           <View className="h-14 w-14 items-center justify-center rounded-full bg-primary-light">
-            <Wallet color="#16A88F" size={22} />
+            <Wallet color="#2F8F7D" size={22} />
           </View>
           <Text className="text-sm text-neutral-500">No accounts yet. Add cash, a card, or savings.</Text>
         </View>
@@ -64,7 +81,38 @@ export function AccountsTabView() {
         );
       })}
 
+      {suggestions.length > 0 && (
+        <View className="gap-2">
+          <View className="flex-row items-center gap-1.5">
+            <Sparkle color="#6B7169" size={13} />
+            <Text className="text-xs font-medium text-neutral-500">You might also want</Text>
+          </View>
+          {suggestions.map((s) => (
+            <Card key={s.type} className="flex-row items-center gap-3 py-3 opacity-60">
+              <View className="h-10 w-10 items-center justify-center rounded-full bg-neutral-100 dark:bg-white/5">
+                <Text className="text-lg">{s.icon}</Text>
+              </View>
+              <View className="flex-1">
+                <Text className="font-medium text-neutral-900 dark:text-neutral-100">{s.name}</Text>
+                <Text className="text-xs capitalize text-neutral-500">{s.type}</Text>
+              </View>
+              <Button variant="outline" size="sm" onPress={() => setAddingSuggestion(s)}>
+                <View className="flex-row items-center gap-1">
+                  <Plus color="#2F8F7D" size={14} />
+                  <Text className="text-sm font-semibold text-primary">Add</Text>
+                </View>
+              </Button>
+            </Card>
+          ))}
+        </View>
+      )}
+
       <AddAccountSheet visible={!!editing} onClose={() => setEditing(null)} account={editing ?? undefined} />
+      <AddAccountSheet
+        visible={!!addingSuggestion}
+        onClose={() => setAddingSuggestion(null)}
+        prefill={addingSuggestion ?? undefined}
+      />
     </View>
   );
 }

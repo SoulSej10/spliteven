@@ -7,12 +7,12 @@ import { colorScheme } from "nativewind";
 import { I18nManager } from "react-native";
 import {
   useFonts,
-  PlusJakartaSans_400Regular,
-  PlusJakartaSans_500Medium,
-  PlusJakartaSans_600SemiBold,
-  PlusJakartaSans_700Bold,
-  PlusJakartaSans_800ExtraBold,
-} from "@expo-google-fonts/plus-jakarta-sans";
+  Sora_400Regular,
+  Sora_500Medium,
+  Sora_600SemiBold,
+  Sora_700Bold,
+  Sora_800ExtraBold,
+} from "@expo-google-fonts/sora";
 import "../global.css";
 import { Providers } from "@/components/Providers";
 
@@ -40,20 +40,20 @@ if (I18nManager.isRTL) {
   I18nManager.forceRTL(false);
 }
 
-// App now defaults to dark mode regardless of the device's system setting,
+// App now defaults to light mode regardless of the device's system setting,
 // per direct feedback. Set once at module load (not in an effect) so the
-// very first frame renders dark instead of flashing light first. The
+// very first frame renders light instead of flashing dark first. The
 // Settings toggle still calls toggleColorScheme/setColorScheme normally —
 // this only changes the starting point each cold launch.
-colorScheme.set("dark");
+colorScheme.set("light");
 
 function RootLayout() {
   const [fontsLoaded] = useFonts({
-    PlusJakartaSans_400Regular,
-    PlusJakartaSans_500Medium,
-    PlusJakartaSans_600SemiBold,
-    PlusJakartaSans_700Bold,
-    PlusJakartaSans_800ExtraBold,
+    Sora_400Regular,
+    Sora_500Medium,
+    Sora_600SemiBold,
+    Sora_700Bold,
+    Sora_800ExtraBold,
   });
 
   useEffect(() => {

@@ -92,7 +92,8 @@ export default function PersonalBudgetsPage() {
       {!isLoading && suggestions.length > 0 && (
         <div className="mb-6">
           <h2 className="mb-2 flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
-            <Sparkle className="h-3.5 w-3.5" /> Suggested, based on last month
+            <Sparkle className="h-3.5 w-3.5" />{" "}
+            {suggestions[0]?.is_starter ? "Try a starter budget" : "Suggested, based on last month"}
           </h2>
           <div className="grid gap-2">
             {suggestions.map((s) => (
@@ -100,7 +101,7 @@ export default function PersonalBudgetsPage() {
                 <div className="min-w-0">
                   <p className="font-medium">{s.category_name}</p>
                   <p className="text-xs text-muted-foreground">
-                    Spent {formatMoney(s.last_month_spent, currency)} last month
+                    {s.is_starter ? "A common starting point" : `Spent ${formatMoney(s.last_month_spent, currency)} last month`}
                   </p>
                 </div>
                 <Button

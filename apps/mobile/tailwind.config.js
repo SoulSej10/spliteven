@@ -5,18 +5,20 @@ module.exports = {
   darkMode: "class",
   theme: {
     extend: {
-      // SplitEven brand tokens v7 — reverted off the plum/indigo retheme
-      // back to the original teal-green brand per direct feedback ("go back
-      // on the green theme"). The amber accent and positive/negative/
-      // warning semantics introduced alongside personal budgeting stay as
-      // they are — those weren't the brand-chrome complaint.
+      // SplitEven brand tokens v8 — same teal-green family kept (a prior
+      // plum/indigo hue swap was tried and reverted per feedback), but
+      // desaturated and lightened per "too strong, not the right vibe, do
+      // a friendlier makeover": the old primary (#16A88F) and dark-mode
+      // bright variant (#35D6B5) read as neon, and the dark-mode background
+      // (#0A120D) was near-black. Both are toned down here while staying
+      // recognizably the same brand color, not a hue change.
       colors: {
         primary: {
-          DEFAULT: "#16A88F",
-          light: "#E3FBF6",
-          bright: "#35D6B5", // for dark-mode text/icons on the dark bg
-          soft: "#63E7CE",
-          deep: "#0F7A68", // for gradients / pressed states
+          DEFAULT: "#2F8F7D",
+          light: "#E8F4F0",
+          bright: "#5FBBA5", // for dark-mode text/icons on the dark bg
+          soft: "#86CDBB",
+          deep: "#1F6355", // for gradients / pressed states
         },
         accent: {
           DEFAULT: "#F5A524", // warm amber - CTAs, streaks, highlights
@@ -28,23 +30,26 @@ module.exports = {
         warning: "#E0A63A", // warm amber
         surface: "#FFFFFF",
         neutral: {
-          900: "#0A120D", // dark-mode screen background — deep green-black, not flat black
+          900: "#16211B", // dark-mode screen background — softened from near-black for a friendlier feel
           500: "#6B7169",
           100: "#F4F5F3",
         },
         // Dark mode card surface (applied via `dark:bg-surface-dark`) — a
         // visible step lighter than neutral-900 so cards actually read as
-        // raised against the background, per feedback that dark mode was
-        // "too dark" and components weren't visible (surface-dark used to
-        // equal neutral-900 exactly, i.e. zero contrast between the two).
-        "surface-dark": "#15251C",
+        // raised against the background.
+        "surface-dark": "#1E2E27",
       },
+      // Font swapped from Plus Jakarta Sans to Sora per feedback ("too
+      // standard, give it character but still comprehensive") - Sora's
+      // rounded, slightly geometric letterforms read as more distinctive
+      // while staying just as legible at small sizes. Mirrors the web
+      // font swap in layout.tsx.
       fontFamily: {
-        sans: ["PlusJakartaSans_400Regular"],
-        medium: ["PlusJakartaSans_500Medium"],
-        semibold: ["PlusJakartaSans_600SemiBold"],
-        bold: ["PlusJakartaSans_700Bold"],
-        extrabold: ["PlusJakartaSans_800ExtraBold"],
+        sans: ["Sora_400Regular"],
+        medium: ["Sora_500Medium"],
+        semibold: ["Sora_600SemiBold"],
+        bold: ["Sora_700Bold"],
+        extrabold: ["Sora_800ExtraBold"],
       },
       // Text was reading too small across the app, so the whole scale was
       // bumped ~12.5% over Tailwind's RN defaults - that turned out to be

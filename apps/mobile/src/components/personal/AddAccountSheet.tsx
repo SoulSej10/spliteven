@@ -20,36 +20,45 @@ const ACCOUNT_TYPES: { value: PersonalAccountType; label: string }[] = [
 
 const ACCOUNT_ICONS = ["💵", "💳", "👛", "🏦", "🐷", "📈", "💰", "🪙", "🏧", "💎", "🧾", "🎯"];
 
-/** Pass `account` to edit an existing account in place instead of creating a new one. */
+/** A suggested-but-not-yet-created account (see AccountsTabView's template cards) - pre-fills the form without being an edit. */
+export interface AccountPrefill {
+  name: string;
+  type: PersonalAccountType;
+  icon: string;
+}
+
+/** Pass `account` to edit an existing account in place instead of creating a new one, or `prefill` to start a new one pre-filled from a suggestion. */
 export function AddAccountSheet({
   visible,
   onClose,
   account,
+  prefill,
 }: {
   visible: boolean;
   onClose: () => void;
   account?: PersonalAccount;
+  prefill?: AccountPrefill;
 }) {
   const isEdit = !!account;
   const { profile } = useAuth();
   const createAccount = useCreatePersonalAccount();
   const updateAccount = useUpdatePersonalAccount();
-  const [name, setName] = useState(account?.name ?? "");
-  const [type, setType] = useState<PersonalAccountType>(account?.type ?? "cash");
+  const [name, setName] = useState(account?.name ?? prefill?.name ?? "");
+  const [type, setType] = useState<PersonalAccountType>(account?.type ?? prefill?.type ?? "cash");
   const [currency, setCurrency] = useState(account?.currency ?? profile?.default_currency ?? "PHP");
   const [startingBalance, setStartingBalance] = useState(String(account?.starting_balance ?? 0));
-  const [icon, setIcon] = useState(account?.icon ?? ACCOUNT_ICONS[0]);
+  const [icon, setIcon] = useState(account?.icon ?? prefill?.icon ?? ACCOUNT_ICONS[0]);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (visible) {
-      setName(account?.name ?? "");
-      setType(account?.type ?? "cash");
+      setName(account?.name ?? prefill?.name ?? "");
+      setType(account?.type ?? prefill?.type ?? "cash");
       setCurrency(account?.currency ?? profile?.default_currency ?? "PHP");
       setStartingBalance(String(account?.starting_balance ?? 0));
-      setIcon(account?.icon ?? ACCOUNT_ICONS[0]);
+      setIcon(account?.icon ?? prefill?.icon ?? ACCOUNT_ICONS[0]);
     }
-  }, [visible, account, profile]);
+  }, [visible, account, prefill, profile]);
 
   async function onSubmit() {
     const parsed = createPersonalAccountSchema.safeParse({

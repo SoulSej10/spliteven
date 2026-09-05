@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, Pressable, ScrollView, Switch, Text, TextInput, View } from "react-native";
+import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, Switch, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useColorScheme } from "nativewind";
@@ -225,7 +225,10 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <View className="flex-1">
+    <KeyboardAvoidingView
+      className="flex-1"
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <View className="flex-row items-center justify-between px-5 pb-2 pt-3">
         <Text className="text-xl font-bold text-neutral-900 dark:text-neutral-100">Settings</Text>
         <Pressable
@@ -292,7 +295,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
               className="flex-row items-center justify-between py-2"
             >
               <View className="flex-row items-center gap-2.5">
-                <Wallet size={17} color="#16A88F" />
+                <Wallet size={17} color="#2F8F7D" />
                 <Text className="text-neutral-900 dark:text-neutral-100">Accounts</Text>
               </View>
               <ChevronRight color="#6B7169" size={17} />
@@ -302,7 +305,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
               className="flex-row items-center justify-between py-2"
             >
               <View className="flex-row items-center gap-2.5">
-                <Tag size={17} color="#16A88F" />
+                <Tag size={17} color="#2F8F7D" />
                 <Text className="text-neutral-900 dark:text-neutral-100">Categories</Text>
               </View>
               <ChevronRight color="#6B7169" size={17} />
@@ -312,7 +315,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
               className="flex-row items-center justify-between py-2"
             >
               <View className="flex-row items-center gap-2.5">
-                <PiggyBank size={17} color="#16A88F" />
+                <PiggyBank size={17} color="#2F8F7D" />
                 <Text className="text-neutral-900 dark:text-neutral-100">Budgets</Text>
               </View>
               <ChevronRight color="#6B7169" size={17} />
@@ -322,7 +325,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
               className="flex-row items-center justify-between py-2"
             >
               <View className="flex-row items-center gap-2.5">
-                <ListChecks size={17} color="#16A88F" />
+                <ListChecks size={17} color="#2F8F7D" />
                 <Text className="text-neutral-900 dark:text-neutral-100">Transactions</Text>
               </View>
               <ChevronRight color="#6B7169" size={17} />
@@ -337,7 +340,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
             className="flex-row items-center justify-between py-1"
           >
             <View className="flex-row items-center gap-2.5">
-              <KeyRound size={17} color="#16A88F" />
+              <KeyRound size={17} color="#2F8F7D" />
               <Text className="text-neutral-900 dark:text-neutral-100">Change password</Text>
             </View>
             <ChevronRight color="#6B7169" size={17} />
@@ -371,14 +374,14 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
           <Text className="mb-3 font-semibold text-neutral-900 dark:text-neutral-100">Data</Text>
           <Pressable onPress={onExport} disabled={exporting} className="flex-row items-center justify-between py-2">
             <View className="flex-row items-center gap-2.5">
-              <Download size={17} color="#16A88F" />
+              <Download size={17} color="#2F8F7D" />
               <Text className="text-neutral-900 dark:text-neutral-100">Export data (CSV)</Text>
             </View>
             <ChevronRight color="#6B7169" size={17} />
           </Pressable>
           <Pressable onPress={onImport} disabled={importing} className="flex-row items-center justify-between py-2">
             <View className="flex-row items-center gap-2.5">
-              <Upload size={17} color="#16A88F" />
+              <Upload size={17} color="#2F8F7D" />
               <Text className="text-neutral-900 dark:text-neutral-100">Import data (CSV)</Text>
             </View>
             <ChevronRight color="#6B7169" size={17} />
@@ -392,7 +395,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
             <Switch
               value={colorScheme === "dark"}
               onValueChange={toggleColorScheme}
-              trackColor={{ true: "#16A88F", false: "#D9DCD6" }}
+              trackColor={{ true: "#2F8F7D", false: "#D9DCD6" }}
             />
           </View>
         </Card>
@@ -409,7 +412,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
               <Switch
                 value={notifExpenses}
                 onValueChange={setNotifExpenses}
-                trackColor={{ true: "#16A88F", false: "#D9DCD6" }}
+                trackColor={{ true: "#2F8F7D", false: "#D9DCD6" }}
               />
             </View>
             <View className="flex-row items-center justify-between">
@@ -417,7 +420,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
               <Switch
                 value={notifSettlements}
                 onValueChange={setNotifSettlements}
-                trackColor={{ true: "#16A88F", false: "#D9DCD6" }}
+                trackColor={{ true: "#2F8F7D", false: "#D9DCD6" }}
               />
             </View>
           </View>
@@ -432,7 +435,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
             className="flex-row items-center justify-between py-1"
           >
             <View className="flex-row items-center gap-2.5">
-              <ShieldCheck size={17} color="#16A88F" />
+              <ShieldCheck size={17} color="#2F8F7D" />
               <Text className="text-neutral-900 dark:text-neutral-100">Privacy policy</Text>
             </View>
             <ChevronRight color="#6B7169" size={17} />
@@ -445,7 +448,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
             className="flex-row items-center justify-between py-1"
           >
             <View className="flex-row items-center gap-2.5">
-              <ShieldCheck size={17} color="#16A88F" />
+              <ShieldCheck size={17} color="#2F8F7D" />
               <Text className="text-neutral-900 dark:text-neutral-100">Terms of service</Text>
             </View>
             <ChevronRight color="#6B7169" size={17} />
@@ -479,6 +482,6 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
       </ScrollView>
 
       <EditProfileSheet visible={editProfileVisible} onClose={() => setEditProfileVisible(false)} />
-    </View>
+    </KeyboardAvoidingView>
   );
 }

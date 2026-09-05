@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { Dimensions, Modal, Pressable, ScrollView, Text, View } from "react-native";
+import { Dimensions, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { Easing, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { X } from "phosphor-react-native";
@@ -76,44 +76,55 @@ export function BottomSheet({
         ]}
         className="rounded-t-[18px] bg-surface dark:bg-surface-dark"
       >
-        <SafeAreaView edges={["bottom"]} style={{ flexShrink: 1, flexBasis: "auto" }}>
-          <View className="items-center pt-2.5">
-            <View className="h-1.5 w-10 rounded-full bg-neutral-500/25" />
-          </View>
-
-          {title && (
-            <View className="flex-row items-center justify-between px-5 pb-2 pt-3">
-              <Text className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                {title}
-              </Text>
-              <Pressable
-                onPress={onClose}
-                hitSlop={12}
-                className="h-8 w-8 items-center justify-center rounded-full bg-neutral-100 dark:bg-white/10"
-              >
-                <X size={16} color="#6B7169" />
-              </Pressable>
+        {/* Keyboard would otherwise sit on top of whatever field is focused,
+            since a Modal opens its own native window and doesn't inherit the
+            activity's automatic resize-on-keyboard behavior. "height" shrinks
+            this view by the keyboard's height, and because the outer sheet is
+            bottom-anchored with only a maxHeight (not a fixed height), the
+            whole sheet visually rides up to sit just above the keyboard. */}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flexShrink: 1, flexBasis: "auto" }}
+        >
+          <SafeAreaView edges={["bottom"]} style={{ flexShrink: 1, flexBasis: "auto" }}>
+            <View className="items-center pt-2.5">
+              <View className="h-1.5 w-10 rounded-full bg-neutral-500/25" />
             </View>
-          )}
 
-          <ScrollView
-            className={cn("px-5")}
-            style={{ flexGrow: 0, flexShrink: 1, flexBasis: "auto" }}
-            contentContainerClassName="gap-4 pb-4"
-            keyboardShouldPersistTaps="handled"
-          >
-            {children}
-          </ScrollView>
+            {title && (
+              <View className="flex-row items-center justify-between px-5 pb-2 pt-3">
+                <Text className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+                  {title}
+                </Text>
+                <Pressable
+                  onPress={onClose}
+                  hitSlop={12}
+                  className="h-8 w-8 items-center justify-center rounded-full bg-neutral-100 dark:bg-white/10"
+                >
+                  <X size={16} color="#6B7169" />
+                </Pressable>
+              </View>
+            )}
 
-          {footer && (
-            <View
-              style={{ flexShrink: 0 }}
-              className="border-t border-neutral-500/10 px-5 py-4"
+            <ScrollView
+              className={cn("px-5")}
+              style={{ flexGrow: 0, flexShrink: 1, flexBasis: "auto" }}
+              contentContainerClassName="gap-4 pb-4"
+              keyboardShouldPersistTaps="handled"
             >
-              {footer}
-            </View>
-          )}
-        </SafeAreaView>
+              {children}
+            </ScrollView>
+
+            {footer && (
+              <View
+                style={{ flexShrink: 0 }}
+                className="border-t border-neutral-500/10 px-5 py-4"
+              >
+                {footer}
+              </View>
+            )}
+          </SafeAreaView>
+        </KeyboardAvoidingView>
       </Animated.View>
     </Modal>
   );

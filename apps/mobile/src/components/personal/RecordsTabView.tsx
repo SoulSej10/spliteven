@@ -111,7 +111,7 @@ export function RecordsTabView() {
       {(accounts?.length ?? 0) === 0 && (
         <View className="items-center gap-2 py-14">
           <View className="h-14 w-14 items-center justify-center rounded-full bg-primary-light">
-            <Receipt color="#16A88F" size={22} />
+            <Receipt color="#2F8F7D" size={22} />
           </View>
           <Text className="text-sm text-neutral-500">Add an account before logging a transaction.</Text>
         </View>
@@ -120,7 +120,7 @@ export function RecordsTabView() {
       {(accounts?.length ?? 0) > 0 && monthTransactions.length === 0 && (
         <View className="items-center gap-2 py-14">
           <View className="h-14 w-14 items-center justify-center rounded-full bg-primary-light">
-            <Receipt color="#16A88F" size={22} />
+            <Receipt color="#2F8F7D" size={22} />
           </View>
           <Text className="text-sm text-neutral-500">
             {isCurrentMonth ? "No transactions yet. Log your first one." : "No transactions this month."}

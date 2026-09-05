@@ -186,11 +186,28 @@ export function computeBudgetProgress(
 export interface BudgetSuggestion {
   category_id: UUID;
   category_name: string;
-  /** What was actually spent in this category last calendar month. */
+  /** What was actually spent in this category last calendar month. Always 0 for a starter suggestion. */
   last_month_spent: number;
   /** Last month's spend rounded up to the nearest 100, for a bit of headroom. */
   suggested_limit: number;
+  /** True for a generic starter suggestion (no spending history yet) rather than one derived from actual last-month spend. */
+  is_starter?: boolean;
 }
+
+/**
+ * Sensible example limits for a brand-new user's seeded starter categories
+ * (see supabase/migrations/0019_seed_default_personal_categories_and_account.sql)
+ * - shown only when there's no spending history yet to base a real
+ * suggestion on, so a first-time user immediately sees what "set a budget"
+ * looks like instead of a blank tab.
+ */
+const STARTER_BUDGET_LIMITS: Record<string, number> = {
+  Groceries: 6000,
+  "Food & Dining": 5000,
+  Transport: 2500,
+  Entertainment: 3000,
+  Shopping: 4000,
+};
 
 /**
  * Expense categories with no budget yet, ranked by how much was actually
@@ -218,7 +235,7 @@ export function computeBudgetSuggestions(
     spentByCategory.set(tx.category_id, (spentByCategory.get(tx.category_id) ?? 0) + tx.amount);
   }
 
-  return categories
+  const fromHistory = categories
     .filter((c) => c.kind === "expense" && !budgetedCategoryIds.has(c.id) && (spentByCategory.get(c.id) ?? 0) > 0)
     .map((c) => {
       const spent = round2(spentByCategory.get(c.id) ?? 0);
@@ -230,6 +247,21 @@ export function computeBudgetSuggestions(
       };
     })
     .sort((a, b) => b.last_month_spent - a.last_month_spent);
+
+  if (fromHistory.length > 0) return fromHistory;
+
+  // No spending history to suggest from (a brand-new account, most likely) -
+  // fall back to generic starter amounts for whichever seeded categories the
+  // user still has, so the tab isn't just an empty message on first visit.
+  return categories
+    .filter((c) => c.kind === "expense" && !budgetedCategoryIds.has(c.id) && c.name in STARTER_BUDGET_LIMITS)
+    .map((c) => ({
+      category_id: c.id,
+      category_name: c.name,
+      last_month_spent: 0,
+      suggested_limit: STARTER_BUDGET_LIMITS[c.name],
+      is_starter: true,
+    }));
 }
 
 export interface DailyTotal {

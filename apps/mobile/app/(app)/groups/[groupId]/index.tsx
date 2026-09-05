@@ -227,7 +227,7 @@ export default function GroupDetailScreen() {
           disabled={Math.abs(myBalance) < 0.005}
           onPress={() => setTab("balances")}
         >
-          <ArrowLeftRight color="#16A88F" size={18} />
+          <ArrowLeftRight color="#2F8F7D" size={18} />
           <Text className="font-semibold text-primary">Settle up</Text>
         </Button>
         <Button size="lg" className="flex-1 flex-row gap-2" onPress={() => setAddExpenseOpen(true)}>
@@ -279,7 +279,7 @@ export default function GroupDetailScreen() {
           }}
           className="flex-row items-center gap-3 py-3"
         >
-          <Download size={18} color="#16A88F" />
+          <Download size={18} color="#2F8F7D" />
           <Text className="text-base text-neutral-900 dark:text-neutral-100">Export CSV</Text>
         </Pressable>
         {isOwner && (
@@ -290,7 +290,7 @@ export default function GroupDetailScreen() {
             }}
             className="flex-row items-center gap-3 py-3"
           >
-            <Pencil size={18} color="#16A88F" />
+            <Pencil size={18} color="#2F8F7D" />
             <Text className="text-base text-neutral-900 dark:text-neutral-100">Edit group</Text>
           </Pressable>
         )}
@@ -302,7 +302,7 @@ export default function GroupDetailScreen() {
             }}
             className="flex-row items-center gap-3 py-3"
           >
-            <Archive size={18} color="#16A88F" />
+            <Archive size={18} color="#2F8F7D" />
             <Text className="text-base text-neutral-900 dark:text-neutral-100">Archive group</Text>
           </Pressable>
         )}

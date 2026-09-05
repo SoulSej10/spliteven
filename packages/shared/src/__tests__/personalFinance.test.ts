@@ -231,6 +231,28 @@ describe("computeBudgetSuggestions", () => {
     );
     expect(suggestions.map((s) => s.category_id)).toEqual([BILLS, FOOD]);
   });
+
+  it("falls back to generic starter suggestions for a brand-new account with no spending history", () => {
+    const GROCERIES = "55555555-5555-5555-5555-555555555555";
+    const suggestions = computeBudgetSuggestions(
+      [...categories, { id: GROCERIES, name: "Groceries", kind: "expense" as const }],
+      [],
+      []
+    );
+    expect(suggestions.length).toBeGreaterThan(0);
+    expect(suggestions.every((s) => s.is_starter)).toBe(true);
+    expect(suggestions.every((s) => s.last_month_spent === 0)).toBe(true);
+    expect(suggestions.find((s) => s.category_id === GROCERIES)?.suggested_limit).toBe(6000);
+  });
+
+  it("does not fall back to starter suggestions once at least one real suggestion exists", () => {
+    const suggestions = computeBudgetSuggestions(
+      categories,
+      [],
+      [{ category_id: FOOD, kind: "expense", amount: 340, occurred_at: prevMonthDate }]
+    );
+    expect(suggestions.every((s) => !s.is_starter)).toBe(true);
+  });
 });
 
 describe("computeSharedFinanceSummary", () => {
