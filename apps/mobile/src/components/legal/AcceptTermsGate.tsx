@@ -38,6 +38,12 @@ export function AcceptTermsGate({
         contentContainerClassName="gap-8 px-5 py-5"
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
+        // A fling that lands exactly at the scroll limit doesn't always emit
+        // a final onScroll callback on Android - onMomentumScrollEnd and
+        // onScrollEndDrag fire reliably once the gesture actually settles,
+        // so the gate doesn't get stuck open right at the true bottom.
+        onMomentumScrollEnd={handleScroll}
+        onScrollEndDrag={handleScroll}
         scrollEventThrottle={64}
       >
         <View className="gap-5">
