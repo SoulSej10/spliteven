@@ -12,54 +12,123 @@ function Section({ title, children }: { title: string; children: string }) {
 /**
  * Real, SplitEven-specific terms of service (not placeholder copy) — shown
  * at the first-run acceptance gate alongside the Privacy Policy, and
- * reachable anytime from Settings for a read-only view.
+ * reachable anytime from Settings for a read-only view. Mirrored
+ * section-for-section in apps/web/src/app/terms-of-service/page.tsx — keep
+ * both in sync when editing.
  */
 export function TermsOfServiceContent() {
   return (
     <View className="gap-5">
       <Text className="text-xs text-neutral-500">Last updated: 2026</Text>
 
+      <Section title="Acceptance of these terms">
+        By creating an account or otherwise using SplitEven, you agree to these Terms of Service and the
+        Privacy Policy above. If you don't agree with any part of them, don't create an account or use the
+        app.
+      </Section>
+
+      <Section title="Eligibility">
+        You must be at least 13 years old (or the minimum age of digital consent in your country, if
+        higher) to use SplitEven. By using the app, you confirm that you meet this requirement and that any
+        information you provide during account creation is accurate.
+      </Section>
+
       <Section title="What SplitEven is">
         SplitEven is a tool for tracking shared expenses and personal finances between people who trust each
         other. It records what group members say they paid and owe — it does not move money, verify
-        payments, or act as a bank, payment processor, or escrow service. Settling up happens outside the
-        app (cash, a payment app, a bank transfer); SplitEven just keeps the ledger.
+        payments, or act as a bank, payment processor, money transmitter, or escrow service. Settling up
+        happens outside the app (cash, a payment app, a bank transfer); SplitEven just keeps the ledger.
+      </Section>
+
+      <Section title="Your account">
+        You're responsible for keeping your login credentials confidential and for all activity that happens
+        under your account. Tell us immediately if you suspect unauthorized access. You're also responsible
+        for making sure the email address on your account stays reachable, since it's used for
+        account-recovery and confirmation messages.
       </Section>
 
       <Section title="Your data is your responsibility">
         Balances, expenses, and settlements are only as accurate as what you and your group members enter.
-        SplitEven doesn't verify that a recorded expense actually happened or that a settlement was actually
-        paid. Double-check anything before relying on it for a real financial decision.
+        SplitEven doesn't verify that a recorded expense actually happened, that an amount is correct, or
+        that a settlement was actually paid outside the app. Double-check anything before relying on it for
+        a real financial decision, and resolve disagreements about a shared expense directly with the group
+        members involved — SplitEven has no way to mediate or verify real-world disputes.
       </Section>
 
-      <Section title="No warranty">
-        SplitEven is provided "as is," without warranty of any kind. We work to keep balance calculations
-        correct and the app available, but we don't guarantee it will be error-free, uninterrupted, or fit
-        for any particular purpose.
+      <Section title="Acceptable use">
+        Don't use SplitEven to store or share anything illegal, fraudulent, or infringing; to harass,
+        impersonate, or defraud another user; to try to access another account, group, or data you're not
+        authorized to see; to reverse-engineer, scrape, or overload the app's infrastructure; or to
+        interfere with anyone else's use of the service.
       </Section>
 
-      <Section title="Limitation of liability">
-        To the fullest extent permitted by law, SplitEven and its developer aren't liable for any financial
-        loss, dispute between group members, or other damages arising from your use of the app, including
-        from inaccurate balances, lost data, or downtime.
+      <Section title="Intellectual property">
+        The SplitEven name, logo, and app design belong to its developer. You keep ownership of the content
+        you enter (expense descriptions, notes, your profile photo, and so on) — by entering it, you grant
+        SplitEven the limited right to store, process, and display it back to you and, where relevant, to
+        your group members, solely to provide the service.
       </Section>
 
-      <Section title="Account deletion">
+      <Section title="Third-party services">
+        SplitEven relies on third-party infrastructure — including Supabase for data storage and
+        authentication, Sentry for crash reporting, and Expo's push notification service — to operate. Your
+        use of the app is also subject to the terms of the app store (Apple App Store or Google Play)
+        through which you downloaded it.
+      </Section>
+
+      <Section title="Availability and changes to the service">
+        SplitEven is actively developed, which means features, layouts, and behavior may change, and the
+        service may occasionally be unavailable for maintenance or due to factors outside our control. We
+        aim to keep disruption minimal but don't guarantee uninterrupted availability.
+      </Section>
+
+      <Section title="Account deletion and termination">
         You can delete your account at any time from Settings. This disables your login permanently and
         removes your personal accounts, transactions, budgets, and categories. Group expenses and
         settlements you were part of stay visible to your former group members (with your profile
         anonymized) so their shared ledger stays accurate — deleting your account doesn't rewrite history
-        other people rely on.
+        other people rely on. Your access may also be suspended or terminated if you violate these terms,
+        such as by using the app for acceptable-use violations described above.
       </Section>
 
-      <Section title="Acceptable use">
-        Don't use SplitEven to store or share anything illegal, to harass another user, or to try to access
-        another account or group you're not a member of.
+      <Section title="No warranty">
+        SplitEven is provided "as is" and "as available," without warranty of any kind, express or implied.
+        We work to keep balance calculations correct and the app available, but we don't guarantee it will
+        be error-free, secure, uninterrupted, or fit for any particular purpose.
       </Section>
 
-      <Section title="Changes">
-        These terms may be updated as the app changes. Continuing to use SplitEven after an update means you
-        accept the revised terms.
+      <Section title="Limitation of liability">
+        To the fullest extent permitted by law, SplitEven and its developer aren't liable for any indirect,
+        incidental, or consequential damages, financial loss, dispute between group members, or other
+        damages arising from your use of the app, including from inaccurate balances, lost data, or
+        downtime — even if advised of the possibility of such damages.
+      </Section>
+
+      <Section title="Indemnification">
+        You agree to hold SplitEven and its developer harmless from any claim or dispute arising from your
+        use of the app, your violation of these terms, or a disagreement between you and another user over
+        shared expenses or settlements.
+      </Section>
+
+      <Section title="Governing law">
+        These terms are governed by the laws of the Republic of the Philippines, without regard to its
+        conflict-of-law principles, to the extent permitted by the law of your own jurisdiction.
+      </Section>
+
+      <Section title="Resolving disputes">
+        If you have a concern about the service, contact us first at the email below so we can try to
+        resolve it directly before pursuing any other remedy.
+      </Section>
+
+      <Section title="Severability">
+        If any part of these terms is found unenforceable, the rest remains in full effect, and the
+        unenforceable part will be read to reflect the original intent as closely as possible.
+      </Section>
+
+      <Section title="Changes to these terms">
+        These terms may be updated as the app changes. Material changes will be reflected here with an
+        updated "Last updated" date, and continuing to use SplitEven after an update means you accept the
+        revised terms.
       </Section>
 
       <Section title="Contact">
