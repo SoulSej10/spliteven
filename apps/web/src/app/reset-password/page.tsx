@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { isPasswordPwned } from "@/lib/pwned-password";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -22,6 +23,18 @@ export default function ResetPasswordPage() {
   async function onSubmit(values: PasswordResetInput) {
     setSubmitting(true);
     try {
+      try {
+        const { pwned, count } = await isPasswordPwned(values.password);
+        if (pwned) {
+          toast.error(
+            `This password has appeared in ${count.toLocaleString()} data breach${count === 1 ? "" : "es"}. Please choose a different one.`
+          );
+          return;
+        }
+      } catch {
+        // Best-effort check - never block a password reset if HaveIBeenPwned is unreachable.
+      }
+
       const supabase = getSupabaseBrowserClient();
       // Requires an active recovery session, established by the reset-link
       // redirect handled at /auth/callback.

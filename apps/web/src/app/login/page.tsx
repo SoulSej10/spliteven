@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { isPasswordPwned } from "@/lib/pwned-password";
 import { Logo } from "@/components/brand/logo";
 
 export default function LoginPage() {
@@ -40,6 +41,18 @@ export default function LoginPage() {
   async function onSignUp(values: SignUpInput) {
     setSubmitting(true);
     try {
+      try {
+        const { pwned, count } = await isPasswordPwned(values.password);
+        if (pwned) {
+          toast.error(
+            `This password has appeared in ${count.toLocaleString()} data breach${count === 1 ? "" : "es"}. Please choose a different one.`
+          );
+          return;
+        }
+      } catch {
+        // Best-effort check - never block signup if HaveIBeenPwned is unreachable.
+      }
+
       const supabase = getSupabaseBrowserClient();
       const { error } = await supabase.auth.signUp({
         email: values.email,

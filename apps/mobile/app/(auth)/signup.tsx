@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { BottomActionBar } from "@/components/ui/BottomActionBar";
 import { getSupabaseClient } from "@/lib/supabase/client";
+import { isPasswordPwned } from "@/lib/pwned-password";
 
 export default function SignUpScreen() {
   const [submitting, setSubmitting] = useState(false);
@@ -24,6 +25,19 @@ export default function SignUpScreen() {
   async function onSubmit(values: SignUpInput) {
     setSubmitting(true);
     try {
+      try {
+        const { pwned, count } = await isPasswordPwned(values.password);
+        if (pwned) {
+          Alert.alert(
+            "Choose a different password",
+            `This password has appeared in ${count.toLocaleString()} data breach${count === 1 ? "" : "es"}. Please choose a different one.`
+          );
+          return;
+        }
+      } catch {
+        // Best-effort check - never block signup if HaveIBeenPwned is unreachable.
+      }
+
       const supabase = getSupabaseClient();
       const { data, error } = await supabase.auth.signUp({
         ...values,
