@@ -23,10 +23,16 @@ export const profileSetupSchema = z.object({
 });
 export type ProfileSetupInput = z.infer<typeof profileSetupSchema>;
 
-export const signUpSchema = z.object({
-  email: z.string().trim().email(),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-});
+export const signUpSchema = z
+  .object({
+    email: z.string().trim().email(),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 export type SignUpInput = z.infer<typeof signUpSchema>;
 
 export const logInSchema = z.object({

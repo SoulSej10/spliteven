@@ -40,12 +40,12 @@ if (I18nManager.isRTL) {
   I18nManager.forceRTL(false);
 }
 
-// App now defaults to dark mode regardless of the device's system setting,
-// per direct feedback. Set once at module load (not in an effect) so the
-// very first frame renders dark instead of flashing light first. The
-// Settings toggle still calls toggleColorScheme/setColorScheme normally —
-// this only changes the starting point each cold launch.
-colorScheme.set("dark");
+// App defaults to light mode regardless of the device's system setting, per
+// direct feedback. Set once at module load (not in an effect) so the very
+// first frame renders light instead of flashing dark first. The Settings
+// toggle still calls toggleColorScheme/setColorScheme normally - this only
+// changes the starting point each cold launch.
+colorScheme.set("light");
 
 function RootLayout() {
   const [fontsLoaded] = useFonts({

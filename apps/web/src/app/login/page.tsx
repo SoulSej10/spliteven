@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { logInSchema, signUpSchema, type LogInInput, type SignUpInput } from "@evensplit/shared";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -115,9 +116,8 @@ export default function LoginPage() {
                         Forgot password?
                       </Link>
                     </div>
-                    <Input
+                    <PasswordInput
                       id="login-password"
-                      type="password"
                       {...loginForm.register("password")}
                     />
                     {loginForm.formState.errors.password && (
@@ -145,14 +145,25 @@ export default function LoginPage() {
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="signup-password">Password</Label>
-                    <Input
+                    <PasswordInput
                       id="signup-password"
-                      type="password"
                       {...signupForm.register("password")}
                     />
                     {signupForm.formState.errors.password && (
                       <p className="text-xs text-destructive">
                         {signupForm.formState.errors.password.message}
+                      </p>
+                    )}
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="signup-confirm-password">Confirm password</Label>
+                    <PasswordInput
+                      id="signup-confirm-password"
+                      {...signupForm.register("confirmPassword")}
+                    />
+                    {signupForm.formState.errors.confirmPassword && (
+                      <p className="text-xs text-destructive">
+                        {signupForm.formState.errors.confirmPassword.message}
                       </p>
                     )}
                   </div>

@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Text, View } from "react-native";
 import { router } from "expo-router";
 import * as Linking from "expo-linking";
 import { applyAuthCallbackUrl } from "@/lib/supabase/authDeepLink";
@@ -11,27 +11,62 @@ import { applyAuthCallbackUrl } from "@/lib/supabase/authDeepLink";
  * (app/index.tsx) to route based on the now-authenticated state. Handles
  * both a cold start (link tapped while the app wasn't running) and a warm
  * one (app already running/backgrounded).
+ *
+ * Previously this screen could get stuck on its own spinner forever: if
+ * applyAuthCallbackUrl threw (or no URL/token ever arrived - e.g. expo-
+ * router's own linking handling races with a manual getInitialURL() call),
+ * the unhandled rejection just left the screen showing its ActivityIndicator
+ * with nothing to navigate away from it. Every path now always resolves to
+ * router.replace("/") - on failure SplashGate correctly falls through to the
+ * login screen instead of leaving the user stuck - and a timeout guarantees
+ * that even if no URL/event ever arrives at all.
  */
 export default function AuthCallbackScreen() {
+  const [failed, setFailed] = useState(false);
+
   useEffect(() => {
-    let handled = false;
-    async function handle(url: string) {
-      if (handled) return;
-      handled = true;
-      await applyAuthCallbackUrl(url);
+    let settled = false;
+
+    function finish(success: boolean) {
+      if (settled) return;
+      settled = true;
+      if (!success) setFailed(true);
       router.replace("/");
     }
+
+    async function handle(url: string) {
+      try {
+        const ok = await applyAuthCallbackUrl(url);
+        finish(ok);
+      } catch (err) {
+        console.error("EvenSplit: auth callback failed", err);
+        finish(false);
+      }
+    }
+
+    // Safety net: never leave the user stuck on this screen, even if no URL
+    // or "url" event ever arrives with a usable token fragment.
+    const timeout = setTimeout(() => finish(false), 10000);
 
     void Linking.getInitialURL().then((url) => {
       if (url) void handle(url);
     });
     const subscription = Linking.addEventListener("url", (event) => void handle(event.url));
-    return () => subscription.remove();
+
+    return () => {
+      clearTimeout(timeout);
+      subscription.remove();
+    };
   }, []);
 
   return (
-    <View className="flex-1 items-center justify-center bg-neutral-100 dark:bg-neutral-900">
+    <View className="flex-1 items-center justify-center gap-3 bg-neutral-100 px-8 dark:bg-neutral-900">
       <ActivityIndicator color="#16A88F" size="large" />
+      {failed && (
+        <Text className="text-center text-sm text-neutral-500">
+          Couldn&apos;t confirm automatically - redirecting you to log in…
+        </Text>
+      )}
     </View>
   );
 }

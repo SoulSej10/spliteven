@@ -19,7 +19,7 @@ export default function SignUpScreen() {
   const iconColor = colorScheme === "dark" ? "#F4F5F3" : "#0A0A0A";
   const { handleSubmit, formState, setValue, watch } = useForm<SignUpInput>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { email: "", password: "", confirmPassword: "" },
   });
 
   async function onSubmit(values: SignUpInput) {
@@ -40,7 +40,8 @@ export default function SignUpScreen() {
 
       const supabase = getSupabaseClient();
       const { data, error } = await supabase.auth.signUp({
-        ...values,
+        email: values.email,
+        password: values.password,
         options: { emailRedirectTo: Linking.createURL("auth/callback") },
       });
       if (error) throw error;
@@ -100,6 +101,13 @@ export default function SignUpScreen() {
             onChangeText={(t) => setValue("password", t)}
             value={watch("password")}
             error={formState.errors.password?.message}
+          />
+          <TextField
+            label="Confirm password"
+            secureTextEntry
+            onChangeText={(t) => setValue("confirmPassword", t)}
+            value={watch("confirmPassword")}
+            error={formState.errors.confirmPassword?.message}
           />
 
           <View className="mt-2 flex-row items-center justify-center gap-1">
