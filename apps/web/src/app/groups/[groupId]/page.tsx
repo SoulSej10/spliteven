@@ -66,7 +66,7 @@ function GroupDetailContent({ groupId }: { groupId: string }) {
   const { data: settlements } = useGroupSettlements(groupId);
   useGroupRealtime(groupId);
 
-  const members = group?.group_members ?? [];
+  const members = useMemo(() => group?.group_members ?? [], [group]);
   const memberIds = useMemo(() => members.map((m) => m.user_id), [members]);
   const isOwner = members.find((m) => m.user_id === authUser?.id)?.role === "owner";
 
