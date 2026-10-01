@@ -14,11 +14,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { Logo } from "@/components/brand/logo";
+import { AcceptTermsGate } from "@/components/legal/accept-terms-gate";
 
 export default function LoginPage() {
   const router = useRouter();
   const [tab, setTab] = useState<"login" | "signup">("login");
   const [submitting, setSubmitting] = useState(false);
+  // Re-gated every time the signup tab is opened, regardless of whether this
+  // browser has seen the terms before - account creation should never be
+  // reachable without it, same as the mobile signup flow.
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const loginForm = useForm<LogInInput>({ resolver: zodResolver(logInSchema) });
   const signupForm = useForm<SignUpInput>({ resolver: zodResolver(signUpSchema) });
@@ -120,44 +125,48 @@ export default function LoginPage() {
               </TabsContent>
 
               <TabsContent value="signup" className="mt-4">
-                <form onSubmit={signupForm.handleSubmit(onSignUp)} className="space-y-4">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="signup-email">Email</Label>
-                    <Input id="signup-email" type="email" {...signupForm.register("email")} />
-                    {signupForm.formState.errors.email && (
-                      <p className="text-xs text-destructive">
-                        {signupForm.formState.errors.email.message}
-                      </p>
-                    )}
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="signup-password">Password</Label>
-                    <Input
-                      id="signup-password"
-                      type="password"
-                      {...signupForm.register("password")}
-                    />
-                    {signupForm.formState.errors.password && (
-                      <p className="text-xs text-destructive">
-                        {signupForm.formState.errors.password.message}
-                      </p>
-                    )}
-                  </div>
-                  <Button type="submit" className="w-full" disabled={submitting}>
-                    Create account
-                  </Button>
-                  <p className="text-center text-xs text-muted-foreground">
-                    By creating an account, you agree to our{" "}
-                    <Link href="/terms-of-service" className="underline hover:text-foreground">
-                      Terms of Service
-                    </Link>{" "}
-                    and{" "}
-                    <Link href="/privacy-policy" className="underline hover:text-foreground">
-                      Privacy Policy
-                    </Link>
-                    .
-                  </p>
-                </form>
+                {!agreedToTerms ? (
+                  <AcceptTermsGate onAgree={() => setAgreedToTerms(true)} />
+                ) : (
+                  <form onSubmit={signupForm.handleSubmit(onSignUp)} className="space-y-4">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="signup-email">Email</Label>
+                      <Input id="signup-email" type="email" {...signupForm.register("email")} />
+                      {signupForm.formState.errors.email && (
+                        <p className="text-xs text-destructive">
+                          {signupForm.formState.errors.email.message}
+                        </p>
+                      )}
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="signup-password">Password</Label>
+                      <Input
+                        id="signup-password"
+                        type="password"
+                        {...signupForm.register("password")}
+                      />
+                      {signupForm.formState.errors.password && (
+                        <p className="text-xs text-destructive">
+                          {signupForm.formState.errors.password.message}
+                        </p>
+                      )}
+                    </div>
+                    <Button type="submit" className="w-full" disabled={submitting}>
+                      Create account
+                    </Button>
+                    <p className="text-center text-xs text-muted-foreground">
+                      By creating an account, you agree to our{" "}
+                      <Link href="/terms-of-service" className="underline hover:text-foreground">
+                        Terms of Service
+                      </Link>{" "}
+                      and{" "}
+                      <Link href="/privacy-policy" className="underline hover:text-foreground">
+                        Privacy Policy
+                      </Link>
+                      .
+                    </p>
+                  </form>
+                )}
               </TabsContent>
             </Tabs>
           </CardContent>
