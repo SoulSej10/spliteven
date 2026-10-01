@@ -64,14 +64,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // chance to load. This is the "session doesn't survive a restart" bug:
     // the session was never actually lost, the redirect just fired one
     // render too early.
-    supabase.auth.getSession().then(async ({ data }) => {
-      if (!mounted) return;
-      setSession(data.session);
-      if (data.session?.user.id) {
-        await fetchProfile(data.session.user.id);
-      }
-      if (mounted) setLoading(false);
-    });
+    supabase.auth
+      .getSession()
+      .then(async ({ data }) => {
+        if (!mounted) return;
+        setSession(data.session);
+        if (data.session?.user.id) {
+          await fetchProfile(data.session.user.id);
+        }
+      })
+      .catch((err) => {
+        // Without this catch, a rejected getSession() (corrupted stored
+        // session, storage read failure) left `loading` stuck true forever -
+        // SplashGate never progresses past its own spinner in that case.
+        console.error("EvenSplit: getSession failed", err);
+      })
+      .finally(() => {
+        if (mounted) setLoading(false);
+      });
 
     const { data: subscription } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession);

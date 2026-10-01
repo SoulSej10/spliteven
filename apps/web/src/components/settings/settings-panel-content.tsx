@@ -38,6 +38,7 @@ import { upsertProfile, uploadAvatar } from "@/lib/api/profile";
 import { importPersonalLedgerRows } from "@/lib/api/personal";
 import { downloadPersonalLedgerCsv, parsePersonalLedgerCsv, summarizePersonalImport } from "@/lib/csv";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { isPasswordPwned } from "@/lib/pwned-password";
 import { CURRENCIES } from "@/lib/format";
 
 /** Shared between the /settings page and the left-sliding Sheet opened from the avatar menu. */
@@ -105,6 +106,18 @@ export function SettingsPanelContent({ onClose }: { onClose?: () => void }) {
   async function onSubmitPassword(values: PasswordResetInput) {
     setChangingPassword(true);
     try {
+      try {
+        const { pwned, count } = await isPasswordPwned(values.password);
+        if (pwned) {
+          toast.error(
+            `This password has appeared in ${count.toLocaleString()} data breach${count === 1 ? "" : "es"}. Please choose a different one.`
+          );
+          return;
+        }
+      } catch {
+        // Best-effort check - never block a password change if HaveIBeenPwned is unreachable.
+      }
+
       const supabase = getSupabaseBrowserClient();
       const { error } = await supabase.auth.updateUser({ password: values.password });
       if (error) throw error;

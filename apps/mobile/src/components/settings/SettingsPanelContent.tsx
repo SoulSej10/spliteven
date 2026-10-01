@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 import { useAuth } from "@/hooks/use-auth";
 import { getSupabaseClient } from "@/lib/supabase/client";
+import { isPasswordPwned } from "@/lib/pwned-password";
 import { ensureNotificationPermission, registerForPushTokenAsync, savePushToken } from "@/lib/notifications";
 import { hasShownNotificationNudge, setNotificationNudgeShown } from "@/lib/device-flags";
 import { upsertProfile } from "@/lib/api/profile";
@@ -108,6 +109,19 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
     }
     setChangingPassword(true);
     try {
+      try {
+        const { pwned, count } = await isPasswordPwned(newPassword);
+        if (pwned) {
+          Alert.alert(
+            "Choose a different password",
+            `This password has appeared in ${count.toLocaleString()} data breach${count === 1 ? "" : "es"}. Please choose a different one.`
+          );
+          return;
+        }
+      } catch {
+        // Best-effort check - never block a password change if HaveIBeenPwned is unreachable.
+      }
+
       const supabase = getSupabaseClient();
       const { error } = await supabase.auth.updateUser({ password: newPassword });
       if (error) throw error;

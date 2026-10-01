@@ -13,6 +13,7 @@ import { BottomActionBar } from "@/components/ui/BottomActionBar";
 import { AlertModal } from "@/components/ui/AlertModal";
 import { AcceptTermsGate } from "@/components/legal/AcceptTermsGate";
 import { getSupabaseClient } from "@/lib/supabase/client";
+import { isPasswordPwned } from "@/lib/pwned-password";
 
 export default function SignUpScreen() {
   const [submitting, setSubmitting] = useState(false);
@@ -27,15 +28,29 @@ export default function SignUpScreen() {
   const iconColor = colorScheme === "dark" ? "#F4F5F3" : "#0A0A0A";
   const { handleSubmit, formState, setValue, watch } = useForm<SignUpInput>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { email: "", password: "", confirmPassword: "" },
   });
 
   async function onSubmit(values: SignUpInput) {
     setSubmitting(true);
     try {
+      try {
+        const { pwned, count } = await isPasswordPwned(values.password);
+        if (pwned) {
+          Alert.alert(
+            "Choose a different password",
+            `This password has appeared in ${count.toLocaleString()} data breach${count === 1 ? "" : "es"}. Please choose a different one.`
+          );
+          return;
+        }
+      } catch {
+        // Best-effort check - never block signup if HaveIBeenPwned is unreachable.
+      }
+
       const supabase = getSupabaseClient();
       const { data, error } = await supabase.auth.signUp({
-        ...values,
+        email: values.email,
+        password: values.password,
         options: { emailRedirectTo: Linking.createURL("auth/callback") },
       });
       if (error) throw error;
@@ -110,6 +125,13 @@ export default function SignUpScreen() {
             onChangeText={(t) => setValue("password", t)}
             value={watch("password")}
             error={formState.errors.password?.message}
+          />
+          <TextField
+            label="Confirm password"
+            secureTextEntry
+            onChangeText={(t) => setValue("confirmPassword", t)}
+            value={watch("confirmPassword")}
+            error={formState.errors.confirmPassword?.message}
           />
 
           <View className="mt-2 flex-row items-center justify-center gap-1">
