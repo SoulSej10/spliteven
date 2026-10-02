@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ThemeProvider } from "next-themes";
 import {
   ArrowRight,
   ArrowsLeftRight as ArrowLeftRight,
@@ -17,6 +18,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Logo } from "@/components/brand/logo";
+
+// EAS preview-build artifacts expire after ~14 days (free tier retention),
+// so this needs refreshing whenever a new build is cut - see PUBLISHING.md
+// for the rebuild command. Points at the latest preview .apk as of this edit.
+const APK_DOWNLOAD_URL = "https://expo.dev/artifacts/eas/PLACEHOLDER.apk";
 
 const splitTypes = [
   { label: "Equal", detail: "Split evenly across everyone" },
@@ -103,7 +109,22 @@ const financeFeatures = [
   },
 ];
 
+// The public landing page always renders light, regardless of a visitor's
+// system preference or a logged-in user's stored dark-mode setting (the
+// app's theme state persists across the whole site via next-themes) - a
+// marketing page shouldn't flip to dark just because someone enabled dark
+// mode in their own account settings. `forcedTheme` on a nested ThemeProvider
+// overrides the root provider for this subtree only, without disabling dark
+// mode anywhere else in the app.
 export default function LandingPage() {
+  return (
+    <ThemeProvider attribute="class" forcedTheme="light" disableTransitionOnChange>
+      <LandingPageContent />
+    </ThemeProvider>
+  );
+}
+
+function LandingPageContent() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 sm:px-6">
@@ -209,6 +230,25 @@ export default function LandingPage() {
                 Settle up
               </Button>
             </div>
+          </div>
+        </section>
+
+        {/* Promo video: one clip, no autoplay - `preload="none"` means nothing
+            downloads until the viewer actually presses play, so the section
+            costs nothing on initial page load beyond the poster image. */}
+        <section className="mx-auto w-full max-w-4xl px-4 py-10 sm:px-6">
+          <h2 className="mb-5 text-center text-2xl font-semibold tracking-tight sm:text-3xl">
+            See it in 15 seconds
+          </h2>
+          <div className="overflow-hidden rounded-lg border border-border/60 bg-card shadow-sm">
+            <video
+              controls
+              preload="none"
+              poster="/video/promo-poster.jpg"
+              className="aspect-video w-full bg-black"
+            >
+              <source src="/video/promo.mp4" type="video/mp4" />
+            </video>
           </div>
         </section>
 
@@ -407,11 +447,16 @@ export default function LandingPage() {
               <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-light text-primary">
                 <DownloadSimple className="h-5 w-5" />
               </span>
-              <h3 className="mt-4 font-medium">On the web today, Android on the way</h3>
+              <h3 className="mt-4 font-medium">On the web, and on Android today</h3>
               <p className="mt-1.5 text-sm text-muted-foreground">
-                Use SplitEven right in your browser now - a native Android app is on its way to
-                Google Play.
+                Use SplitEven right in your browser, or download the Android app directly - a
+                Google Play listing is on its way.
               </p>
+              <Button variant="outline" size="sm" asChild className="mt-4 rounded-full">
+                <a href={APK_DOWNLOAD_URL} download>
+                  <DownloadSimple className="h-4 w-4" /> Download APK
+                </a>
+              </Button>
             </div>
           </div>
         </section>

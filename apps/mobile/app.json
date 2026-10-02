@@ -21,7 +21,8 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "edgeToEdgeEnabled": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -63,7 +64,8 @@
           }
         }
       ],
-      "@sentry/react-native"
+      "@sentry/react-native",
+      "./plugins/withAndroidResizableActivity"
     ],
     "experiments": {
       "typedRoutes": false
