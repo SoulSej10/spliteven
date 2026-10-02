@@ -22,7 +22,7 @@ import { Logo } from "@/components/brand/logo";
 // EAS preview-build artifacts expire after ~14 days (free tier retention),
 // so this needs refreshing whenever a new build is cut - see PUBLISHING.md
 // for the rebuild command. Points at the latest preview .apk as of this edit.
-const APK_DOWNLOAD_URL = "https://expo.dev/artifacts/eas/PLACEHOLDER.apk";
+const APK_DOWNLOAD_URL = "https://expo.dev/artifacts/eas/2Uqn_VAq78MNXFJc-9cJOSmWpQJZblZgkxdqB_rafkc.apk";
 
 const splitTypes = [
   { label: "Equal", detail: "Split evenly across everyone" },
