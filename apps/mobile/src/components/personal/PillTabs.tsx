@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { useColorScheme } from "nativewind";
 import { EdgeFade } from "@/components/ui/EdgeFade";
@@ -23,9 +24,23 @@ export function PillTabs<T extends string>({
   const { colorScheme } = useColorScheme();
   const inactiveBg = colorScheme === "dark" ? "rgba(255,255,255,0.05)" : "#F7F8F7";
 
+  // The ScrollView otherwise always starts at offset 0, so if `value` is set
+  // from outside (e.g. Settings' "Manage" shortcuts jumping straight to a
+  // sub-tab) and that tab isn't one of the first few, the active tab renders
+  // off-screen with no visible selection at all. Track each pill's x offset
+  // and scroll it into view whenever the active value changes.
+  const scrollRef = useRef<ScrollView>(null);
+  const offsets = useRef<Partial<Record<T, number>>>({});
+
+  useEffect(() => {
+    const x = offsets.current[value];
+    if (x !== undefined) scrollRef.current?.scrollTo({ x: Math.max(x - 20, 0), animated: true });
+  }, [value]);
+
   return (
     <View style={{ position: "relative" }}>
       <ScrollView
+        ref={scrollRef}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerClassName="items-center gap-1.5 px-5 pb-3"
@@ -36,6 +51,9 @@ export function PillTabs<T extends string>({
             <Pressable
               key={opt.value}
               onPress={() => onChange(opt.value)}
+              onLayout={(e) => {
+                offsets.current[opt.value] = e.nativeEvent.layout.x;
+              }}
               className="flex-row items-center gap-1 rounded-lg px-3 py-1.5"
               style={{ backgroundColor: active ? "#2F8F7D" : inactiveBg }}
             >
