@@ -9,6 +9,7 @@ import {
   computeExpenseTrend,
   computeSharedFinanceSummary,
   filterTransactionsForCurrentMonth,
+  filterTransactionsForMonth,
 } from "../personalFinance";
 
 const CASH = "11111111-1111-1111-1111-111111111111";
@@ -288,6 +289,21 @@ describe("filterTransactionsForCurrentMonth", () => {
 
   it("returns an empty array when nothing falls in the current month", () => {
     expect(filterTransactionsForCurrentMonth([{ occurred_at: "1999-01-01T00:00:00Z" }])).toEqual([]);
+  });
+});
+
+describe("filterTransactionsForMonth", () => {
+  it("keeps only transactions occurring in the given (0-indexed) month", () => {
+    const transactions = [
+      { occurred_at: "2026-03-15T00:00:00Z" },
+      { occurred_at: "2026-02-28T00:00:00Z" },
+      { occurred_at: "2025-03-15T00:00:00Z" },
+    ];
+    expect(filterTransactionsForMonth(transactions, 2026, 2)).toEqual([{ occurred_at: "2026-03-15T00:00:00Z" }]);
+  });
+
+  it("returns an empty array when nothing falls in the given month", () => {
+    expect(filterTransactionsForMonth([{ occurred_at: "1999-01-01T00:00:00Z" }], 2026, 0)).toEqual([]);
   });
 });
 

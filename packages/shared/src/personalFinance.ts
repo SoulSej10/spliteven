@@ -141,7 +141,22 @@ export function filterTransactionsForCurrentMonth<T extends Pick<PersonalTransac
   transactions: T[]
 ): T[] {
   const now = new Date();
-  const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  return filterTransactionsForMonth(transactions, now.getFullYear(), now.getMonth());
+}
+
+/**
+ * Same scoping as filterTransactionsForCurrentMonth, but for an arbitrary
+ * month - needed wherever a screen lets you navigate to a different month
+ * (Insights' merged chart+calendar view) rather than always meaning "now".
+ * `month` is 0-indexed, matching `Date.getMonth()`, so callers can pass a
+ * `Date` straight through without an off-by-one.
+ */
+export function filterTransactionsForMonth<T extends Pick<PersonalTransaction, "occurred_at">>(
+  transactions: T[],
+  year: number,
+  month: number
+): T[] {
+  const monthKey = `${year}-${String(month + 1).padStart(2, "0")}`;
   return transactions.filter((tx) => tx.occurred_at.slice(0, 7) === monthKey);
 }
 

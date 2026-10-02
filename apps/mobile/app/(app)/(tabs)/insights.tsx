@@ -2,12 +2,12 @@ import { useMemo, useRef, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import { Bell, Stack as Layers, Receipt } from "phosphor-react-native";
+import { Bell, CaretLeft as ChevronLeft, CaretRight as ChevronRight, Stack as Layers, Receipt } from "phosphor-react-native";
 import {
   computeCategoryBreakdown,
   computeDailyTotals,
   computeSharedFinanceSummary,
-  filterTransactionsForCurrentMonth,
+  filterTransactionsForMonth,
   type DailyTotal,
 } from "@evensplit/shared";
 import { Avatar } from "@/components/ui/Avatar";
@@ -28,6 +28,10 @@ import { PageTour, usePageTour } from "@/components/onboarding/PageTour";
 
 const DONUT_COLORS = ["#2F8F7D", "#5FBBA5", "#F5A524", "#009B87", "#D95F5F", "#726C7D"];
 const CATEGORY_ALL = "__all__";
+const MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
 
 function CategoryDonut({
   title,
@@ -71,10 +75,14 @@ function CategoryDonut({
 }
 
 /**
- * Top-level Insights tab — spending broken down by category, per currency
- * (currencies are never blended into one total; a group's PHP expenses and
- * another group's USD expenses are shown as separate sections). Aggregates
- * across every group the user belongs to, unlike the per-group SpendingChart.
+ * Top-level Insights tab. Personal vs Shared replaces the old Charts vs
+ * Calendar split - the calendar isn't a separate mode anymore, it's part of
+ * whichever side (personal or shared) you're looking at, right below that
+ * side's chart. A single month navigator drives both the chart and the
+ * calendar together so they always describe the same period - previously
+ * the chart silently meant "the real current month" while the calendar had
+ * its own independently-navigable month, which could show two different
+ * periods on screen at once with no indication they disagreed.
  */
 export default function InsightsScreen() {
   const { profile, authUser } = useAuth();
@@ -85,7 +93,7 @@ export default function InsightsScreen() {
   const { data: personalCategories } = usePersonalCategories();
   const { data: personalAccounts } = usePersonalAccounts();
 
-  const [view, setView] = useState<"charts" | "calendar">("charts");
+  const [view, setView] = useState<"personal" | "shared">("personal");
   const [categoryFilter, setCategoryFilter] = useState<string>(CATEGORY_ALL);
   const [calendarDate, setCalendarDate] = useState(() => new Date());
 
@@ -95,10 +103,14 @@ export default function InsightsScreen() {
   const { replaySignal } = usePageTour("insights");
 
   const personalCurrency = personalAccounts?.[0]?.currency ?? "PHP";
+  const monthKey = `${calendarDate.getFullYear()}-${String(calendarDate.getMonth() + 1).padStart(2, "0")}`;
 
+  // Everything below is scoped to `calendarDate`'s month (not "now"), so the
+  // chart and the calendar underneath it always agree on which period
+  // they're describing, and the prev/next arrows move both together.
   const monthTransactions = useMemo(
-    () => filterTransactionsForCurrentMonth(personalTransactions ?? []),
-    [personalTransactions]
+    () => filterTransactionsForMonth(personalTransactions ?? [], calendarDate.getFullYear(), calendarDate.getMonth()),
+    [personalTransactions, calendarDate]
   );
 
   const personalBreakdown = useMemo(
@@ -109,29 +121,30 @@ export default function InsightsScreen() {
 
   const sharedSummary = useMemo(() => computeSharedFinanceSummary(monthTransactions), [monthTransactions]);
 
-  /** This user's own share of every group expense this month, per currency — never blended. */
+  const monthExpenses = useMemo(
+    () => (expenses ?? []).filter((e) => e.expense_date.slice(0, 7) === monthKey),
+    [expenses, monthKey]
+  );
+
+  /** This user's own share of this month's group expenses, per currency — never blended. */
   const sharedParticipationByCurrency = useMemo(() => {
-    const now = new Date();
-    const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
     const totals = new Map<string, number>();
-    for (const e of expenses ?? []) {
-      if (e.expense_date.slice(0, 7) !== monthKey) continue;
+    for (const e of monthExpenses) {
       const myShare = e.expense_shares.find((s) => s.user_id === authUser?.id)?.share_amount ?? 0;
       totals.set(e.currency, (totals.get(e.currency) ?? 0) + myShare);
     }
     return [...totals.entries()].filter(([, amount]) => amount > 0.005);
-  }, [expenses, authUser]);
+  }, [monthExpenses, authUser]);
 
-  const hasNarrative =
-    personalMonthTotal > 0.005 ||
-    sharedParticipationByCurrency.length > 0 ||
-    sharedSummary.advanced > 0.005 ||
-    sharedSummary.recovered > 0.005;
+  const hasPersonalNarrative = personalMonthTotal > 0.005;
+  const hasSharedNarrative =
+    sharedParticipationByCurrency.length > 0 || sharedSummary.advanced > 0.005 || sharedSummary.recovered > 0.005;
 
+  /** Group spending by category per currency, scoped to the selected month like everything else here. */
   const byCurrency = useMemo(() => {
     const groups = new Map<string, { label: string; amount: number }[]>();
     const totals = new Map<string, number>();
-    for (const e of expenses ?? []) {
+    for (const e of monthExpenses) {
       totals.set(e.currency, (totals.get(e.currency) ?? 0) + e.amount);
       // category is free text, not an enum - lowercase it for grouping so
       // "Food" and "food" don't split into two entries.
@@ -149,22 +162,19 @@ export default function InsightsScreen() {
         categories: categories.sort((a, b) => b.amount - a.amount).slice(0, 6),
       }))
       .sort((a, b) => b.total - a.total);
-  }, [expenses]);
+  }, [monthExpenses]);
 
-  /** All free-text group-expense category labels seen, for the calendar filter pills. */
+  /** All free-text group-expense category labels seen this month, for the calendar filter pills. */
   const groupCategoryLabels = useMemo(() => {
     const labels = new Set<string>();
-    for (const e of expenses ?? []) labels.add(e.category?.trim().toLowerCase() || "other");
+    for (const e of monthExpenses) labels.add(e.category?.trim().toLowerCase() || "other");
     return [...labels].sort();
-  }, [expenses]);
-
-  const monthKey = `${calendarDate.getFullYear()}-${String(calendarDate.getMonth() + 1).padStart(2, "0")}`;
+  }, [monthExpenses]);
 
   /** Group expenses (all currencies mixed — the calendar is a date-shape view, not a totals view) as daily totals. */
   const groupDailyTotals: DailyTotal[] = useMemo(() => {
     const totals = new Map<string, number>();
-    for (const e of expenses ?? []) {
-      if (e.expense_date.slice(0, 7) !== monthKey) continue;
+    for (const e of monthExpenses) {
       const label = e.category?.trim().toLowerCase() || "other";
       if (categoryFilter !== CATEGORY_ALL && label !== categoryFilter) continue;
       const day = e.expense_date.slice(0, 10);
@@ -173,16 +183,13 @@ export default function InsightsScreen() {
     return [...totals.entries()]
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([date, expense]) => ({ date, expense, income: 0 }));
-  }, [expenses, monthKey, categoryFilter]);
+  }, [monthExpenses, categoryFilter]);
 
-  const personalCalendarTransactions = useMemo(
-    () => (personalTransactions ?? []).filter((t) => t.occurred_at.slice(0, 7) === monthKey),
-    [personalTransactions, monthKey]
-  );
-  const personalDailyTotals = useMemo(
-    () => computeDailyTotals(personalCalendarTransactions),
-    [personalCalendarTransactions]
-  );
+  const personalDailyTotals = useMemo(() => computeDailyTotals(monthTransactions), [monthTransactions]);
+
+  function goToMonth(delta: number) {
+    setCalendarDate((d) => new Date(d.getFullYear(), d.getMonth() + delta, 1));
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-neutral-100 dark:bg-neutral-900" edges={["top"]}>
@@ -206,7 +213,7 @@ export default function InsightsScreen() {
 
       <View className="px-5 pb-2 pt-1">
         <Text className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">Insights</Text>
-        <Text className="text-neutral-500">Where your shared money is going</Text>
+        <Text className="text-neutral-500">Where your money is going</Text>
       </View>
 
       <ScrollView contentContainerClassName="gap-4 px-5 pb-4 pt-2" showsVerticalScrollIndicator={false}>
@@ -241,89 +248,122 @@ export default function InsightsScreen() {
               value={view}
               onChange={setView}
               options={[
-                { label: "Charts", value: "charts" },
-                { label: "Calendar", value: "calendar" },
+                { label: "Personal", value: "personal" },
+                { label: "Shared", value: "shared" },
               ]}
             />
           </View>
         )}
 
-        {!isLoading && !isError && view === "charts" && hasNarrative && (
-          <View ref={chartsRef} collapsable={false}>
-          <Card className="gap-1.5">
-            <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">This month</Text>
-            {personalMonthTotal > 0.005 && (
-              <Text className="text-sm text-neutral-700 dark:text-neutral-300">
-                You spent {formatMoney(personalMonthTotal, personalCurrency)} personally.
-              </Text>
-            )}
-            {sharedParticipationByCurrency.map(([currency, amount]) => (
-              <Text key={currency} className="text-sm text-neutral-700 dark:text-neutral-300">
-                You were part of {formatMoney(amount, currency)} in shared group spending.
-              </Text>
-            ))}
-            {(sharedSummary.advanced > 0.005 || sharedSummary.recovered > 0.005) && (
-              <Text className="text-sm text-neutral-700 dark:text-neutral-300">
-                You've advanced {formatMoney(sharedSummary.advanced, personalCurrency)} for others and recovered{" "}
-                {formatMoney(sharedSummary.recovered, personalCurrency)}
-                {sharedSummary.outstanding > 0.005
-                  ? `, with ${formatMoney(sharedSummary.outstanding, personalCurrency)} still outstanding.`
-                  : "."}
-              </Text>
-            )}
-          </Card>
+        {!isLoading && !isError && (
+          <View className="flex-row items-center justify-between">
+            <Pressable
+              onPress={() => goToMonth(-1)}
+              hitSlop={10}
+              className="h-8 w-8 items-center justify-center rounded-lg bg-neutral-500/10"
+            >
+              <ChevronLeft color="#6B7169" size={16} />
+            </Pressable>
+            <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+              {MONTH_NAMES[calendarDate.getMonth()]} {calendarDate.getFullYear()}
+            </Text>
+            <Pressable
+              onPress={() => goToMonth(1)}
+              hitSlop={10}
+              className="h-8 w-8 items-center justify-center rounded-lg bg-neutral-500/10"
+            >
+              <ChevronRight color="#6B7169" size={16} />
+            </Pressable>
           </View>
         )}
 
-        {!isLoading && !isError && view === "charts" && personalBreakdown.length > 0 && (
-          <CategoryDonut
-            title="Personal spending by category"
-            total={personalMonthTotal}
-            currency={personalCurrency}
-            categories={personalBreakdown.map((c) => ({
-              label: c.category_name,
-              icon: personalCategories?.find((cat) => cat.id === c.category_id)?.icon,
-              amount: c.amount,
-            }))}
-          />
-        )}
+        {!isLoading && !isError && view === "personal" && (
+          <View ref={chartsRef} collapsable={false} className="gap-4">
+            {hasPersonalNarrative && (
+              <Card className="gap-1.5">
+                <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                  {MONTH_NAMES[calendarDate.getMonth()]}
+                </Text>
+                <Text className="text-sm text-neutral-700 dark:text-neutral-300">
+                  You spent {formatMoney(personalMonthTotal, personalCurrency)} personally.
+                </Text>
+              </Card>
+            )}
 
-        {!isLoading && !isError && view === "charts" && byCurrency.length === 0 && (
-          <Text className="mt-10 rounded-card border border-dashed border-neutral-500/25 py-14 text-center text-sm text-neutral-500">
-            No expenses yet. Once you add some, spending by category shows up here.
-          </Text>
-        )}
+            {personalBreakdown.length > 0 ? (
+              <CategoryDonut
+                title="Personal spending by category"
+                total={personalMonthTotal}
+                currency={personalCurrency}
+                categories={personalBreakdown.map((c) => ({
+                  label: c.category_name,
+                  icon: personalCategories?.find((cat) => cat.id === c.category_id)?.icon,
+                  amount: c.amount,
+                }))}
+              />
+            ) : (
+              <Text className="rounded-card border border-dashed border-neutral-500/25 py-14 text-center text-sm text-neutral-500">
+                No personal expenses this month.
+              </Text>
+            )}
 
-        {!isLoading &&
-          !isError &&
-          view === "charts" &&
-          byCurrency.map(({ currency, total, categories }) => (
-            <CategoryDonut
-              key={currency}
-              title={`Spending by category · ${currency}`}
-              total={total}
-              currency={currency}
-              categories={categories}
-            />
-          ))}
-
-        {!isLoading && !isError && view === "calendar" && (
-          <>
             <Card className="gap-3">
-              <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">Personal</Text>
+              <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">Calendar</Text>
               <MonthCalendar
                 year={calendarDate.getFullYear()}
                 month={calendarDate.getMonth()}
                 dailyTotals={personalDailyTotals}
                 kind="expense"
                 currency={personalCurrency}
-                onPrevMonth={() => setCalendarDate((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1))}
-                onNextMonth={() => setCalendarDate((d) => new Date(d.getFullYear(), d.getMonth() + 1, 1))}
+                onPrevMonth={() => goToMonth(-1)}
+                onNextMonth={() => goToMonth(1)}
               />
             </Card>
+          </View>
+        )}
+
+        {!isLoading && !isError && view === "shared" && (
+          <View className="gap-4">
+            {hasSharedNarrative && (
+              <Card className="gap-1.5">
+                <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                  {MONTH_NAMES[calendarDate.getMonth()]}
+                </Text>
+                {sharedParticipationByCurrency.map(([currency, amount]) => (
+                  <Text key={currency} className="text-sm text-neutral-700 dark:text-neutral-300">
+                    You were part of {formatMoney(amount, currency)} in shared group spending.
+                  </Text>
+                ))}
+                {(sharedSummary.advanced > 0.005 || sharedSummary.recovered > 0.005) && (
+                  <Text className="text-sm text-neutral-700 dark:text-neutral-300">
+                    You've advanced {formatMoney(sharedSummary.advanced, personalCurrency)} for others and recovered{" "}
+                    {formatMoney(sharedSummary.recovered, personalCurrency)}
+                    {sharedSummary.outstanding > 0.005
+                      ? `, with ${formatMoney(sharedSummary.outstanding, personalCurrency)} still outstanding.`
+                      : "."}
+                  </Text>
+                )}
+              </Card>
+            )}
+
+            {byCurrency.length > 0 ? (
+              byCurrency.map(({ currency, total, categories }) => (
+                <CategoryDonut
+                  key={currency}
+                  title={`Spending by category · ${currency}`}
+                  total={total}
+                  currency={currency}
+                  categories={categories}
+                />
+              ))
+            ) : (
+              <Text className="rounded-card border border-dashed border-neutral-500/25 py-14 text-center text-sm text-neutral-500">
+                No group expenses this month.
+              </Text>
+            )}
 
             <Card className="gap-3">
-              <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">Group expenses</Text>
+              <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">Calendar</Text>
               <View className="flex-row flex-wrap gap-2">
                 <Pressable
                   onPress={() => setCategoryFilter(CATEGORY_ALL)}
@@ -370,11 +410,11 @@ export default function InsightsScreen() {
                 dailyTotals={groupDailyTotals}
                 kind="expense"
                 currency={byCurrency[0]?.currency ?? personalCurrency}
-                onPrevMonth={() => setCalendarDate((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1))}
-                onNextMonth={() => setCalendarDate((d) => new Date(d.getFullYear(), d.getMonth() + 1, 1))}
+                onPrevMonth={() => goToMonth(-1)}
+                onNextMonth={() => goToMonth(1)}
               />
             </Card>
-          </>
+          </View>
         )}
       </ScrollView>
 
@@ -389,13 +429,13 @@ export default function InsightsScreen() {
           },
           {
             ref: viewToggleRef,
-            title: "Charts or Calendar",
-            body: "Switch between category breakdowns and a day-by-day calendar view of your spending.",
+            title: "Personal or Shared",
+            body: "Switch between your own spending and your groups' shared spending - each with its own chart and calendar.",
           },
           {
             ref: chartsRef,
-            title: "Personal + shared spending",
-            body: "See how much you spent personally this month, plus your share of group expenses, all in one place.",
+            title: "Chart and calendar together",
+            body: "See a category breakdown and a day-by-day calendar for the same month, side by side.",
           },
         ]}
       />
