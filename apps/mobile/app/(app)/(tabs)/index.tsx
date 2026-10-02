@@ -141,7 +141,7 @@ export default function HomeScreen() {
         />
 
         {sharedBalances.length > 0 && (
-          <View className="mb-4 gap-2 rounded-card border border-neutral-500/15 bg-surface p-4 dark:bg-surface-dark">
+          <View className="mb-6 gap-2 rounded-card border border-neutral-500/15 bg-surface p-4 dark:bg-surface-dark">
             <Text className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
               Shared balances
             </Text>
@@ -198,7 +198,7 @@ export default function HomeScreen() {
 
         {budgetHighlight && (
           <Pressable onPress={() => router.navigate("/(app)/(tabs)/finances")}>
-            <Card className="mb-4 gap-2">
+            <Card className="mb-6 gap-2">
               <View className="flex-row items-center gap-2">
                 <PiggyBank color="#2F8F7D" size={16} />
                 <Text className="flex-1 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
@@ -222,7 +222,7 @@ export default function HomeScreen() {
         )}
 
         {upcomingRecurring.length > 0 && (
-          <View className="mb-4 gap-2">
+          <View className="mb-6 gap-2">
             <Text className="text-base font-bold text-neutral-900 dark:text-neutral-100">Upcoming</Text>
             {upcomingRecurring.map((e) => (
               <Card key={e.id} className="flex-row items-center gap-3 py-2.5">
@@ -262,7 +262,7 @@ export default function HomeScreen() {
         {!groupsLoading && preview.map((g) => <GroupCard key={g.id} group={g} />)}
 
         {recentActivity.length > 0 && (
-          <View className="mt-2 gap-2">
+          <View className="mt-6 gap-2">
             <View className="flex-row items-center justify-between">
               <Text className="text-base font-bold text-neutral-900 dark:text-neutral-100">Recent activity</Text>
               <Pressable

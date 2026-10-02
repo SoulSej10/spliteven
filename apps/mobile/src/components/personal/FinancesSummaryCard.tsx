@@ -31,7 +31,7 @@ export function FinancesSummaryCard() {
   if (!accounts || accounts.length === 0) return null;
 
   return (
-    <View className="mx-5 mb-4 overflow-hidden rounded-card bg-primary-deep">
+    <View className="mb-4 overflow-hidden rounded-card bg-primary-deep">
       <View className="gap-4 bg-primary/95 px-5 py-5">
         <View>
           <Text className="text-xs font-medium text-white/70">Total balance</Text>

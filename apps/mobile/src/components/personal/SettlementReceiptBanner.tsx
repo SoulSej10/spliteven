@@ -48,7 +48,7 @@ export function SettlementReceiptBanner({
   }
 
   return (
-    <View className="mb-4 gap-2">
+    <View className="mb-6 gap-2">
       {unconfirmed.map((s) => (
         <Card key={s.id} className="gap-2 border border-primary/20 py-3">
           <Text className="text-sm text-neutral-900 dark:text-neutral-100">

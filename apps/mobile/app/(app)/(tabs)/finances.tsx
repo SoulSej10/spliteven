@@ -103,7 +103,7 @@ export default function FinancesScreen() {
         Finances
       </Text>
 
-      <View ref={summaryRef} collapsable={false}>
+      <View ref={summaryRef} collapsable={false} className="px-5">
         <FinancesSummaryCard />
       </View>
 
