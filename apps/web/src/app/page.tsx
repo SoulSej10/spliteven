@@ -127,19 +127,21 @@ export default function LandingPage() {
 function LandingPageContent() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 sm:px-6">
-        <div className="flex items-center gap-2">
-          <Logo size={32} />
-          <span className="text-lg font-semibold tracking-tight">SplitEven</span>
+      <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
+          <div className="flex items-center gap-2">
+            <Logo size={32} />
+            <span className="text-lg font-semibold tracking-tight">SplitEven</span>
+          </div>
+          <nav className="flex items-center gap-2">
+            <Button variant="ghost" asChild>
+              <Link href="/login">Log in</Link>
+            </Button>
+            <Button asChild className="rounded-full px-5">
+              <Link href="/login">Get started</Link>
+            </Button>
+          </nav>
         </div>
-        <nav className="flex items-center gap-2">
-          <Button variant="ghost" asChild>
-            <Link href="/login">Log in</Link>
-          </Button>
-          <Button asChild className="rounded-full px-5">
-            <Link href="/login">Get started</Link>
-          </Button>
-        </nav>
       </header>
 
       <main className="flex-1">
