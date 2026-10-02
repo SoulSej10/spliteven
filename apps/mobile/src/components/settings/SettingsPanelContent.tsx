@@ -6,7 +6,8 @@ import { useColorScheme } from "nativewind";
 import * as DocumentPicker from "expo-document-picker";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
-import { CaretRight as ChevronRight, Download, Key as KeyRound, ListChecks, SignOut as LogOut, PiggyBank, ShieldCheck, Tag, Trash as Trash2, Upload, Wallet, X } from "phosphor-react-native";
+import { CaretRight as ChevronRight, Crown, Download, Key as KeyRound, ListChecks, SignOut as LogOut, PiggyBank, ShieldCheck, Tag, Trash as Trash2, Upload, Wallet, X } from "phosphor-react-native";
+import { SUBSCRIPTION_ADMIN_EMAIL, SUBSCRIPTION_PLANS } from "@evensplit/shared";
 import { CURRENCIES } from "@/lib/format";
 import { Avatar } from "@/components/ui/Avatar";
 import { Card } from "@/components/ui/Card";
@@ -274,6 +275,57 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
             <ChevronRight color="#6B7169" size={20} />
           </Pressable>
         </Card>
+
+        {profile?.subscription_tier === "free" || !profile?.subscription_tier ? (
+          <Pressable
+            onPress={() => {
+              onClose();
+              router.push("/(app)/upgrade");
+            }}
+          >
+            <Card className="flex-row items-center gap-3 border-2 border-accent bg-accent/10">
+              <View className="h-10 w-10 items-center justify-center rounded-full bg-accent/20">
+                <Crown size={20} color="#F5A524" weight="fill" />
+              </View>
+              <View className="flex-1">
+                <Text className="font-semibold text-neutral-900 dark:text-neutral-100">Upgrade to Pro</Text>
+                <Text className="text-xs text-neutral-500">
+                  Unlimited groups, insights, and more from {SUBSCRIPTION_PLANS.pro.priceLabel}
+                </Text>
+              </View>
+              <ChevronRight color="#F5A524" size={18} />
+            </Card>
+          </Pressable>
+        ) : (
+          <Pressable
+            onPress={() => {
+              onClose();
+              router.push("/(app)/upgrade");
+            }}
+          >
+            <Card className="flex-row items-center gap-3">
+              <View className="h-10 w-10 items-center justify-center rounded-full bg-accent/20">
+                <Crown size={20} color="#F5A524" weight="fill" />
+              </View>
+              <View className="flex-1">
+                <Text className="font-semibold text-neutral-900 dark:text-neutral-100">
+                  {SUBSCRIPTION_PLANS[profile.subscription_tier].name} plan
+                </Text>
+                <Text className="text-xs text-neutral-500">Manage your subscription</Text>
+              </View>
+              <ChevronRight color="#6B7169" size={18} />
+            </Card>
+          </Pressable>
+        )}
+
+        {authUser?.email === SUBSCRIPTION_ADMIN_EMAIL ? (
+          <Pressable onPress={() => { onClose(); router.push("/(app)/admin-subscriptions"); }}>
+            <Card className="flex-row items-center justify-between">
+              <Text className="font-semibold text-neutral-900 dark:text-neutral-100">Subscription requests</Text>
+              <ChevronRight color="#6B7169" size={18} />
+            </Card>
+          </Pressable>
+        ) : null}
 
         <Card>
           <Text className="mb-3 font-semibold text-neutral-900 dark:text-neutral-100">Default currency</Text>

@@ -11,12 +11,33 @@ export type GroupMemberRole = "owner" | "member";
 
 export type SplitType = "equal" | "exact" | "percentage" | "shares";
 
+export type SubscriptionTier = "free" | "pro" | "premium";
+
 export interface User {
   id: UUID;
   display_name: string;
   avatar_url: string | null;
   default_currency: string;
   created_at: ISODateTimeString;
+  subscription_tier: SubscriptionTier;
+}
+
+export type SubscriptionPaymentMethod = "gcash" | "maya" | "bdo" | "maribank";
+
+export type SubscriptionRequestStatus = "pending" | "approved" | "rejected";
+
+export interface SubscriptionRequest {
+  id: UUID;
+  user_id: UUID;
+  plan: Exclude<SubscriptionTier, "free">;
+  payment_method: SubscriptionPaymentMethod;
+  amount: number;
+  reference_number: string;
+  status: SubscriptionRequestStatus;
+  admin_note: string | null;
+  created_at: ISODateTimeString;
+  reviewed_at: ISODateTimeString | null;
+  reviewed_by: UUID | null;
 }
 
 export interface Group {

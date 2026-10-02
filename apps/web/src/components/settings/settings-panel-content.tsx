@@ -7,7 +7,7 @@ import { useTheme } from "next-themes";
 import { useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { CaretRight as ChevronRight, Download, Key as KeyRound, ListChecks, SignOut as LogOut, PiggyBank, ShieldCheck, Tag, Trash as Trash2, Upload, Wallet } from "@phosphor-icons/react";
+import { CaretRight as ChevronRight, Crown, Download, Key as KeyRound, ListChecks, SignOut as LogOut, PiggyBank, ShieldCheck, Tag, Trash as Trash2, Upload, Wallet } from "@phosphor-icons/react";
 import {
   passwordResetSchema,
   profileSetupSchema,
@@ -40,6 +40,7 @@ import { downloadPersonalLedgerCsv, parsePersonalLedgerCsv, summarizePersonalImp
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { isPasswordPwned } from "@/lib/pwned-password";
 import { CURRENCIES } from "@/lib/format";
+import { SUBSCRIPTION_ADMIN_EMAIL, SUBSCRIPTION_PLANS } from "@evensplit/shared";
 
 /** Shared between the /settings page and the left-sliding Sheet opened from the avatar menu. */
 export function SettingsPanelContent({ onClose }: { onClose?: () => void }) {
@@ -200,6 +201,40 @@ export function SettingsPanelContent({ onClose }: { onClose?: () => void }) {
 
   return (
     <div className="space-y-6">
+      <button type="button" onClick={() => goTo("/upgrade")} className="block w-full text-left">
+        <Card className="rounded-2xl border-2 border-accent bg-accent/10 shadow-sm transition hover:bg-accent/15">
+          <CardContent className="flex items-center gap-3 py-4">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/20">
+              <Crown className="h-5 w-5 text-accent" weight="fill" />
+            </span>
+            <div className="flex-1">
+              <p className="font-semibold">
+                {profile?.subscription_tier && profile.subscription_tier !== "free"
+                  ? `${SUBSCRIPTION_PLANS[profile.subscription_tier].name} plan`
+                  : "Upgrade to Pro"}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {profile?.subscription_tier && profile.subscription_tier !== "free"
+                  ? "Manage your subscription"
+                  : `Unlimited groups, insights, and more from ${SUBSCRIPTION_PLANS.pro.priceLabel}`}
+              </p>
+            </div>
+            <ChevronRight className="h-4 w-4 text-accent" />
+          </CardContent>
+        </Card>
+      </button>
+
+      {authUser?.email === SUBSCRIPTION_ADMIN_EMAIL && (
+        <button type="button" onClick={() => goTo("/admin/subscriptions")} className="block w-full text-left">
+          <Card className="rounded-2xl border-border/60 shadow-sm transition hover:bg-muted">
+            <CardContent className="flex items-center justify-between py-4">
+              <p className="font-semibold">Subscription requests</p>
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            </CardContent>
+          </Card>
+        </button>
+      )}
+
       <Card className="rounded-2xl border-border/60 shadow-sm">
         <CardHeader>
           <CardTitle>Profile</CardTitle>
