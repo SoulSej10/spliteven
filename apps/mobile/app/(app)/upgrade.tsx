@@ -176,7 +176,7 @@ export default function UpgradeScreen() {
             </View>
 
             {selectedMethod === "maya" ? (
-              <Image source={MAYA_QR} className="h-56 w-full rounded-2xl" resizeMode="contain" />
+              <Image source={MAYA_QR} className="h-96 w-full rounded-2xl" resizeMode="contain" />
             ) : null}
 
             <View className="gap-1.5">
