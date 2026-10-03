@@ -24,6 +24,7 @@ import {
 } from "@phosphor-icons/react";
 import { SUBSCRIPTION_PLANS, type SubscriptionTier } from "@evensplit/shared";
 import { cn } from "@/lib/utils";
+import { WebScreensCarousel } from "@/components/landing/web-screens-carousel";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Logo } from "@/components/brand/logo";
@@ -347,30 +348,7 @@ function LandingPageContent() {
           <p className="mt-1 text-sm text-muted-foreground">
             Nothing to install. Open it in any browser, on desktop or phone.
           </p>
-          <div className="mt-6 grid gap-6 md:grid-cols-2">
-            {webScreens.map((screen) => (
-              <figure key={screen.src}>
-                <div className="overflow-hidden rounded-xl border border-border bg-card shadow-lg">
-                  <div className="flex items-center gap-1.5 border-b border-border/60 bg-muted px-3 py-2" aria-hidden>
-                    <span className="h-2.5 w-2.5 rounded-full bg-foreground/15" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-foreground/15" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-foreground/15" />
-                  </div>
-                  {/* eslint-disable-next-line @next/next/no-img-element -- small static WebP, lazy-loaded; next/image adds nothing here */}
-                  <img
-                    src={screen.src}
-                    alt={screen.alt}
-                    width={1100}
-                    height={580}
-                    loading="lazy"
-                    decoding="async"
-                    className="block h-auto w-full"
-                  />
-                </div>
-                <figcaption className="mt-3 text-center text-sm font-medium">{screen.caption}</figcaption>
-              </figure>
-            ))}
-          </div>
+          <WebScreensCarousel screens={webScreens} />
 
           <h3 className="mt-14 text-sm font-semibold uppercase tracking-wide text-primary">
             On Android
