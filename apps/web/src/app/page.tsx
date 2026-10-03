@@ -4,10 +4,17 @@ import Link from "next/link";
 import { ThemeProvider } from "next-themes";
 import {
   ArrowRight,
+  ArrowsClockwise,
   ArrowsLeftRight as ArrowLeftRight,
+  Bell,
   Calculator,
+  Camera,
   ChartPieSlice,
+  Check,
   DownloadSimple,
+  FileCsv,
+  LinkSimple,
+  Moon,
   PiggyBank,
   Receipt,
   ShieldCheck,
@@ -15,6 +22,8 @@ import {
   Users,
   Wallet,
 } from "@phosphor-icons/react";
+import { SUBSCRIPTION_PLANS, type SubscriptionTier } from "@evensplit/shared";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Logo } from "@/components/brand/logo";
@@ -89,9 +98,42 @@ const faqs = [
   },
   {
     question: "Is it free?",
-    answer: "Yes, SplitEven is free to use for any group size.",
+    answer:
+      "Yes. The Free plan covers splitting expenses and tracking your own money. Pro and Premium add more on top, and you can upgrade whenever you like.",
+  },
+  {
+    question: "How do I pay for Pro or Premium?",
+    answer:
+      "Pay directly via GCash, Maya, BDO, or Maribank, then submit your reference number in the app. Your plan is activated once the payment is verified, usually within a day.",
+  },
+  {
+    question: "Does it work on iPhone?",
+    answer:
+      "SplitEven runs in any browser, including Safari on iPhone. The native app is Android-only for now, with a Google Play listing on the way.",
   },
 ];
+
+const moreFeatures = [
+  { icon: LinkSimple, title: "Invite by link", detail: "Share a link or code and friends join in a tap." },
+  { icon: Camera, title: "Receipt photos", detail: "Snap the receipt and keep it attached to the expense." },
+  { icon: ArrowsClockwise, title: "Recurring expenses", detail: "Rent and subscriptions post themselves on schedule." },
+  { icon: Bell, title: "Push notifications", detail: "Get pinged when someone adds an expense or settles up." },
+  { icon: FileCsv, title: "CSV import and export", detail: "Bring your data in, or take it all out, any time." },
+  { icon: Moon, title: "Light and dark themes", detail: "Easy on the eyes at any hour, inside the app." },
+];
+
+const navLinks = [
+  { href: "#features", label: "Features" },
+  { href: "#how-it-works", label: "How it works" },
+  { href: "#pricing", label: "Pricing" },
+  { href: "#faq", label: "FAQ" },
+];
+
+const planCtas: Record<SubscriptionTier, string> = {
+  free: "Start free",
+  pro: "Get Pro",
+  premium: "Get Premium",
+};
 
 const financeFeatures = [
   {
@@ -133,21 +175,38 @@ export default function LandingPage() {
 
 function LandingPageContent() {
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col overflow-x-clip bg-background">
       <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
           <div className="flex items-center gap-2">
             <Logo size={32} />
             <span className="text-lg font-semibold tracking-tight">SplitEven</span>
           </div>
-          <nav className="flex items-center gap-2">
-            <Button variant="ghost" asChild>
+          <nav className="hidden items-center gap-6 md:flex" aria-label="Sections">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-sm font-medium text-muted-foreground hover:text-foreground"
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" asChild className="rounded-full px-3 sm:px-4">
+              <a href={APK_DOWNLOAD_URL} download aria-label="Download the app">
+                <DownloadSimple className="h-4 w-4" />
+                <span className="hidden sm:inline">Get the app</span>
+              </a>
+            </Button>
+            <Button variant="ghost" asChild className="hidden sm:inline-flex">
               <Link href="/login">Log in</Link>
             </Button>
             <Button asChild className="rounded-full px-5">
               <Link href="/login">Get started</Link>
             </Button>
-          </nav>
+          </div>
         </div>
       </header>
 
@@ -175,6 +234,11 @@ function LandingPageContent() {
                 <Link href="/login">
                   Get started <ArrowRight className="ml-1 h-4 w-4" />
                 </Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild className="rounded-full px-6">
+                <a href={APK_DOWNLOAD_URL} download>
+                  <DownloadSimple className="mr-1 h-4 w-4" /> Download the app
+                </a>
               </Button>
               <Link
                 href="#how-it-works"
@@ -291,7 +355,7 @@ function LandingPageContent() {
         </section>
 
         {/* How it works: numbered steps, a layout family distinct from the bento/chip/CTA sections below */}
-        <section id="how-it-works" className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+        <section id="how-it-works" className="mx-auto w-full max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6">
           <h2 className="max-w-md text-2xl font-semibold tracking-tight sm:text-3xl">
             Three steps, start to settled
           </h2>
@@ -314,7 +378,7 @@ function LandingPageContent() {
         </section>
 
         {/* Features: asymmetric 3-cell bento, not three equal cards */}
-        <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+        <section id="features" className="mx-auto w-full max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6">
           <h2 className="max-w-md text-2xl font-semibold tracking-tight sm:text-3xl">
             Everything a group needs to stay square
           </h2>
@@ -468,8 +532,113 @@ function LandingPageContent() {
           </div>
         </section>
 
-        {/* Trust strip: privacy + platform availability, single row of two cards */}
+        {/* Group <-> personal linking: the app's most distinctive idea, shown as a worked example */}
         <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-wide text-primary">
+                Shared + personal, connected
+              </span>
+              <h2 className="mt-2 max-w-md text-2xl font-semibold tracking-tight sm:text-3xl">
+                Fronted the group bill? Your budget knows the difference.
+              </h2>
+              <p className="mt-3 max-w-md text-sm text-muted-foreground">
+                When you pay a shared expense from your own account, only your share counts as
+                your spending. The rest is tracked as money owed to you, and when friends pay you
+                back it&apos;s not mistaken for income.
+              </p>
+            </div>
+            <div className="rounded-lg border border-border/60 bg-card p-6 shadow-sm">
+              <p className="text-xs text-muted-foreground">You paid for groceries from GCash</p>
+              <p className="mt-1 font-mono text-2xl font-semibold tabular-nums">₱3,000.00</p>
+              <div className="mt-5 space-y-3 border-t border-border/60 pt-4 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Counted as your spending</span>
+                  <span className="font-mono tabular-nums">₱750.00</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Tracked as owed to you</span>
+                  <span className="font-mono tabular-nums text-positive">₱2,250.00</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">When they pay you back</span>
+                  <span className="text-xs font-medium text-primary">Not counted as income</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* And more: compact grid of the smaller features */}
+        <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+          <h2 className="max-w-md text-2xl font-semibold tracking-tight sm:text-3xl">
+            And the details that make it stick
+          </h2>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {moreFeatures.map((feature) => (
+              <div key={feature.title} className="flex gap-4 rounded-lg border border-border/60 bg-card p-5">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-light text-primary">
+                  <feature.icon className="h-4 w-4" />
+                </span>
+                <div>
+                  <h3 className="text-sm font-medium">{feature.title}</h3>
+                  <p className="mt-1 text-xs text-muted-foreground">{feature.detail}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Pricing: driven by the same plan definitions the in-app Upgrade screen uses */}
+        <section id="pricing" className="mx-auto w-full max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6">
+          <h2 className="max-w-md text-2xl font-semibold tracking-tight sm:text-3xl">
+            Simple plans, start free
+          </h2>
+          <p className="mt-2 max-w-md text-sm text-muted-foreground">
+            Pay with GCash, Maya, BDO, or Maribank. No card needed.
+          </p>
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {(Object.keys(SUBSCRIPTION_PLANS) as SubscriptionTier[]).map((tier) => {
+              const plan = SUBSCRIPTION_PLANS[tier];
+              const featured = tier === "pro";
+              return (
+                <div
+                  key={tier}
+                  className={cn(
+                    "relative flex flex-col rounded-lg border bg-card p-6",
+                    featured ? "border-2 border-accent shadow-md" : "border-border/60"
+                  )}
+                >
+                  {featured && (
+                    <span className="absolute -top-3 left-6 rounded-full bg-accent px-3 py-0.5 text-xs font-semibold text-accent-foreground">
+                      Most popular
+                    </span>
+                  )}
+                  <h3 className="text-lg font-semibold">{plan.name}</h3>
+                  <p className="mt-1 font-mono text-2xl font-semibold tabular-nums">{plan.priceLabel}</p>
+                  <ul className="mt-5 flex-1 space-y-2">
+                    {plan.features.map((feature) => (
+                      <li key={feature} className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                  <Button
+                    asChild
+                    variant={featured ? "default" : "outline"}
+                    className="mt-6 w-full rounded-full"
+                  >
+                    <Link href="/login">{planCtas[tier]}</Link>
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Trust strip: privacy + platform availability, single row of two cards */}
+        <section id="download" className="mx-auto w-full max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-lg border border-border/60 bg-card p-6">
               <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-light text-primary">
@@ -492,7 +661,7 @@ function LandingPageContent() {
               </p>
               <Button variant="outline" size="sm" asChild className="mt-4 rounded-full">
                 <a href={APK_DOWNLOAD_URL} download>
-                  <DownloadSimple className="h-4 w-4" /> Download APK
+                  <DownloadSimple className="h-4 w-4" /> Download the app
                 </a>
               </Button>
             </div>
@@ -500,7 +669,7 @@ function LandingPageContent() {
         </section>
 
         {/* FAQ: 2-column list, a layout family distinct from every section above */}
-        <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+        <section id="faq" className="mx-auto w-full max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6">
           <h2 className="max-w-md text-2xl font-semibold tracking-tight sm:text-3xl">
             Questions people actually ask
           </h2>
@@ -522,14 +691,21 @@ function LandingPageContent() {
                 Start your first group in a minute
               </h2>
               <p className="mt-1.5 text-sm text-muted-foreground">
-                Free to use. No card required.
+                Free to start. No card required.
               </p>
             </div>
-            <Button size="lg" asChild className="shrink-0 rounded-full px-7">
-              <Link href="/login">
-                Get started <ArrowRight className="ml-1 h-4 w-4" />
-              </Link>
-            </Button>
+            <div className="flex shrink-0 flex-wrap items-center gap-3">
+              <Button size="lg" asChild className="rounded-full px-7">
+                <Link href="/login">
+                  Get started <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild className="rounded-full px-6">
+                <a href={APK_DOWNLOAD_URL} download>
+                  <DownloadSimple className="mr-1 h-4 w-4" /> Download the app
+                </a>
+              </Button>
+            </div>
           </div>
         </section>
       </main>
@@ -537,7 +713,13 @@ function LandingPageContent() {
       <footer className="border-t border-border/60 py-6 text-center text-xs text-muted-foreground">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-3 px-4 sm:flex-row sm:justify-between sm:px-6">
           <span>Built with Next.js, Supabase, and shadcn/ui.</span>
-          <nav className="flex items-center gap-4">
+          <nav className="flex flex-wrap items-center justify-center gap-4">
+            <a href="#pricing" className="hover:text-foreground hover:underline">
+              Pricing
+            </a>
+            <a href={APK_DOWNLOAD_URL} download className="hover:text-foreground hover:underline">
+              Download the app
+            </a>
             <Link href="/privacy-policy" className="hover:text-foreground hover:underline">
               Privacy Policy
             </Link>
