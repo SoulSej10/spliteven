@@ -33,6 +33,13 @@ import { Logo } from "@/components/brand/logo";
 // for the rebuild command. Points at the latest preview .apk as of this edit.
 const APK_DOWNLOAD_URL = "https://expo.dev/artifacts/eas/2Uqn_VAq78MNXFJc-9cJOSmWpQJZblZgkxdqB_rafkc.apk";
 
+const webScreens = [
+  { src: "/screens/web-dashboard.webp", alt: "Web dashboard with shared balances, personal balance, and your groups", caption: "Your dashboard, shared and personal in one view" },
+  { src: "/screens/web-group.webp", alt: "Web group page with who owes whom and recent expenses", caption: "Group balances and settle-up" },
+  { src: "/screens/web-insights.webp", alt: "Web Insights page with a personal spending-by-category chart", caption: "Insights by month, personal or shared" },
+  { src: "/screens/web-finances.webp", alt: "Web Finances page with total balance and accounts", caption: "Accounts, budgets, and transactions" },
+];
+
 const appScreens = [
   { src: "/screens/home.webp", alt: "SplitEven home screen showing total balance and your groups", caption: "Everything at a glance" },
   { src: "/screens/group.webp", alt: "A group overview with who owes whom and recent expenses", caption: "Who owes whom, settled" },
@@ -331,9 +338,47 @@ function LandingPageContent() {
             The app, up close
           </h2>
           <p className="mt-2 max-w-md text-sm text-muted-foreground">
-            Real screens from the Android app, not mockups.
+            Real screens from the web app and the Android app, not mockups.
           </p>
-          <div className="-mx-4 mt-8 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 sm:mx-0 sm:px-0 lg:grid lg:grid-cols-4 lg:overflow-visible">
+
+          <h3 className="mt-10 text-sm font-semibold uppercase tracking-wide text-primary">
+            On the web
+          </h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Nothing to install. Open it in any browser, on desktop or phone.
+          </p>
+          <div className="mt-6 grid gap-6 md:grid-cols-2">
+            {webScreens.map((screen) => (
+              <figure key={screen.src}>
+                <div className="overflow-hidden rounded-xl border border-border bg-card shadow-lg">
+                  <div className="flex items-center gap-1.5 border-b border-border/60 bg-muted px-3 py-2" aria-hidden>
+                    <span className="h-2.5 w-2.5 rounded-full bg-foreground/15" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-foreground/15" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-foreground/15" />
+                  </div>
+                  {/* eslint-disable-next-line @next/next/no-img-element -- small static WebP, lazy-loaded; next/image adds nothing here */}
+                  <img
+                    src={screen.src}
+                    alt={screen.alt}
+                    width={1100}
+                    height={580}
+                    loading="lazy"
+                    decoding="async"
+                    className="block h-auto w-full"
+                  />
+                </div>
+                <figcaption className="mt-3 text-center text-sm font-medium">{screen.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+
+          <h3 className="mt-14 text-sm font-semibold uppercase tracking-wide text-primary">
+            On Android
+          </h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            The same account and data, in your pocket.
+          </p>
+          <div className="-mx-4 mt-6 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 sm:mx-0 sm:px-0 lg:grid lg:grid-cols-4 lg:overflow-visible">
             {appScreens.map((screen) => (
               <figure key={screen.src} className="w-[62%] shrink-0 snap-center sm:w-[38%] lg:w-auto">
                 <div className="overflow-hidden rounded-[1.75rem] border-[5px] border-foreground/90 bg-card shadow-lg">
