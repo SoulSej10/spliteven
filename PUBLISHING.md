@@ -7,9 +7,9 @@ Everything needed to get SplitEven onto a device or into an app store, as of thi
 | Type | Format | Use | Link |
 |---|---|---|---|
 | **Production** | `.aab` | Upload this to Google Play Console | https://expo.dev/artifacts/eas/h5lg-ysawR47FcE9vns8TWfXzqBPKoBQw6RRuMtVyE0.aab |
-| **Preview** | `.apk` | Install directly on a phone/emulator for testing | https://expo.dev/artifacts/eas/2Uqn_VAq78MNXFJc-9cJOSmWpQJZblZgkxdqB_rafkc.apk |
+| **Preview** | `.apk` | Install directly on a phone/emulator for testing | https://expo.dev/artifacts/eas/LrKLFL6gmNMXVYCnPlcyhHRboC7aL9F4SnCjVAt38kA.apk |
 
-The preview `.apk` is built from commit `cd9252f` (versionCode 5, expires 2026-10-16) — includes the Insights Personal/Shared redesign, Android resizable-activity + edge-to-edge support, and the landing page video/APK-button. The production `.aab` above is still from the earlier commit `8c5901d` and needs a fresh `production`-profile build before the next Play Store upload.
+The preview `.apk` is built from commit `169ae1f` (versionCode 5, expires 2026-10-17) — includes the Insights Personal/Shared redesign, Android resizable-activity + edge-to-edge support, and the Free/Pro/Premium Upgrade flow with manual GCash/Maya/BDO/Maribank payment. The website serves it as `SplitEven.apk` from `/download/SplitEven.apk`; after cutting a new build, update `APP_SOURCE_URL` in `apps/web/src/lib/app-download.ts`. The production `.aab` above is still from the earlier commit `8c5901d` and needs a fresh `production`-profile build before the next Play Store upload.
 
 **An `.aab` cannot be installed on a device directly** — it's a submission format only; Google Play's servers unpack it into device-specific APKs. For testing on your own phone or the emulator, always use the `.apk` (preview build) instead.
 
