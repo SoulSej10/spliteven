@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import { Bell, CaretLeft as ChevronLeft, CaretRight as ChevronRight, Stack as Layers, Receipt } from "phosphor-react-native";
+import { Bell, Crown, CaretLeft as ChevronLeft, CaretRight as ChevronRight, Stack as Layers, Receipt } from "phosphor-react-native";
 import {
   computeCategoryBreakdown,
   computeDailyTotals,
@@ -18,6 +18,9 @@ import { ErrorState } from "@/components/ui/ErrorState";
 import { DonutChart } from "@/components/ui/DonutChart";
 import { MonthCalendar } from "@/components/ui/MonthCalendar";
 import { CategoryBreakdownList } from "@/components/ui/CategoryBreakdownList";
+import { Button } from "@/components/ui/Button";
+import { PLAN_FEATURE_COPY } from "@evensplit/shared";
+import { usePlan } from "@/hooks/use-plan";
 import { useAuth } from "@/hooks/use-auth";
 import { useSettingsDrawer } from "@/context/settings-drawer";
 import { useMyGroups, useAllExpenses } from "@/hooks/use-groups";
@@ -101,6 +104,8 @@ export default function InsightsScreen() {
   const viewToggleRef = useRef<View>(null);
   const chartsRef = useRef<View>(null);
   const { replaySignal } = usePageTour("insights");
+  const { allows } = usePlan();
+  const locked = !allows("insights");
 
   const personalCurrency = personalAccounts?.[0]?.currency ?? "PHP";
   const monthKey = `${calendarDate.getFullYear()}-${String(calendarDate.getMonth() + 1).padStart(2, "0")}`;
@@ -242,7 +247,25 @@ export default function InsightsScreen() {
           </View>
         )}
 
-        {!isLoading && !isError && (
+        {!isLoading && !isError && locked && (
+          <Card className="items-center gap-3 border-2 border-accent bg-accent/10 py-6">
+            <View className="h-12 w-12 items-center justify-center rounded-full bg-accent/20">
+              <Crown size={24} color="#F5A524" weight="fill" />
+            </View>
+            <Text className="text-center text-base font-semibold text-neutral-900 dark:text-neutral-100">
+              {PLAN_FEATURE_COPY.insights.title}
+            </Text>
+            <Text className="text-center text-sm text-neutral-500">
+              See where your money goes with monthly charts and a spending calendar, for both personal and shared
+              expenses.
+            </Text>
+            <Button size="sm" onPress={() => router.push("/(app)/upgrade")}>
+              See plans
+            </Button>
+          </Card>
+        )}
+
+        {!isLoading && !isError && !locked && (
           <View ref={viewToggleRef} collapsable={false}>
             <SegmentedControl
               value={view}
@@ -255,7 +278,7 @@ export default function InsightsScreen() {
           </View>
         )}
 
-        {!isLoading && !isError && (
+        {!isLoading && !isError && !locked && (
           <View className="flex-row items-center justify-between">
             <Pressable
               onPress={() => goToMonth(-1)}
@@ -277,7 +300,7 @@ export default function InsightsScreen() {
           </View>
         )}
 
-        {!isLoading && !isError && view === "personal" && (
+        {!isLoading && !isError && !locked && view === "personal" && (
           <View ref={chartsRef} collapsable={false} className="gap-4">
             {hasPersonalNarrative && (
               <Card className="gap-1.5">
@@ -322,7 +345,7 @@ export default function InsightsScreen() {
           </View>
         )}
 
-        {!isLoading && !isError && view === "shared" && (
+        {!isLoading && !isError && !locked && view === "shared" && (
           <View className="gap-4">
             {hasSharedNarrative && (
               <Card className="gap-1.5">

@@ -79,7 +79,7 @@ const faqs = [
   {
     question: "Can a group use more than one currency?",
     answer:
-      "Each group has a default currency, and individual expenses can override it if someone paid in something else.",
+      "Yes. Every group has its own currency, so one group can run in pesos while another runs in dollars.",
   },
   {
     question: "How does the minimum-payments settle-up work?",

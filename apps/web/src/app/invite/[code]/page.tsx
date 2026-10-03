@@ -10,10 +10,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { acceptInvite, fetchInviteByCode, type InvitePreview } from "@/lib/api/invites";
+import { useUpgradePrompt } from "@/hooks/use-upgrade-prompt";
 
 function JoinGroupContent({ code }: { code: string }) {
   const router = useRouter();
   const { authUser } = useAuth();
+  const { handlePlanLimitError } = useUpgradePrompt();
   const [invite, setInvite] = useState<InvitePreview | null>(null);
   const [loading, setLoading] = useState(true);
   const [joining, setJoining] = useState(false);
@@ -44,6 +46,7 @@ function JoinGroupContent({ code }: { code: string }) {
       toast.success(`You've joined ${invite.group_name}`);
       router.push(`/groups/${groupId}`);
     } catch (err) {
+      if (handlePlanLimitError(err)) return;
       toast.error(err instanceof Error ? err.message : "Could not join group");
     } finally {
       setJoining(false);

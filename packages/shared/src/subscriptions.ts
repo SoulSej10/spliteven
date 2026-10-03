@@ -32,7 +32,6 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionPlanInfo> 
       "Unlimited groups",
       "Receipt photo attachments",
       "Spending insights (charts + calendar)",
-      "Priority settle-up suggestions",
     ],
   },
   premium: {
@@ -42,7 +41,6 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionPlanInfo> 
     priceValue: 199,
     features: [
       "Everything in Pro",
-      "Multi-currency per group",
       "Recurring expense automation",
       "Early access to new features",
     ],
@@ -84,3 +82,78 @@ export const PAYMENT_METHODS: Record<SubscriptionPaymentMethod, PaymentMethodInf
     accountNumber: "17545279960",
   },
 };
+
+export interface PlanLimits {
+  /** Max non-archived groups a member can belong to; null means unlimited. Mirrors enforce_group_limit() in migration 0021. */
+  maxActiveGroups: number | null;
+  receipts: boolean;
+  insights: boolean;
+  recurringExpenses: boolean;
+}
+
+export const PLAN_LIMITS: Record<SubscriptionTier, PlanLimits> = {
+  free: { maxActiveGroups: 2, receipts: false, insights: false, recurringExpenses: false },
+  pro: { maxActiveGroups: null, receipts: true, insights: true, recurringExpenses: false },
+  premium: { maxActiveGroups: null, receipts: true, insights: true, recurringExpenses: true },
+};
+
+export type PlanFeature = "receipts" | "insights" | "recurringExpenses" | "groups";
+
+/** The owner account always has every feature, matching tier_of() in migration 0021. */
+export function effectiveTier(tier: SubscriptionTier | null | undefined, email?: string | null): SubscriptionTier {
+  if (email && email === SUBSCRIPTION_ADMIN_EMAIL) return "premium";
+  return tier ?? "free";
+}
+
+export function planAllows(tier: SubscriptionTier, feature: Exclude<PlanFeature, "groups">): boolean {
+  return PLAN_LIMITS[tier][feature];
+}
+
+export function canJoinAnotherGroup(tier: SubscriptionTier, activeGroupCount: number): boolean {
+  const max = PLAN_LIMITS[tier].maxActiveGroups;
+  return max === null || activeGroupCount < max;
+}
+
+export const PLAN_FEATURE_COPY: Record<
+  PlanFeature,
+  { required: Exclude<SubscriptionTier, "free">; title: string; message: string }
+> = {
+  groups: {
+    required: "pro",
+    title: "Group limit reached",
+    message: "The Free plan includes up to 2 active groups. Upgrade to Pro for unlimited groups.",
+  },
+  receipts: {
+    required: "pro",
+    title: "Receipt photos are a Pro feature",
+    message: "Upgrade to Pro to attach receipt photos to your expenses.",
+  },
+  insights: {
+    required: "pro",
+    title: "Insights is a Pro feature",
+    message: "Upgrade to Pro to see your spending charts and calendar.",
+  },
+  recurringExpenses: {
+    required: "premium",
+    title: "Recurring expenses are a Premium feature",
+    message: "Upgrade to Premium to automate rent, subscriptions, and other repeating bills.",
+  },
+};
+
+const PLAN_LIMIT_ERROR_TO_FEATURE: Record<string, PlanFeature> = {
+  groups: "groups",
+  receipts: "receipts",
+  recurring: "recurringExpenses",
+};
+
+/** Maps a server "plan_limit:<name>" error (raised by the migration 0021 triggers) to the feature it refers to. */
+export function planLimitFeatureFromError(error: unknown): PlanFeature | null {
+  const message =
+    error instanceof Error
+      ? error.message
+      : typeof error === "object" && error !== null && "message" in error
+        ? String((error as { message: unknown }).message)
+        : "";
+  const match = /plan_limit:(\w+)/.exec(message);
+  return match ? (PLAN_LIMIT_ERROR_TO_FEATURE[match[1]] ?? null) : null;
+}

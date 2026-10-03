@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { AuthGuard } from "@/components/AuthGuard";
 import { useAuth } from "@/hooks/use-auth";
 import { acceptInvite, fetchInviteByCode, type InvitePreview } from "@/lib/api/invites";
+import { handlePlanLimitError } from "@/lib/plan-prompt";
 
 function JoinGroupContent({ code }: { code: string }) {
   const { authUser } = useAuth();
@@ -38,8 +39,8 @@ function JoinGroupContent({ code }: { code: string }) {
     try {
       const groupId = await acceptInvite(invite.invite_id);
       router.replace(`/(app)/groups/${groupId}`);
-    } catch {
-      setError("Could not join this group. It may no longer exist.");
+    } catch (err) {
+      if (!handlePlanLimitError(err)) setError("Could not join this group. It may no longer exist.");
     } finally {
       setJoining(false);
     }

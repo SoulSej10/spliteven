@@ -1,12 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { Bar, BarChart, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import {
   WarningCircle as AlertCircle,
   ArrowsLeftRight as ArrowRightLeft,
   CaretLeft as ChevronLeft,
   CaretRight as ChevronRight,
+  Crown,
   Stack as Layers,
   ChartPie as PieChartIcon,
   Receipt,
@@ -17,6 +19,7 @@ import {
   computeDailyTotals,
   computeSharedFinanceSummary,
   filterTransactionsForMonth,
+  PLAN_FEATURE_COPY,
   type DailyTotal,
 } from "@evensplit/shared";
 import { AuthGuard } from "@/components/auth/auth-guard";
@@ -28,6 +31,7 @@ import { SegmentedTabs } from "@/components/personal/segmented-tabs";
 import { MonthCalendar } from "@/components/personal/month-calendar";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
+import { usePlan } from "@/hooks/use-plan";
 import { useMyGroups, useAllExpenses } from "@/hooks/use-groups";
 import { usePersonalAccounts, usePersonalCategories, usePersonalTransactions } from "@/hooks/use-personal";
 import { formatMoney } from "@/lib/format";
@@ -123,6 +127,8 @@ function CategoryPieChart({
  */
 function InsightsContent() {
   const { authUser } = useAuth();
+  const { allows } = usePlan();
+  const locked = !allows("insights");
   const { data: groups } = useMyGroups();
   const { data: expenses, isLoading, isError, refetch, isRefetching } = useAllExpenses();
   const { data: personalTransactions } = usePersonalTransactions();
@@ -250,7 +256,7 @@ function InsightsContent() {
           <h1 className="text-2xl font-semibold tracking-tight">Insights</h1>
           <p className="text-sm text-muted-foreground">Where your money is going</p>
         </div>
-        {!isLoading && !isError && (
+        {!isLoading && !isError && !locked && (
           <SegmentedTabs
             value={view}
             onChange={(v) => setView(v as "personal" | "shared")}
@@ -300,7 +306,23 @@ function InsightsContent() {
         </MetricCardGrid>
       )}
 
-      {!isLoading && !isError && (
+      {!isLoading && !isError && locked && (
+        <div className="flex flex-col items-center gap-3 rounded-2xl border-2 border-accent bg-accent/10 px-6 py-12 text-center">
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/20">
+            <Crown className="h-6 w-6 text-accent" weight="fill" />
+          </span>
+          <p className="text-lg font-semibold">{PLAN_FEATURE_COPY.insights.title}</p>
+          <p className="max-w-md text-sm text-muted-foreground">
+            See where your money goes with monthly charts and a spending calendar, for both personal and shared
+            expenses.
+          </p>
+          <Button asChild>
+            <Link href="/upgrade">See plans</Link>
+          </Button>
+        </div>
+      )}
+
+      {!isLoading && !isError && !locked && (
         <div className="mb-6 flex items-center justify-center gap-4">
           <button
             type="button"
@@ -322,7 +344,7 @@ function InsightsContent() {
         </div>
       )}
 
-      {!isLoading && !isError && view === "personal" && (
+      {!isLoading && !isError && !locked && view === "personal" && (
         <div className="grid gap-4">
           {hasPersonalNarrative && (
             <Card className="gap-1.5 p-4">
@@ -364,7 +386,7 @@ function InsightsContent() {
         </div>
       )}
 
-      {!isLoading && !isError && view === "shared" && (
+      {!isLoading && !isError && !locked && view === "shared" && (
         <div className="grid gap-4">
           {hasSharedNarrative && (
             <Card className="gap-1.5 p-4">

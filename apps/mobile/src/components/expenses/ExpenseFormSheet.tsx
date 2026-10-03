@@ -15,6 +15,8 @@ import { fetchPersonalAccounts } from "@/lib/api/personal";
 import { formatDate, formatMoney } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import { notifyLocal } from "@/lib/notifications";
+import { usePlan } from "@/hooks/use-plan";
+import { handlePlanLimitError, showUpgradePrompt } from "@/lib/plan-prompt";
 
 const SPLIT_LABELS: Record<SplitType, string> = {
   equal: "Equal",
@@ -56,6 +58,7 @@ export function ExpenseFormSheet({
   existingExpense?: ExpenseWithShares;
 }) {
   const queryClient = useQueryClient();
+  const { allows } = usePlan();
   const isEdit = !!existingExpense;
 
   const [description, setDescription] = useState("");
@@ -195,6 +198,7 @@ export function ExpenseFormSheet({
       onClose();
     } catch (err) {
       if (err instanceof SplitError) Alert.alert("Split error", err.message);
+      else if (handlePlanLimitError(err)) return;
       else Alert.alert("Could not save expense", err instanceof Error ? err.message : "Try again");
     } finally {
       setSubmitting(false);
@@ -399,7 +403,13 @@ export function ExpenseFormSheet({
 
       <View className="gap-2">
         <Pressable
-          onPress={() => setIsRecurring((v) => !v)}
+          onPress={() => {
+            if (!isRecurring && !allows("recurringExpenses")) {
+              showUpgradePrompt("recurringExpenses");
+              return;
+            }
+            setIsRecurring((v) => !v);
+          }}
           className="flex-row items-center justify-between rounded-card border border-neutral-500/20 px-4 py-3"
         >
           <View className="flex-row items-center gap-2">
@@ -407,6 +417,11 @@ export function ExpenseFormSheet({
             <Text className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
               Recurring expense
             </Text>
+            {!allows("recurringExpenses") && (
+              <View className="rounded-pill bg-accent/20 px-2 py-0.5">
+                <Text className="text-[10px] font-semibold text-accent">PREMIUM</Text>
+              </View>
+            )}
           </View>
           <View
             className={cn(
@@ -444,13 +459,18 @@ export function ExpenseFormSheet({
       </View>
 
       <Pressable
-        onPress={pickReceipt}
+        onPress={() => (allows("receipts") ? pickReceipt() : showUpgradePrompt("receipts"))}
         className="flex-row items-center gap-2 rounded-card border border-dashed border-neutral-500/30 px-4 py-3"
       >
         <ImageIcon size={18} color="#6B7169" />
         <Text className="text-sm text-neutral-500">
           {receiptUri ? "Receipt attached" : "Attach receipt (optional)"}
         </Text>
+        {!allows("receipts") && (
+          <View className="rounded-pill bg-accent/20 px-2 py-0.5">
+            <Text className="text-[10px] font-semibold text-accent">PRO</Text>
+          </View>
+        )}
       </Pressable>
     </BottomSheet>
   );

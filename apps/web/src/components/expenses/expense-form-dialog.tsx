@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { toast } from "sonner";
+import { usePlan } from "@/hooks/use-plan";
+import { useUpgradePrompt } from "@/hooks/use-upgrade-prompt";
 import { computeSplitShares, SplitError, type SplitType, type User } from "@evensplit/shared";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -80,6 +82,8 @@ export function ExpenseFormDialog({
   existingExpense,
 }: Props) {
   const queryClient = useQueryClient();
+  const { allows } = usePlan();
+  const { showUpgradePrompt, handlePlanLimitError } = useUpgradePrompt();
   const isEdit = !!existingExpense;
   const [open, setOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -224,6 +228,7 @@ export function ExpenseFormDialog({
       setOpen(false);
     } catch (err) {
       if (err instanceof SplitError) toast.error(err.message);
+      else if (handlePlanLimitError(err)) return;
       else toast.error(err instanceof Error ? err.message : "Could not save expense");
     } finally {
       setSubmitting(false);
@@ -390,10 +395,27 @@ export function ExpenseFormDialog({
           <div className="space-y-2 rounded-xl border border-border p-3">
             <div className="flex items-center justify-between">
               <div>
-                <Label htmlFor="recurring">Recurring expense</Label>
+                <Label htmlFor="recurring" className="flex items-center gap-2">
+                  Recurring expense
+                  {!allows("recurringExpenses") && (
+                    <span className="rounded-full bg-accent/20 px-2 py-0.5 text-[10px] font-semibold text-accent">
+                      PREMIUM
+                    </span>
+                  )}
+                </Label>
                 <p className="text-xs text-muted-foreground">Repeats automatically on a schedule.</p>
               </div>
-              <Switch id="recurring" checked={isRecurring} onCheckedChange={setIsRecurring} />
+              <Switch
+                id="recurring"
+                checked={isRecurring}
+                onCheckedChange={(next) => {
+                  if (next && !allows("recurringExpenses")) {
+                    showUpgradePrompt("recurringExpenses");
+                    return;
+                  }
+                  setIsRecurring(next);
+                }}
+              />
             </div>
             {isRecurring && (
               <div className="grid grid-cols-2 gap-3 pt-1">
@@ -428,11 +450,22 @@ export function ExpenseFormDialog({
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="receipt">Receipt (optional)</Label>
+            <Label htmlFor="receipt" className="flex items-center gap-2">
+              Receipt (optional)
+              {!allows("receipts") && (
+                <span className="rounded-full bg-accent/20 px-2 py-0.5 text-[10px] font-semibold text-accent">
+                  PRO
+                </span>
+              )}
+            </Label>
             <Input
               id="receipt"
               type="file"
               accept="image/*"
+              disabled={!allows("receipts")}
+              onClick={() => {
+                if (!allows("receipts")) showUpgradePrompt("receipts");
+              }}
               onChange={(e) => setReceiptFile(e.target.files?.[0] ?? null)}
             />
           </div>

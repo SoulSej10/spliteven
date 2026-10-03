@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
-import type { User } from "@evensplit/shared";
+import Link from "next/link";
+import { PLAN_FEATURE_COPY, type User } from "@evensplit/shared";
 import {
   Bar,
   BarChart,
@@ -16,10 +17,11 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { WarningCircle as AlertCircle, ChartPie as PieChartIcon } from "@phosphor-icons/react";
+import { WarningCircle as AlertCircle, ChartPie as PieChartIcon, Crown } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGroupExpenses } from "@/hooks/use-group-detail";
+import { usePlan } from "@/hooks/use-plan";
 import { formatMoney } from "@/lib/format";
 
 const CHART_COLORS = [
@@ -48,6 +50,7 @@ export function InsightsTab({
   members: { user_id: string; users: User | null }[];
 }) {
   const { data: expenses, isLoading, isError, refetch, isRefetching } = useGroupExpenses(groupId);
+  const { allows } = usePlan();
 
   function memberName(userId: string) {
     return members.find((m) => m.user_id === userId)?.users?.display_name ?? "Someone";
@@ -111,6 +114,23 @@ export function InsightsTab({
       (a, b) => a.sort - b.sort
     );
   }, [expenses]);
+
+  if (!allows("insights")) {
+    return (
+      <div className="flex flex-col items-center gap-3 rounded-2xl border-2 border-accent bg-accent/10 px-6 py-12 text-center">
+        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/20">
+          <Crown className="h-6 w-6 text-accent" weight="fill" />
+        </span>
+        <p className="text-lg font-semibold">{PLAN_FEATURE_COPY.insights.title}</p>
+        <p className="max-w-md text-sm text-muted-foreground">
+          See this group&apos;s spending by category, member, and over time.
+        </p>
+        <Button asChild>
+          <Link href="/upgrade">See plans</Link>
+        </Button>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

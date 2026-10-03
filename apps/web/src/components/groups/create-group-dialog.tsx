@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/use-auth";
+import { usePlan } from "@/hooks/use-plan";
+import { useUpgradePrompt } from "@/hooks/use-upgrade-prompt";
 import { createGroup } from "@/lib/api/groups";
 import { CURRENCIES } from "@/lib/format";
 import { useQueryClient } from "@tanstack/react-query";
@@ -31,6 +33,8 @@ export function CreateGroupDialog() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { authUser, profile } = useAuth();
+  const { canAddGroup } = usePlan();
+  const { showUpgradePrompt, handlePlanLimitError } = useUpgradePrompt();
   const [open, setOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [icon, setIcon] = useState(ICONS[0]);
@@ -43,6 +47,11 @@ export function CreateGroupDialog() {
 
   async function onSubmit(values: CreateGroupInput) {
     if (!authUser) return;
+    if (!canAddGroup) {
+      setOpen(false);
+      showUpgradePrompt("groups");
+      return;
+    }
     setSubmitting(true);
     try {
       const group = await createGroup({ ...values, icon }, authUser.id);
@@ -52,6 +61,7 @@ export function CreateGroupDialog() {
       reset();
       router.push(`/groups/${group.id}`);
     } catch (err) {
+      if (handlePlanLimitError(err)) return;
       toast.error(err instanceof Error ? err.message : "Could not create group");
     } finally {
       setSubmitting(false);

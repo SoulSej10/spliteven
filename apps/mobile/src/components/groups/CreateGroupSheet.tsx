@@ -7,6 +7,8 @@ import { BottomSheet } from "@/components/ui/BottomSheet";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { useAuth } from "@/hooks/use-auth";
+import { usePlan } from "@/hooks/use-plan";
+import { handlePlanLimitError, showUpgradePrompt } from "@/lib/plan-prompt";
 import { createGroup } from "@/lib/api/groups";
 import { CURRENCIES } from "@/lib/format";
 import { cn } from "@/lib/cn";
@@ -15,6 +17,7 @@ const ICONS = ["👥", "🏠", "✈️", "🍕", "🎉", "💰", "🚗", "🏖�
 
 export function CreateGroupSheet({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const { authUser, profile } = useAuth();
+  const { canAddGroup } = usePlan();
   const queryClient = useQueryClient();
   const [name, setName] = useState("");
   const [icon, setIcon] = useState(ICONS[0]);
@@ -23,6 +26,11 @@ export function CreateGroupSheet({ visible, onClose }: { visible: boolean; onClo
 
   async function onSubmit() {
     if (!authUser) return;
+    if (!canAddGroup) {
+      onClose();
+      showUpgradePrompt("groups");
+      return;
+    }
     const parsed = createGroupSchema.safeParse({ name, icon, currency });
     if (!parsed.success) {
       Alert.alert("Check the group details", parsed.error.issues[0]?.message ?? "Invalid input");
@@ -36,6 +44,7 @@ export function CreateGroupSheet({ visible, onClose }: { visible: boolean; onClo
       setName("");
       router.push(`/(app)/groups/${group.id}`);
     } catch (err) {
+      if (handlePlanLimitError(err)) return;
       Alert.alert("Could not create group", err instanceof Error ? err.message : "Try again");
     } finally {
       setSubmitting(false);
