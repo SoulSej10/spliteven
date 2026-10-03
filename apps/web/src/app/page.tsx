@@ -25,6 +25,7 @@ import {
 import { SUBSCRIPTION_PLANS, type SubscriptionTier } from "@evensplit/shared";
 import { cn } from "@/lib/utils";
 import { WebScreensCarousel } from "@/components/landing/web-screens-carousel";
+import { AutoplayVideo } from "@/components/landing/autoplay-video";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Logo } from "@/components/brand/logo";
@@ -322,14 +323,11 @@ function LandingPageContent() {
             See it in 15 seconds
           </h2>
           <div className="overflow-hidden rounded-lg border border-border/60 bg-card shadow-sm">
-            <video
-              controls
-              preload="none"
+            <AutoplayVideo
+              src="/video/promo.mp4"
               poster="/video/promo-poster.jpg"
               className="aspect-video w-full bg-black"
-            >
-              <source src="/video/promo.mp4" type="video/mp4" />
-            </video>
+            />
           </div>
         </section>
 
