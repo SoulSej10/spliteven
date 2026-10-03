@@ -24,6 +24,13 @@ import { Logo } from "@/components/brand/logo";
 // for the rebuild command. Points at the latest preview .apk as of this edit.
 const APK_DOWNLOAD_URL = "https://expo.dev/artifacts/eas/2Uqn_VAq78MNXFJc-9cJOSmWpQJZblZgkxdqB_rafkc.apk";
 
+const appScreens = [
+  { src: "/screens/home.webp", alt: "SplitEven home screen showing total balance and your groups", caption: "Everything at a glance" },
+  { src: "/screens/group.webp", alt: "A group overview with who owes whom and recent expenses", caption: "Who owes whom, settled" },
+  { src: "/screens/insights.webp", alt: "Insights tab with a spending-by-category donut chart", caption: "See where money goes" },
+  { src: "/screens/finances.webp", alt: "Finances tab with accounts and budgets", caption: "Your accounts and budgets" },
+];
+
 const splitTypes = [
   { label: "Equal", detail: "Split evenly across everyone" },
   { label: "Exact", detail: "Set each person's amount" },
@@ -251,6 +258,35 @@ function LandingPageContent() {
             >
               <source src="/video/promo.mp4" type="video/mp4" />
             </video>
+          </div>
+        </section>
+
+        {/* Real app screenshots (Android), lazy-loaded WebP: scroll-snap row on phones, 4-up grid on desktop */}
+        <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+          <h2 className="max-w-md text-2xl font-semibold tracking-tight sm:text-3xl">
+            The app, up close
+          </h2>
+          <p className="mt-2 max-w-md text-sm text-muted-foreground">
+            Real screens from the Android app, not mockups.
+          </p>
+          <div className="-mx-4 mt-8 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 sm:mx-0 sm:px-0 lg:grid lg:grid-cols-4 lg:overflow-visible">
+            {appScreens.map((screen) => (
+              <figure key={screen.src} className="w-[62%] shrink-0 snap-center sm:w-[38%] lg:w-auto">
+                <div className="overflow-hidden rounded-[1.75rem] border-[5px] border-foreground/90 bg-card shadow-lg">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- small static WebP, lazy-loaded; next/image adds nothing here */}
+                  <img
+                    src={screen.src}
+                    alt={screen.alt}
+                    width={540}
+                    height={1140}
+                    loading="lazy"
+                    decoding="async"
+                    className="block h-auto w-full"
+                  />
+                </div>
+                <figcaption className="mt-3 text-center text-sm font-medium">{screen.caption}</figcaption>
+              </figure>
+            ))}
           </div>
         </section>
 
