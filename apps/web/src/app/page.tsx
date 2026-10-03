@@ -29,11 +29,7 @@ import { AutoplayVideo } from "@/components/landing/autoplay-video";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Logo } from "@/components/brand/logo";
-
-// EAS preview-build artifacts expire after ~14 days (free tier retention),
-// so this needs refreshing whenever a new build is cut - see PUBLISHING.md
-// for the rebuild command. Points at the latest preview .apk as of this edit.
-const APK_DOWNLOAD_URL = "https://expo.dev/artifacts/eas/2Uqn_VAq78MNXFJc-9cJOSmWpQJZblZgkxdqB_rafkc.apk";
+import { APP_DOWNLOAD_PATH } from "@/lib/app-download";
 
 const webScreens = [
   { src: "/screens/web-dashboard.webp", alt: "Web dashboard with shared balances, personal balance, and your groups", caption: "Your dashboard, shared and personal in one view" },
@@ -204,7 +200,7 @@ function LandingPageContent() {
           </nav>
           <div className="flex items-center gap-2">
             <Button variant="outline" asChild className="rounded-full px-3 sm:px-4">
-              <a href={APK_DOWNLOAD_URL} download aria-label="Download the app">
+              <a href={APP_DOWNLOAD_PATH} download aria-label="Download the app">
                 <DownloadSimple className="h-4 w-4" />
                 <span className="hidden sm:inline">Get the app</span>
               </a>
@@ -245,7 +241,7 @@ function LandingPageContent() {
                 </Link>
               </Button>
               <Button size="lg" variant="outline" asChild className="rounded-full px-6">
-                <a href={APK_DOWNLOAD_URL} download>
+                <a href={APP_DOWNLOAD_PATH} download>
                   <DownloadSimple className="mr-1 h-4 w-4" /> Download the app
                 </a>
               </Button>
@@ -681,7 +677,7 @@ function LandingPageContent() {
                 Google Play listing is on its way.
               </p>
               <Button variant="outline" size="sm" asChild className="mt-4 rounded-full">
-                <a href={APK_DOWNLOAD_URL} download>
+                <a href={APP_DOWNLOAD_PATH} download>
                   <DownloadSimple className="h-4 w-4" /> Download the app
                 </a>
               </Button>
@@ -722,7 +718,7 @@ function LandingPageContent() {
                 </Link>
               </Button>
               <Button size="lg" variant="outline" asChild className="rounded-full px-6">
-                <a href={APK_DOWNLOAD_URL} download>
+                <a href={APP_DOWNLOAD_PATH} download>
                   <DownloadSimple className="mr-1 h-4 w-4" /> Download the app
                 </a>
               </Button>
@@ -738,7 +734,7 @@ function LandingPageContent() {
             <a href="#pricing" className="hover:text-foreground hover:underline">
               Pricing
             </a>
-            <a href={APK_DOWNLOAD_URL} download className="hover:text-foreground hover:underline">
+            <a href={APP_DOWNLOAD_PATH} download className="hover:text-foreground hover:underline">
               Download the app
             </a>
             <Link href="/privacy-policy" className="hover:text-foreground hover:underline">
