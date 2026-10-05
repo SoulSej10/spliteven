@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { passwordResetSchema, type PasswordResetInput } from "@evensplit/shared";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
@@ -60,7 +60,7 @@ export default function ResetPasswordPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="password">New password</Label>
-              <Input id="password" type="password" {...register("password")} />
+              <PasswordInput id="password" autoComplete="new-password" {...register("password")} />
               {formState.errors.password && (
                 <p className="text-xs text-destructive">{formState.errors.password.message}</p>
               )}

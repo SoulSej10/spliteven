@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, Switch, Text, TextInput, View } from "react-native";
+import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, Switch, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useColorScheme } from "nativewind";
@@ -12,6 +12,7 @@ import { CURRENCIES } from "@/lib/format";
 import { Avatar } from "@/components/ui/Avatar";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { TextField } from "@/components/ui/TextField";
 import { cn } from "@/lib/cn";
 import { useAuth } from "@/hooks/use-auth";
 import { getSupabaseClient } from "@/lib/supabase/client";
@@ -413,21 +414,19 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
           </Pressable>
           {showPasswordForm && (
             <View className="mt-3 gap-2.5">
-              <TextInput
+              <TextField
                 value={newPassword}
                 onChangeText={setNewPassword}
                 placeholder="New password"
                 secureTextEntry
-                className="rounded-xl border border-neutral-500/20 px-3 py-2.5 text-neutral-900 dark:text-neutral-100"
-                placeholderTextColor="#6B7169"
+                autoCapitalize="none"
               />
-              <TextInput
+              <TextField
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
                 placeholder="Confirm new password"
                 secureTextEntry
-                className="rounded-xl border border-neutral-500/20 px-3 py-2.5 text-neutral-900 dark:text-neutral-100"
-                placeholderTextColor="#6B7169"
+                autoCapitalize="none"
               />
               <Button onPress={onSubmitPassword} loading={changingPassword}>
                 <Text className="font-semibold text-white">Update password</Text>
