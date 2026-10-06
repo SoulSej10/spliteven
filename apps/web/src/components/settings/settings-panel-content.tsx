@@ -41,7 +41,7 @@ import { downloadPersonalLedgerCsv, parsePersonalLedgerCsv, summarizePersonalImp
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { isPasswordPwned } from "@/lib/pwned-password";
 import { CURRENCIES } from "@/lib/format";
-import { SUBSCRIPTION_ADMIN_EMAIL, SUBSCRIPTION_PLANS } from "@evensplit/shared";
+import { PLANS_ENABLED, SUBSCRIPTION_ADMIN_EMAIL, SUBSCRIPTION_PLANS } from "@evensplit/shared";
 
 /** Shared between the /settings page and the left-sliding Sheet opened from the avatar menu. */
 export function SettingsPanelContent({ onClose }: { onClose?: () => void }) {
@@ -202,6 +202,7 @@ export function SettingsPanelContent({ onClose }: { onClose?: () => void }) {
 
   return (
     <div className="space-y-6">
+      {PLANS_ENABLED && (
       <button type="button" onClick={() => goTo("/upgrade")} className="block w-full text-left">
         <Card className="rounded-2xl border-2 border-accent bg-accent/10 shadow-sm transition hover:bg-accent/15">
           <CardContent className="flex items-center gap-3 py-4">
@@ -224,6 +225,7 @@ export function SettingsPanelContent({ onClose }: { onClose?: () => void }) {
           </CardContent>
         </Card>
       </button>
+      )}
 
       {authUser?.email === SUBSCRIPTION_ADMIN_EMAIL && (
         <button type="button" onClick={() => goTo("/admin/subscriptions")} className="block w-full text-left">

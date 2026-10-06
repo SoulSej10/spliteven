@@ -22,7 +22,7 @@ import {
   Users,
   Wallet,
 } from "@phosphor-icons/react";
-import { SUBSCRIPTION_PLANS, type SubscriptionTier } from "@evensplit/shared";
+import { PLANS_ENABLED, SUBSCRIPTION_PLANS, type SubscriptionTier } from "@evensplit/shared";
 import { cn } from "@/lib/utils";
 import { WebScreensCarousel } from "@/components/landing/web-screens-carousel";
 import { AutoplayVideo } from "@/components/landing/autoplay-video";
@@ -103,14 +103,19 @@ const faqs = [
   },
   {
     question: "Is it free?",
-    answer:
-      "Yes. The Free plan covers splitting expenses and tracking your own money. Pro and Premium add more on top, and you can upgrade whenever you like.",
+    answer: PLANS_ENABLED
+      ? "Yes. The Free plan covers splitting expenses and tracking your own money. Pro and Premium add more on top, and you can upgrade whenever you like."
+      : "Yes, SplitEven is free to use right now, with every feature included.",
   },
-  {
-    question: "How do I pay for Pro or Premium?",
-    answer:
-      "Pay directly via GCash, Maya, BDO, or Maribank, then submit your reference number in the app. Your plan is activated once the payment is verified, usually within a day.",
-  },
+  ...(PLANS_ENABLED
+    ? [
+        {
+          question: "How do I pay for Pro or Premium?",
+          answer:
+            "Pay directly via GCash, Maya, BDO, or Maribank, then submit your reference number in the app. Your plan is activated once the payment is verified, usually within a day.",
+        },
+      ]
+    : []),
   {
     question: "Does it work on iPhone?",
     answer:
@@ -130,7 +135,7 @@ const moreFeatures = [
 const navLinks = [
   { href: "#features", label: "Features" },
   { href: "#how-it-works", label: "How it works" },
-  { href: "#pricing", label: "Pricing" },
+  ...(PLANS_ENABLED ? [{ href: "#pricing", label: "Pricing" }] : []),
   { href: "#faq", label: "FAQ" },
 ];
 
@@ -606,7 +611,8 @@ function LandingPageContent() {
           </div>
         </section>
 
-        {/* Pricing: driven by the same plan definitions the in-app Upgrade screen uses */}
+        {/* Pricing: driven by the same plan definitions the in-app Upgrade screen uses; hidden while PLANS_ENABLED is off */}
+        {PLANS_ENABLED && (
         <section id="pricing" className="mx-auto w-full max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6">
           <h2 className="max-w-md text-2xl font-semibold tracking-tight sm:text-3xl">
             Simple plans, start free
@@ -653,6 +659,7 @@ function LandingPageContent() {
             })}
           </div>
         </section>
+        )}
 
         {/* Trust strip: privacy + platform availability, single row of two cards */}
         <section id="download" className="mx-auto w-full max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6">
@@ -731,9 +738,11 @@ function LandingPageContent() {
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-3 px-4 sm:flex-row sm:justify-between sm:px-6">
           <span>Built with Next.js, Supabase, and shadcn/ui.</span>
           <nav className="flex flex-wrap items-center justify-center gap-4">
-            <a href="#pricing" className="hover:text-foreground hover:underline">
-              Pricing
-            </a>
+            {PLANS_ENABLED && (
+              <a href="#pricing" className="hover:text-foreground hover:underline">
+                Pricing
+              </a>
+            )}
             <a href={APP_DOWNLOAD_PATH} download className="hover:text-foreground hover:underline">
               Download the app
             </a>

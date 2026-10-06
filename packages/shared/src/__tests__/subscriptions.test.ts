@@ -36,9 +36,10 @@ describe("plan limits", () => {
   });
 
   it("treats the owner account as premium and defaults unknown tiers to free", () => {
-    expect(effectiveTier("free", SUBSCRIPTION_ADMIN_EMAIL)).toBe("premium");
-    expect(effectiveTier("pro", "someone@example.com")).toBe("pro");
-    expect(effectiveTier(undefined, null)).toBe("free");
+    expect(effectiveTier("free", SUBSCRIPTION_ADMIN_EMAIL, true)).toBe("premium");
+    expect(effectiveTier("pro", "someone@example.com", true)).toBe("pro");
+    expect(effectiveTier(undefined, null, true)).toBe("free");
+    expect(effectiveTier("free", "someone@example.com", false)).toBe("premium");
   });
 
   it("maps server plan_limit errors to features", () => {

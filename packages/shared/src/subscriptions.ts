@@ -99,8 +99,21 @@ export const PLAN_LIMITS: Record<SubscriptionTier, PlanLimits> = {
 
 export type PlanFeature = "receipts" | "insights" | "recurringExpenses" | "groups";
 
+/**
+ * Master switch for subscription plans. While false, every account gets every
+ * feature and the plan UI (upgrade banner, pricing) is hidden. Flip to true
+ * together with re-applying the real tier_of() from migration 0021 - the
+ * database side is switched off by migration 0022.
+ */
+export const PLANS_ENABLED = false;
+
 /** The owner account always has every feature, matching tier_of() in migration 0021. */
-export function effectiveTier(tier: SubscriptionTier | null | undefined, email?: string | null): SubscriptionTier {
+export function effectiveTier(
+  tier: SubscriptionTier | null | undefined,
+  email?: string | null,
+  plansEnabled: boolean = PLANS_ENABLED
+): SubscriptionTier {
+  if (!plansEnabled) return "premium";
   if (email && email === SUBSCRIPTION_ADMIN_EMAIL) return "premium";
   return tier ?? "free";
 }

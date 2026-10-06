@@ -7,7 +7,7 @@ import * as DocumentPicker from "expo-document-picker";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import { CaretRight as ChevronRight, Crown, Download, Key as KeyRound, ListChecks, SignOut as LogOut, PiggyBank, ShieldCheck, Tag, Trash as Trash2, Upload, Wallet, X } from "phosphor-react-native";
-import { SUBSCRIPTION_ADMIN_EMAIL, SUBSCRIPTION_PLANS } from "@evensplit/shared";
+import { PLANS_ENABLED, SUBSCRIPTION_ADMIN_EMAIL, SUBSCRIPTION_PLANS } from "@evensplit/shared";
 import { CURRENCIES } from "@/lib/format";
 import { Avatar } from "@/components/ui/Avatar";
 import { Card } from "@/components/ui/Card";
@@ -277,7 +277,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
           </Pressable>
         </Card>
 
-        {profile?.subscription_tier === "free" || !profile?.subscription_tier ? (
+        {!PLANS_ENABLED ? null : profile?.subscription_tier === "free" || !profile?.subscription_tier ? (
           <Pressable
             onPress={() => {
               onClose();
