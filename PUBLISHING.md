@@ -7,9 +7,9 @@ Everything needed to get SplitEven onto a device or into an app store, as of thi
 | Type | Format | Use | Link |
 |---|---|---|---|
 | **Production** | `.aab` | Upload this to Google Play Console | https://expo.dev/artifacts/eas/h5lg-ysawR47FcE9vns8TWfXzqBPKoBQw6RRuMtVyE0.aab |
-| **Preview** | `.apk` | Install directly on a phone/emulator for testing | https://expo.dev/artifacts/eas/LrKLFL6gmNMXVYCnPlcyhHRboC7aL9F4SnCjVAt38kA.apk |
+| **Preview (public download)** | `.apk` | Friends and testers install this | https://github.com/SoulSej10/spliteven-app/releases/latest/download/SplitEven.apk (also reachable at `/download/SplitEven.apk` on the website) |
 
-The preview `.apk` is built from commit `169ae1f` (versionCode 5, expires 2026-10-17) — includes the Insights Personal/Shared redesign, Android resizable-activity + edge-to-edge support, and the Free/Pro/Premium Upgrade flow with manual GCash/Maya/BDO/Maribank payment. The website serves it as `SplitEven.apk` from `/download/SplitEven.apk`; after cutting a new build, update `APP_SOURCE_URL` in `apps/web/src/lib/app-download.ts`. The production `.aab` above is still from the earlier commit `8c5901d` and needs a fresh `production`-profile build before the next Play Store upload.
+The public download is permanent: it lives as a GitHub release in the public `SoulSej10/spliteven-app` repo (the source repo stays private), so it never expires, unlike EAS build links, which are deleted after ~14 days. The production `.aab` above is still from an early commit and needs a fresh `production`-profile build before the next Play Store upload.
 
 **An `.aab` cannot be installed on a device directly** — it's a submission format only; Google Play's servers unpack it into device-specific APKs. For testing on your own phone or the emulator, always use the `.apk` (preview build) instead.
 
@@ -63,3 +63,18 @@ These came up while auditing the app for launch-readiness but are separate from 
 - **Monetization** (subscriptions, RevenueCat, etc.) — nothing exists yet; recommended to ship free first, instrument with analytics, and build pricing once there's real usage data.
 - **A CI-driven automated EAS build** (trigger a build on every push to `main`, rather than manually) — not set up; the GitHub Actions workflow currently only runs typecheck/test/lint.
 - **E2E tests, offline handling, multi-currency conversion, receipt OCR** — noted as gaps in the earlier system audit, all out of scope for getting a first build published.
+
+## Publishing a new Android build
+
+The website's "Get the app" buttons point at `/download/SplitEven.apk`, which redirects to the newest release of the public download repo, so a new build needs **no website change**:
+
+```bash
+# 1. Build (from apps/mobile) and wait for it to finish
+pnpm exec eas build --platform android --profile preview
+# 2. Fetch the finished file using the artifact URL printed by EAS (or `eas build:view <id> --json`)
+curl -L -o SplitEven.apk "<artifact .apk URL>"
+# 3. Publish it - the asset MUST be named SplitEven.apk. Use the next version number.
+gh release create v1.0.1 SplitEven.apk --repo SoulSej10/spliteven-app --title "SplitEven 1.0.1" --notes "What changed"
+```
+
+Old versions stay available under that repo's Releases page.
