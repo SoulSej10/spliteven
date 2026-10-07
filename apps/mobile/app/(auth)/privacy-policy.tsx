@@ -8,9 +8,8 @@ import { setPrivacyPolicyAccepted } from "@/lib/device-flags";
  * First-run gate shown once before a new device ever reaches login/signup,
  * per direct feedback ("standard privacy policy things where users get to
  * read that thing before going in the app"). Acceptance is persisted
- * per-device (AsyncStorage) so it's shown exactly once, not on every launch -
- * account creation itself separately re-gates on this every time, since a
- * device-level flag alone isn't reliable consent for a specific new account
+ * per-device (AsyncStorage) so it's shown exactly once, not on every launch.
+ * Signup reads the same flag and only shows the policy if it's still unset
  * (see (auth)/signup.tsx).
  */
 export default function PrivacyPolicyGateScreen() {

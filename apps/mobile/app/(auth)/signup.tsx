@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from "react-native";
 import { Link, router } from "expo-router";
 import * as Linking from "expo-linking";
@@ -14,16 +14,24 @@ import { AlertModal } from "@/components/ui/AlertModal";
 import { AcceptTermsGate } from "@/components/legal/AcceptTermsGate";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import { isPasswordPwned } from "@/lib/pwned-password";
+import { hasAcceptedPrivacyPolicy, setPrivacyPolicyAccepted } from "@/lib/device-flags";
 
 export default function SignUpScreen() {
   const [submitting, setSubmitting] = useState(false);
   const [checkEmailVisible, setCheckEmailVisible] = useState(false);
-  // Re-gated on every signup regardless of the device-level first-run flag
-  // (app/(auth)/privacy-policy.tsx) - creating a specific new account should
-  // never be reachable without fresh, explicit consent, per standard
-  // practice, not just a one-time device setting from whenever the app was
-  // first installed.
-  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  // Acceptance is remembered per device (app/(auth)/privacy-policy.tsx), so
+  // signup only shows the policy when this device hasn't accepted it yet
+  // (e.g. reached via a deep link). null = still reading the saved flag.
+  const [agreedToTerms, setAgreedToTerms] = useState<boolean | null>(null);
+  useEffect(() => {
+    let active = true;
+    hasAcceptedPrivacyPolicy()
+      .then((accepted) => active && setAgreedToTerms(accepted))
+      .catch(() => active && setAgreedToTerms(false));
+    return () => {
+      active = false;
+    };
+  }, []);
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === "dark" ? "#F4F5F3" : "#0A0A0A";
   const { handleSubmit, formState, setValue, watch } = useForm<SignUpInput>({
@@ -72,6 +80,10 @@ export default function SignUpScreen() {
     }
   }
 
+  if (agreedToTerms === null) {
+    return <View className="flex-1 bg-neutral-100 dark:bg-neutral-900" />;
+  }
+
   if (!agreedToTerms) {
     return (
       <View className="flex-1 bg-neutral-100 pt-14 dark:bg-neutral-900">
@@ -86,7 +98,12 @@ export default function SignUpScreen() {
             Privacy Policy &amp; Terms
           </Text>
         </View>
-        <AcceptTermsGate onAgree={() => setAgreedToTerms(true)} />
+        <AcceptTermsGate
+          onAgree={async () => {
+            await setPrivacyPolicyAccepted();
+            setAgreedToTerms(true);
+          }}
+        />
       </View>
     );
   }

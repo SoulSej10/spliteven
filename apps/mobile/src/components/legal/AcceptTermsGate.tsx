@@ -10,9 +10,8 @@ const BOTTOM_THRESHOLD = 24;
  * Privacy Policy + Terms of Service, with the accept button disabled until
  * the user has actually scrolled to the bottom of both documents - a
  * one-tap "I agree" that nobody reads isn't real consent. Used both as the
- * device's first-run gate ((auth)/privacy-policy.tsx) and embedded directly
- * in the signup flow, since account creation should never be reachable
- * without this regardless of any earlier device-level acceptance.
+ * device's first-run gate ((auth)/privacy-policy.tsx) and as a fallback in
+ * the signup flow for devices that haven't accepted it yet.
  */
 export function AcceptTermsGate({
   onAgree,
