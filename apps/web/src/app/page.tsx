@@ -30,6 +30,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Logo } from "@/components/brand/logo";
 import { APP_DOWNLOAD_PATH } from "@/lib/app-download";
+import { PENIKO_NAME, PENIKO_URL } from "@/lib/brand";
 
 const webScreens = [
   { src: "/screens/web-dashboard.webp", alt: "Web dashboard with shared balances, personal balance, and your groups", caption: "Your dashboard, shared and personal in one view" },
@@ -190,7 +191,17 @@ function LandingPageContent() {
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
           <div className="flex items-center gap-2">
             <Logo size={32} />
-            <span className="text-lg font-semibold tracking-tight">SplitEven</span>
+            <div className="flex flex-col leading-none">
+              <span className="text-lg font-semibold tracking-tight">SplitEven</span>
+              <a
+                href={PENIKO_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-0.5 text-[11px] font-medium text-muted-foreground hover:text-primary"
+              >
+                by {PENIKO_NAME}
+              </a>
+            </div>
           </div>
           <nav className="hidden items-center gap-6 md:flex" aria-label="Sections">
             {navLinks.map((link) => (
@@ -732,11 +743,40 @@ function LandingPageContent() {
             </div>
           </div>
         </section>
+
+        {/* Built by Peniko: credits the maker and sends visitors to the company site */}
+        <section className="mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6">
+          <div className="flex flex-col items-start gap-4 rounded-lg border border-border/60 bg-card p-6 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-primary">Built by {PENIKO_NAME}</p>
+              <p className="mt-1.5 font-medium">SplitEven is a {PENIKO_NAME} product.</p>
+              <p className="mt-1 max-w-xl text-sm text-muted-foreground">
+                {PENIKO_NAME} makes friendly software for small businesses. See what else we&apos;re building.
+              </p>
+            </div>
+            <Button variant="outline" asChild className="shrink-0 rounded-full px-6">
+              <a href={PENIKO_URL} target="_blank" rel="noopener noreferrer">
+                Visit {PENIKO_NAME} <ArrowRight className="ml-1 h-4 w-4" />
+              </a>
+            </Button>
+          </div>
+        </section>
       </main>
 
       <footer className="border-t border-border/60 py-6 text-center text-xs text-muted-foreground">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-3 px-4 sm:flex-row sm:justify-between sm:px-6">
-          <span>Built with Next.js, Supabase, and shadcn/ui.</span>
+          <span>
+            Powered by{" "}
+            <a
+              href={PENIKO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-foreground hover:underline"
+            >
+              {PENIKO_NAME}
+            </a>
+            . Built with Next.js, Supabase, and shadcn/ui.
+          </span>
           <nav className="flex flex-wrap items-center justify-center gap-4">
             {PLANS_ENABLED && (
               <a href="#pricing" className="hover:text-foreground hover:underline">
