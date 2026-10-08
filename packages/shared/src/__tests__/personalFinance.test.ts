@@ -6,6 +6,7 @@ import {
   computeBudgetSuggestions,
   computeCategoryBreakdown,
   computeDailyTotals,
+  computeCategoryTrail,
   computeExpenseTrend,
   computeMonthlyCashFlow,
   computeSharedFinanceSummary,
@@ -386,5 +387,56 @@ describe("computeMonthlyCashFlow", () => {
   it("rolls the window across a year boundary", () => {
     const flow = computeMonthlyCashFlow([], 3, new Date(2026, 0, 10));
     expect(flow.map((m) => m.key)).toEqual(["2025-11", "2025-12", "2026-01"]);
+  });
+});
+
+describe("computeCategoryTrail", () => {
+  const tx = (id: string, day: string, kind: "income" | "expense" | "transfer", amount: number, category: string | null) => ({
+    id,
+    occurred_at: `2026-09-${day}T00:00:00Z`,
+    kind,
+    amount,
+    category_id: category,
+  });
+  const txs = [
+    tx("c", "20", "expense", 300.1, FOOD),
+    tx("a", "03", "expense", 120.25, FOOD),
+    tx("b", "11", "expense", 80, FOOD),
+    tx("d", "05", "expense", 999, BILLS),
+    tx("e", "06", "income", 5000, FOOD),
+    tx("f", "07", "transfer", 700, FOOD),
+    tx("g", "08", "expense", 15.5, null),
+  ];
+
+  it("lists only the matching category and kind, oldest first, with running totals", () => {
+    const trail = computeCategoryTrail(txs, FOOD, "expense");
+    expect(trail.entries.map((e) => e.id)).toEqual(["a", "b", "c"]);
+    expect(trail.entries.map((e) => e.running_total)).toEqual([120.25, 200.25, 500.35]);
+    expect(trail.total).toBe(500.35);
+    expect(trail.count).toBe(3);
+    expect(trail.average).toBe(166.78);
+    expect(trail.largest?.id).toBe("c");
+  });
+
+  it("always matches the figure computeCategoryBreakdown reports", () => {
+    const breakdown = computeCategoryBreakdown(txs, [{ id: FOOD, name: "Food" }, { id: BILLS, name: "Bills" }], "expense");
+    for (const entry of breakdown) {
+      expect(computeCategoryTrail(txs, entry.category_id, "expense").total).toBe(entry.amount);
+    }
+  });
+
+  it("supports the Uncategorized bucket and income", () => {
+    expect(computeCategoryTrail(txs, null, "expense").total).toBe(15.5);
+    expect(computeCategoryTrail(txs, FOOD, "income").total).toBe(5000);
+  });
+
+  it("returns an empty trail when nothing matches", () => {
+    const trail = computeCategoryTrail(txs, "nope", "expense");
+    expect(trail).toMatchObject({ entries: [], total: 0, count: 0, average: 0, largest: null });
+  });
+
+  it("keeps cents exact across many small amounts", () => {
+    const many = Array.from({ length: 10 }, (_, i) => tx(`m${i}`, "10", "expense", 0.1, FOOD));
+    expect(computeCategoryTrail(many, FOOD, "expense").total).toBe(1);
   });
 });

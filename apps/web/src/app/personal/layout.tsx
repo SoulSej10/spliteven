@@ -28,7 +28,7 @@ function PersonalSubNav() {
   return (
     <nav className="mb-6 flex gap-1 overflow-x-auto">
       {TABS.map((tab) => {
-        const active = pathname === tab.href;
+        const active = pathname === tab.href || (tab.href !== "/personal" && pathname.startsWith(`${tab.href}/`));
         return (
           <Link
             key={tab.href}

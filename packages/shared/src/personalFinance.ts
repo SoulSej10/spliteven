@@ -397,3 +397,59 @@ export function computeMonthlyCashFlow(
   }
   return buckets;
 }
+
+export type CategoryTrailTransaction = Pick<
+  PersonalTransaction,
+  "id" | "occurred_at" | "amount" | "kind" | "category_id"
+>;
+
+export type CategoryTrailEntry<T extends CategoryTrailTransaction> = T & {
+  /** Sum of every entry up to and including this one, oldest first. */
+  running_total: number;
+};
+
+export interface CategoryTrail<T extends CategoryTrailTransaction> {
+  entries: CategoryTrailEntry<T>[];
+  /** Always equals the amount computeCategoryBreakdown reports for the same category and kind. */
+  total: number;
+  count: number;
+  average: number;
+  largest: T | null;
+}
+
+/**
+ * The audit trail behind one number in the category breakdown: exactly the
+ * transactions that were summed to produce it (same kind, same category,
+ * `null` meaning Uncategorized), oldest first, each with the running total
+ * so far. The caller passes transactions already scoped to the period, same
+ * as computeCategoryBreakdown, so the trail's total can never disagree with
+ * the figure that was tapped.
+ */
+export function computeCategoryTrail<T extends CategoryTrailTransaction>(
+  transactions: T[],
+  categoryId: UUID | null,
+  kind: "income" | "expense"
+): CategoryTrail<T> {
+  const matching = transactions
+    .filter((tx) => tx.kind === kind && tx.category_id === categoryId)
+    .sort((a, b) =>
+      a.occurred_at < b.occurred_at ? -1 : a.occurred_at > b.occurred_at ? 1 : a.id < b.id ? -1 : a.id > b.id ? 1 : 0
+    );
+
+  let running = 0;
+  const entries = matching.map((tx) => {
+    running = round2(running + tx.amount);
+    return { ...tx, running_total: running };
+  });
+
+  const total = round2(matching.reduce((sum, tx) => sum + tx.amount, 0));
+  const largest = matching.reduce<T | null>((max, tx) => (max === null || tx.amount > max.amount ? tx : max), null);
+
+  return {
+    entries,
+    total,
+    count: matching.length,
+    average: matching.length > 0 ? round2(total / matching.length) : 0,
+    largest,
+  };
+}

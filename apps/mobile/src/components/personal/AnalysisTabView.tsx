@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Pressable, Text, View } from "react-native";
+import { router } from "expo-router";
 import { computeCategoryBreakdown, computeDailyTotals } from "@evensplit/shared";
 import { CaretDown as ChevronDown, CaretLeft as ChevronLeft, CaretRight as ChevronRight, ChartPie as PieChart } from "phosphor-react-native";
 import { Card } from "@/components/ui/Card";
@@ -166,6 +167,11 @@ export function AnalysisTabView() {
                   amount: b.amount,
                   percent: b.percent,
                   color: DONUT_COLORS[i % DONUT_COLORS.length],
+                  onPress: () =>
+                    router.push({
+                      pathname: "/(app)/category-trail",
+                      params: { categoryId: b.category_id ?? "none", month: monthKey, kind },
+                    }),
                 }))}
               />
             </>

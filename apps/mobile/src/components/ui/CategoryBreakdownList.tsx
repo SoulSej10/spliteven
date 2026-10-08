@@ -1,4 +1,5 @@
-import { Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
+import { CaretRight } from "phosphor-react-native";
 import { formatMoney } from "@/lib/format";
 
 export interface BreakdownRow {
@@ -7,6 +8,8 @@ export interface BreakdownRow {
   amount: number;
   percent: number;
   color: string;
+  /** When set, the row is tappable (e.g. to open the trail behind its number). */
+  onPress?: () => void;
 }
 
 /**
@@ -23,7 +26,14 @@ export function CategoryBreakdownList({ rows, currency }: { rows: BreakdownRow[]
   return (
     <View className="gap-3">
       {rows.map((r) => (
-        <View key={r.label} className="gap-1.5">
+        <Pressable
+          key={r.label}
+          disabled={!r.onPress}
+          onPress={r.onPress}
+          className="gap-1.5 active:opacity-70"
+          accessibilityRole={r.onPress ? "button" : undefined}
+          accessibilityHint={r.onPress ? "Shows the transactions behind this amount" : undefined}
+        >
           <View className="flex-row items-center gap-2.5">
             <Text className="text-base">{r.icon ?? "🏷️"}</Text>
             <Text className="flex-1 text-sm font-medium capitalize text-neutral-900 dark:text-neutral-100" numberOfLines={1}>
@@ -32,6 +42,7 @@ export function CategoryBreakdownList({ rows, currency }: { rows: BreakdownRow[]
             <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {formatMoney(r.amount, currency)}
             </Text>
+            {r.onPress && <CaretRight size={13} color="#6B7169" />}
           </View>
           <View className="flex-row items-center gap-2">
             <View className="h-1.5 flex-1 overflow-hidden rounded-full bg-neutral-500/15">
@@ -42,7 +53,7 @@ export function CategoryBreakdownList({ rows, currency }: { rows: BreakdownRow[]
             </View>
             <Text className="w-10 text-right text-xs text-neutral-500">{r.percent.toFixed(0)}%</Text>
           </View>
-        </View>
+        </Pressable>
       ))}
     </View>
   );

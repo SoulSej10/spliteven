@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { computeCategoryBreakdown, computeDailyTotals } from "@evensplit/shared";
 import {
   Bar,
@@ -16,7 +17,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { CaretLeft as ChevronLeft, CaretRight as ChevronRight, ChartPie as PieChartIcon } from "@phosphor-icons/react";
+import { CaretLeft as ChevronLeft, CaretRight, CaretRight as ChevronRight, ChartPie as PieChartIcon } from "@phosphor-icons/react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MonthCalendar } from "@/components/personal/month-calendar";
@@ -201,21 +202,29 @@ export default function PersonalAnalysisPage() {
               </div>
               <div className="flex flex-col justify-center gap-3">
                 {breakdown.map((c, i) => (
-                  <div key={c.category_id ?? "none"} className="space-y-1">
+                  <Link
+                    key={c.category_id ?? "none"}
+                    href={`/personal/analysis/${c.category_id ?? "none"}?month=${monthKey}&kind=${kind}`}
+                    title="See the transactions behind this amount"
+                    className="group -mx-2 block space-y-1 rounded-lg px-2 py-1.5 transition-colors hover:bg-muted"
+                  >
                     <div className="flex items-center justify-between text-sm">
                       <span className="flex items-center gap-1.5 capitalize">
                         <span className="h-2 w-2 rounded-full" style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }} />
                         {c.category_name}
                       </span>
-                      <span className="font-medium">{formatMoney(c.amount, currency)}</span>
+                      <span className="flex items-center gap-1 font-medium">
+                        {formatMoney(c.amount, currency)}
+                        <CaretRight className="h-3 w-3 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                      </span>
                     </div>
-                    <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+                    <div className="h-1.5 overflow-hidden rounded-full bg-background">
                       <div
                         className="h-full rounded-full"
                         style={{ width: `${Math.min(100, c.percent)}%`, backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }}
                       />
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
