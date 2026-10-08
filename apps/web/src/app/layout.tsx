@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
-import { buildThemeCss } from "@/lib/theme-css";
-import { APPEARANCE_BOOT_SCRIPT } from "@/lib/appearance";
 
 // Bricolage Grotesque: a characterful grotesque so the app has its own personality
 // instead of a generic UI face. Mirrors the mobile font in apps/mobile/app/_layout.tsx.
@@ -31,11 +29,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${bricolage.variable} ${jetbrainsMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        {/* Generated from the shared theme data (packages/shared/src/themes.ts) */}
-        <style dangerouslySetInnerHTML={{ __html: buildThemeCss() }} />
-        <script dangerouslySetInnerHTML={{ __html: APPEARANCE_BOOT_SCRIPT }} />
-      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <Providers>{children}</Providers>
       </body>

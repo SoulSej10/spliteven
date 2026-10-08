@@ -87,4 +87,6 @@ The app checks the latest release of `SoulSej10/spliteven-app` on launch and whe
 2. Create the release with a tag that equals the new version (`v1.2.0`), the asset named `SplitEven.apk`, and release notes in plain sentences: they are shown to users in the dialog.
 3. Do not mark the release as a draft or pre-release; those are ignored.
 
+Preview builds auto-increment the Android versionCode on every build (`autoIncrement` in `eas.json`): Android refuses to install an APK whose versionCode is not higher than the installed one, so without this an update would fail. All public builds must also keep the same signing key (EAS manages it), or Android reports "package conflicts with an existing package". A locally built dev client (debug-signed) can never be updated by a release APK: uninstall it first (`adb uninstall com.evensplit.app`).
+
 Tapping Download opens the APK in the phone's browser; Android then offers to install it over the existing app, keeping the account and data.
