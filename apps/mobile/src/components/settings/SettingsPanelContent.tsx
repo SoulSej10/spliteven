@@ -20,6 +20,7 @@ import { isPasswordPwned } from "@/lib/pwned-password";
 import { ensureNotificationPermission, registerForPushTokenAsync, savePushToken } from "@/lib/notifications";
 import { hasShownNotificationNudge, setNotificationNudgeShown } from "@/lib/device-flags";
 import { upsertProfile } from "@/lib/api/profile";
+import { saveColorScheme } from "@/lib/appearance";
 import { EditProfileSheet } from "./EditProfileSheet";
 import {
   usePersonalAccounts,
@@ -43,7 +44,7 @@ function goToFinancesTab(tab: string, onClose: () => void) {
 
 export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
   const { authUser, profile, signOut, refreshProfile } = useAuth();
-  const { colorScheme, toggleColorScheme } = useColorScheme();
+  const { colorScheme, setColorScheme } = useColorScheme();
   const insets = useSafeAreaInsets();
   const [notifExpenses, setNotifExpenses] = useState(true);
   const [notifSettlements, setNotifSettlements] = useState(true);
@@ -459,7 +460,11 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
             <Text className="text-neutral-900 dark:text-neutral-100">Dark mode</Text>
             <Switch
               value={colorScheme === "dark"}
-              onValueChange={toggleColorScheme}
+              onValueChange={(isDark) => {
+                const next = isDark ? "dark" : "light";
+                setColorScheme(next);
+                void saveColorScheme(next);
+              }}
               trackColor={{ true: "#2F8F7D", false: "#D9DCD6" }}
             />
           </View>

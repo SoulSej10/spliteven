@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Stack } from "expo-router";
 import * as Sentry from "@sentry/react-native";
 import * as SplashScreen from "expo-splash-screen";
@@ -15,6 +15,7 @@ import {
 } from "@expo-google-fonts/sora";
 import "../global.css";
 import { Providers } from "@/components/Providers";
+import { loadStoredColorScheme } from "@/lib/appearance";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -40,11 +41,9 @@ if (I18nManager.isRTL) {
   I18nManager.forceRTL(false);
 }
 
-// App defaults to light mode regardless of the device's system setting, per
-// direct feedback. Set once at module load (not in an effect) so the very
-// first frame renders light instead of flashing dark first. The Settings
-// toggle still calls toggleColorScheme/setColorScheme normally - this only
-// changes the starting point each cold launch.
+// Light until the user picks otherwise, regardless of the device's system
+// setting, per direct feedback. The saved choice (Settings > Dark mode) is
+// restored below before anything renders.
 colorScheme.set("light");
 
 function RootLayout() {
@@ -55,12 +54,28 @@ function RootLayout() {
     Sora_700Bold,
     Sora_800ExtraBold,
   });
+  const [schemeRestored, setSchemeRestored] = useState(false);
+
+  // Restore the saved light/dark choice while the splash screen is still up, so a
+  // dark-mode user never sees a light flash and the choice survives app restarts.
+  useEffect(() => {
+    let active = true;
+    loadStoredColorScheme().then((scheme) => {
+      colorScheme.set(scheme);
+      if (active) setSchemeRestored(true);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const ready = fontsLoaded && schemeRestored;
 
   useEffect(() => {
-    if (fontsLoaded) void SplashScreen.hideAsync();
-  }, [fontsLoaded]);
+    if (ready) void SplashScreen.hideAsync();
+  }, [ready]);
 
-  if (!fontsLoaded) return null;
+  if (!ready) return null;
 
   return (
     <Providers>
