@@ -10,17 +10,11 @@ export function Card({ className, style, ...props }: ViewProps & { className?: s
   return (
     <View
       className={cn(
-        "rounded-card bg-surface p-4 dark:bg-surface-dark",
+        "rounded-card border border-neutral-200 bg-surface p-4 dark:bg-surface-dark",
         className
       )}
       style={[
-        {
-          shadowColor: "#0A0A0A",
-          shadowOpacity: 0.06,
-          shadowRadius: 12,
-          shadowOffset: { width: 0, height: 4 },
-          elevation: 2,
-        },
+        { shadowColor: "#2A2528", shadowOpacity: 0.03, shadowRadius: 6, shadowOffset: { width: 0, height: 1 }, elevation: 0 },
         style,
       ]}
       {...props}

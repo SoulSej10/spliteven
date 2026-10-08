@@ -115,11 +115,7 @@ export default function GroupsListScreen() {
         onPress={() => setSheetOpen(true)}
         className="absolute bottom-5 right-5 h-16 w-16 items-center justify-center rounded-full bg-primary active:opacity-90"
         style={{
-          shadowColor: "#2F8F7D",
-          shadowOpacity: 0.35,
-          shadowRadius: 12,
-          shadowOffset: { width: 0, height: 6 },
-          elevation: 8,
+          shadowColor: "#2A2528", shadowOpacity: 0.12, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, elevation: 3,
         }}
       >
         <Plus color={palette.onPrimary} size={28} />

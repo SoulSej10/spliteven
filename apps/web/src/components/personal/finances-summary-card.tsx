@@ -32,8 +32,8 @@ export function FinancesSummaryCard() {
   if (!accounts || accounts.length === 0) return null;
 
   return (
-    <div className="mb-6 overflow-hidden rounded-2xl bg-primary px-6 py-5 text-primary-foreground shadow-sm">
-      <p className="text-xs font-medium text-primary-foreground/70">Total balance</p>
+    <div className="mb-6 overflow-hidden rounded-2xl border bg-primary-light px-6 py-5 text-primary-deep">
+      <p className="text-xs font-medium text-primary-deep/80">Total balance</p>
       <p className="mt-1 text-3xl font-extrabold">{formatMoney(total, currency)}</p>
       <div className="mt-4 grid grid-cols-2 gap-3 sm:max-w-sm">
         <div className="flex items-center gap-2 rounded-lg bg-white/10 px-3 py-2.5">
@@ -41,7 +41,7 @@ export function FinancesSummaryCard() {
             <ArrowDownLeft className="h-3.5 w-3.5" />
           </span>
           <span>
-            <span className="block text-[10px] text-primary-foreground/70">Income (mo.)</span>
+            <span className="block text-[10px] text-primary-deep/80">Income (mo.)</span>
             <span className="block text-sm font-bold">{formatMoney(monthIncome, currency)}</span>
           </span>
         </div>
@@ -50,7 +50,7 @@ export function FinancesSummaryCard() {
             <ArrowUpRight className="h-3.5 w-3.5" />
           </span>
           <span>
-            <span className="block text-[10px] text-primary-foreground/70">Expense (mo.)</span>
+            <span className="block text-[10px] text-primary-deep/80">Expense (mo.)</span>
             <span className="block text-sm font-bold">{formatMoney(monthExpense, currency)}</span>
           </span>
         </div>

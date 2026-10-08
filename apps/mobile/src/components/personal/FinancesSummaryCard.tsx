@@ -32,29 +32,29 @@ export function FinancesSummaryCard() {
   if (!accounts || accounts.length === 0) return null;
 
   return (
-    <View className="mb-4 overflow-hidden rounded-card bg-primary">
-      <View className="gap-4 bg-primary/95 px-5 py-5">
+    <View className="mb-4 overflow-hidden rounded-card border border-neutral-200 bg-primary-light">
+      <View className="gap-4 px-5 py-5">
         <View>
-          <Text className="text-xs font-medium text-on-primary/70">Total balance</Text>
-          <Text className="mt-1 text-3xl font-extrabold text-on-primary">{formatMoney(total, currency)}</Text>
+          <Text className="text-xs font-medium text-primary-deep/80">Total balance</Text>
+          <Text className="mt-1 text-3xl font-extrabold text-primary-deep">{formatMoney(total, currency)}</Text>
         </View>
         <View className="flex-row gap-4">
-          <View className="flex-1 flex-row items-center gap-2 rounded-lg bg-on-primary/10 px-3 py-2.5">
-            <View className="h-7 w-7 items-center justify-center rounded-lg bg-on-primary/15">
-              <ArrowDownLeft color={palette.onPrimary} size={14} />
+          <View className="flex-1 flex-row items-center gap-2 rounded-lg bg-surface/60 px-3 py-2.5">
+            <View className="h-7 w-7 items-center justify-center rounded-lg bg-surface/80">
+              <ArrowDownLeft color={palette.primary} size={14} />
             </View>
             <View>
-              <Text className="text-[10px] text-on-primary/70">Income (mo.)</Text>
-              <Text className="text-sm font-bold text-on-primary">{formatMoney(monthIncome, currency)}</Text>
+              <Text className="text-[10px] text-primary-deep/80">Income (mo.)</Text>
+              <Text className="text-sm font-bold text-primary-deep">{formatMoney(monthIncome, currency)}</Text>
             </View>
           </View>
-          <View className="flex-1 flex-row items-center gap-2 rounded-lg bg-on-primary/10 px-3 py-2.5">
-            <View className="h-7 w-7 items-center justify-center rounded-lg bg-on-primary/15">
-              <ArrowUpRight color={palette.onPrimary} size={14} />
+          <View className="flex-1 flex-row items-center gap-2 rounded-lg bg-surface/60 px-3 py-2.5">
+            <View className="h-7 w-7 items-center justify-center rounded-lg bg-surface/80">
+              <ArrowUpRight color={palette.primary} size={14} />
             </View>
             <View>
-              <Text className="text-[10px] text-on-primary/70">Expense (mo.)</Text>
-              <Text className="text-sm font-bold text-on-primary">{formatMoney(monthExpense, currency)}</Text>
+              <Text className="text-[10px] text-primary-deep/80">Expense (mo.)</Text>
+              <Text className="text-sm font-bold text-primary-deep">{formatMoney(monthExpense, currency)}</Text>
             </View>
           </View>
         </View>

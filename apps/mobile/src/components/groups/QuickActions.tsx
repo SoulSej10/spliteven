@@ -36,14 +36,8 @@ export function QuickActions({
         <Pressable
           key={action.label}
           onPress={action.onPress}
-          className="flex-1 flex-row items-center gap-3 rounded-card bg-surface p-4 active:opacity-80 dark:bg-surface-dark"
-          style={{
-            shadowColor: "#0A0A0A",
-            shadowOpacity: 0.05,
-            shadowRadius: 8,
-            shadowOffset: { width: 0, height: 2 },
-            elevation: 1,
-          }}
+          className="flex-1 flex-row items-center gap-3 rounded-card border border-neutral-200 bg-surface p-4 active:opacity-80 dark:bg-surface-dark"
+          style={{ elevation: 0 }}
         >
           <View className="h-11 w-11 items-center justify-center rounded-lg bg-neutral-500/10">
             <action.icon color={palette.muted} size={20} />

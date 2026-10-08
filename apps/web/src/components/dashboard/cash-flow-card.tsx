@@ -37,21 +37,21 @@ export function CashFlowCard() {
   const barHeight = (value: number) => (value > 0 ? Math.max(4, (value / max) * BAR_AREA_HEIGHT) : 2);
 
   return (
-    <div className="mb-6 overflow-hidden rounded-2xl bg-primary text-primary-foreground shadow-md">
+    <div className="mb-6 overflow-hidden rounded-2xl border bg-primary-light text-primary-deep">
       <div className="grid gap-6 p-6 lg:grid-cols-[1fr_1.1fr] lg:items-center">
         <div className="space-y-5">
           <div>
             <p className="text-xs font-medium opacity-70">Total balance</p>
             <p className="mt-1 font-mono text-3xl font-semibold tabular-nums">{formatMoney(total, currency)}</p>
-            <span className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-primary-foreground/15 px-3 py-1 text-xs font-semibold">
+            <span className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1 text-xs font-semibold">
               <TrendIcon className="h-3.5 w-3.5" weight="bold" />
               {positive ? "+" : "-"}
               {formatMoney(Math.abs(current.net), currency)} this month
             </span>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div className="flex items-center gap-2.5 rounded-xl bg-primary-foreground/10 px-3 py-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-foreground/15">
+            <div className="flex items-center gap-2.5 rounded-xl bg-card/60 px-3 py-2.5">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-card/80">
                 <ArrowDownLeft className="h-4 w-4" />
               </span>
               <div className="min-w-0">
@@ -61,8 +61,8 @@ export function CashFlowCard() {
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2.5 rounded-xl bg-primary-foreground/10 px-3 py-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-foreground/15">
+            <div className="flex items-center gap-2.5 rounded-xl bg-card/60 px-3 py-2.5">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-card/80">
                 <ArrowUpRight className="h-4 w-4" />
               </span>
               <div className="min-w-0">
@@ -75,17 +75,17 @@ export function CashFlowCard() {
           </div>
         </div>
 
-        <div className="rounded-xl bg-primary-foreground/10 px-4 pb-3 pt-4">
+        <div className="rounded-xl bg-card/60 px-4 pb-3 pt-4">
           <div className="flex items-end justify-between gap-1" style={{ height: BAR_AREA_HEIGHT }}>
             {months.map((m) => (
               <div key={m.key} className="flex flex-1 items-end justify-center gap-1">
                 <div
-                  className="w-3 rounded-t-full bg-primary-foreground"
+                  className="w-3 rounded-t-full bg-primary-deep"
                   style={{ height: barHeight(m.income) }}
                   title={`${MONTH_SHORT[m.month]} income ${formatMoney(m.income, currency)}`}
                 />
                 <div
-                  className="w-3 rounded-t-full bg-primary-foreground/40"
+                  className="w-3 rounded-t-full bg-primary-deep/40"
                   style={{ height: barHeight(m.expense) }}
                   title={`${MONTH_SHORT[m.month]} expense ${formatMoney(m.expense, currency)}`}
                 />
@@ -104,10 +104,10 @@ export function CashFlowCard() {
           </div>
           <div className="mt-3 flex items-center justify-center gap-4 text-[11px] opacity-80">
             <span className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-primary-foreground" /> Income
+              <span className="h-2 w-2 rounded-full bg-primary-deep" /> Income
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-primary-foreground/40" /> Expense
+              <span className="h-2 w-2 rounded-full bg-primary-deep/40" /> Expense
             </span>
           </div>
         </div>
