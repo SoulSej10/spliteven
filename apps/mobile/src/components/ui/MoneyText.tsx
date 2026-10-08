@@ -3,7 +3,7 @@ import { Text } from "@/components/ui/typography";
 import { formatMoney } from "@/lib/format";
 import { cn } from "@/lib/cn";
 
-/** Bold tabular-numeral money display, colored by sign — PROJECT_PLAN §3.3/§3.4. */
+/** Bold money display, colored by sign — PROJECT_PLAN §3.3/§3.4. */
 export function MoneyText({
   amount,
   currency,
@@ -28,7 +28,6 @@ export function MoneyText({
   return (
     <Text
       className={cn("font-bold text-base", toneClass, className)}
-      style={[{ fontVariant: ["tabular-nums"] }, props.style]}
       {...props}
     >
       {formatMoney(Math.abs(amount), currency)}

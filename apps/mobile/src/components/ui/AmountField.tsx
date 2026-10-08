@@ -51,7 +51,7 @@ function CalcButton({
         TONE_CLASSES[tone]
       )}
     >
-      <Text className={cn("text-base font-semibold tabular-nums", TONE_TEXT_CLASSES[tone])}>{label}</Text>
+      <Text className={cn("text-base font-semibold", TONE_TEXT_CLASSES[tone])}>{label}</Text>
     </Pressable>
   );
 }
@@ -159,7 +159,7 @@ export function AmountField({
           value={calc.display}
           onChangeText={handleTyped}
           className={cn(
-            "rounded-card bg-neutral-100 px-4 py-3 text-right text-2xl font-bold tabular-nums text-neutral-900 dark:bg-on-primary/5 dark:text-neutral-100",
+            "rounded-card bg-neutral-100 px-4 py-3 text-right text-2xl font-bold text-neutral-900 dark:bg-on-primary/5 dark:text-neutral-100",
             error && "border border-negative"
           )}
         />
