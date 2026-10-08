@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import Svg, { Rect } from "react-native-svg";
 import type { User } from "@evensplit/shared";
 import { Card } from "@/components/ui/Card";

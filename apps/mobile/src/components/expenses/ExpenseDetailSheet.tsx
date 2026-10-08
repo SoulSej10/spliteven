@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Alert, Text, View } from "react-native";
+import { Alert, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { useQueryClient } from "@tanstack/react-query";
 import type { User } from "@evensplit/shared";
 import { Trash as Trash2, Pencil } from "phosphor-react-native";

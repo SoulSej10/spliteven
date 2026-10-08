@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+import { Text } from "@/components/ui/typography";
 import type { Icon } from "phosphor-react-native";
 import {
   Airplane,

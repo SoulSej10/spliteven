@@ -1,4 +1,5 @@
-import { Text, type TextProps } from "react-native";
+import { type TextProps } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { formatMoney } from "@/lib/format";
 import { cn } from "@/lib/cn";
 

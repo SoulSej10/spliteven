@@ -1,4 +1,5 @@
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { useColorScheme } from "nativewind";
 import { Check } from "phosphor-react-native";
 import {

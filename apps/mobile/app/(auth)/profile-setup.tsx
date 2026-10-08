@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from "react-native";
+import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { router } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { zodResolver } from "@hookform/resolvers/zod";

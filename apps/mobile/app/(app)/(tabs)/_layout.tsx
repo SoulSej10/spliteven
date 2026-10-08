@@ -34,7 +34,7 @@ export default function TabsLayout() {
           tabBarActiveTintColor: palette.primary,
           tabBarInactiveTintColor: palette.muted,
           tabBarShowLabel: true,
-          tabBarLabelStyle: { fontSize: 10, fontWeight: "600" },
+          tabBarLabelStyle: { fontSize: 10, fontFamily: "Bricolage_600SemiBold" },
           tabBarStyle: {
             height: 56 + insets.bottom,
             paddingTop: 8,

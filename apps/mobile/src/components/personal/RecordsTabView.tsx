@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { Alert, Pressable, Text, View } from "react-native";
+import { Alert, Pressable, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { router } from "expo-router";
 import { ArrowDownLeft, ArrowsLeftRight as ArrowLeftRight, ArrowUpRight, CaretLeft as ChevronLeft, CaretRight as ChevronRight, Receipt } from "phosphor-react-native";
 import { Card } from "@/components/ui/Card";

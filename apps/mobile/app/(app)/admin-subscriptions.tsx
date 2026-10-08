@@ -1,4 +1,5 @@
-import { Alert, Pressable, ScrollView, Text, View } from "react-native";
+import { Alert, Pressable, ScrollView, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useColorScheme } from "nativewind";

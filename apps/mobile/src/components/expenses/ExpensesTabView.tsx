@@ -1,4 +1,5 @@
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import type { User } from "@evensplit/shared";
 import { Receipt, Repeat } from "phosphor-react-native";
 import { Card } from "@/components/ui/Card";

@@ -1,4 +1,5 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { WarningCircle as AlertCircle } from "phosphor-react-native";
 import { Button } from "@/components/ui/Button";
 import { palette } from "@/theme/palette";

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Alert, Pressable, Text, View } from "react-native";
+import { Alert, Pressable, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { User } from "@evensplit/shared";
 import { BottomSheet } from "@/components/ui/BottomSheet";

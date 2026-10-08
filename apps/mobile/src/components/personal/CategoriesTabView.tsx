@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Alert, Pressable, Text, View } from "react-native";
+import { Alert, Pressable, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { Pencil, Tag, Trash as Trash2 } from "phosphor-react-native";
 import type { PersonalCategory } from "@evensplit/shared";
 import { Card } from "@/components/ui/Card";

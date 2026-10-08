@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { router } from "expo-router";
 import { computeCategoryBreakdown, computeDailyTotals } from "@evensplit/shared";
 import { CaretDown as ChevronDown, CaretLeft as ChevronLeft, CaretRight as ChevronRight, ChartPie as PieChart } from "phosphor-react-native";

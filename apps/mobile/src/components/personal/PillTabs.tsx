@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { useColorScheme } from "nativewind";
 import { EdgeFade } from "@/components/ui/EdgeFade";
 import { cn } from "@/lib/cn";
@@ -56,9 +57,9 @@ export function PillTabs<T extends string>({
                 offsets.current[opt.value] = e.nativeEvent.layout.x;
               }}
               className="flex-row items-center gap-1 rounded-lg px-3 py-1.5"
-              style={{ backgroundColor: active ? palette.primary : inactiveBg }}
+              style={{ backgroundColor: active ? palette.primaryFill : inactiveBg }}
             >
-              {opt.icon && <opt.icon color={active ? "white" : palette.muted} size={12} />}
+              {opt.icon && <opt.icon color={active ? palette.onPrimary : palette.muted} size={12} />}
               <Text className={cn("text-xs font-semibold", active ? "text-on-primary" : "text-neutral-500")}>
                 {opt.label}
               </Text>

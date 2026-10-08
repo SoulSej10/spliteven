@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { Dimensions, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, Text, View } from "react-native";
+import { Dimensions, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { Easing, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { X } from "phosphor-react-native";

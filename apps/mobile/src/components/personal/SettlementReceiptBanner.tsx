@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Alert, Pressable, Text, View } from "react-native";
+import { Alert, Pressable, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Settlement } from "@evensplit/shared";
 import { CheckCircle as CheckCircle2 } from "phosphor-react-native";

@@ -1,5 +1,6 @@
 import { useMemo } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { router } from "expo-router";
 import { ArrowRight } from "phosphor-react-native";
 import { Card } from "@/components/ui/Card";

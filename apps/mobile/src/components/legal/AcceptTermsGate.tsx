@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ScrollView, Text, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
+import { ScrollView, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { Button } from "@/components/ui/Button";
 import { PrivacyPolicyContent } from "./PrivacyPolicyContent";
 import { TermsOfServiceContent } from "./TermsOfServiceContent";

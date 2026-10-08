@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { Bell, Plus, Users } from "phosphor-react-native";

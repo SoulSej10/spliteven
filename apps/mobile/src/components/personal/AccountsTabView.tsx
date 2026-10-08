@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Alert, Pressable, Text, View } from "react-native";
+import { Alert, Pressable, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { computeAllAccountBalances, type PersonalAccount, type PersonalAccountType } from "@evensplit/shared";
 import { Pencil, Plus, Sparkle, Wallet } from "phosphor-react-native";
 import { Card } from "@/components/ui/Card";

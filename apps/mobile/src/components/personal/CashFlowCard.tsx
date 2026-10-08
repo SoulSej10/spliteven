@@ -1,4 +1,5 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { ArrowDownLeft, ArrowUpRight, TrendDown, TrendUp } from "phosphor-react-native";
 import { formatMoney } from "@/lib/format";
 import { usePersonalTotals } from "@/hooks/use-personal-totals";

@@ -1,5 +1,6 @@
 import { useMemo } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { router } from "expo-router";
 import {
   computeAllAccountBalances,
@@ -68,7 +69,7 @@ export function OverviewTabView({ onNavigateTab }: { onNavigateTab: (tab: "accou
     <View className="gap-5">
       <View className="gap-2">
         <View className="flex-row items-center justify-between">
-          <Text className="text-sm font-medium text-neutral-500">Accounts</Text>
+          <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">Accounts</Text>
           <Pressable onPress={() => onNavigateTab("accounts")}>
             <Text className="text-sm font-semibold text-primary-deep">See all</Text>
           </Pressable>
@@ -122,7 +123,7 @@ export function OverviewTabView({ onNavigateTab }: { onNavigateTab: (tab: "accou
 
       <View className="gap-2">
         <View className="flex-row items-center justify-between">
-          <Text className="text-sm font-medium text-neutral-500">Recent transactions</Text>
+          <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">Recent transactions</Text>
           <Pressable onPress={() => onNavigateTab("records")}>
             <Text className="text-sm font-semibold text-primary-deep">See all</Text>
           </Pressable>

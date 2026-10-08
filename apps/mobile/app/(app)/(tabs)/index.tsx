@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from "react";
-import { ScrollView, Text, View, Pressable } from "react-native";
+import { ScrollView, View, Pressable } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { ArrowDownLeft, ArrowRight, ArrowsLeftRight as ArrowRightLeft, ArrowUpRight, Bell, Clock, PiggyBank } from "phosphor-react-native";

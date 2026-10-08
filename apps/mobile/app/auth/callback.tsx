@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { router } from "expo-router";
 import * as Linking from "expo-linking";
 import { applyAuthCallbackUrl } from "@/lib/supabase/authDeepLink";

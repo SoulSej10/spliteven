@@ -1,4 +1,5 @@
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { CaretRight } from "phosphor-react-native";
 import { formatMoney } from "@/lib/format";
 import { palette } from "@/theme/palette";

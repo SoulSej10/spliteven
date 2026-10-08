@@ -1,4 +1,5 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { AcceptTermsGate } from "@/components/legal/AcceptTermsGate";

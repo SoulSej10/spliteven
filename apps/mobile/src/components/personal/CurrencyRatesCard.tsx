@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Text, TextInput, View } from "react-native";
+import { View } from "react-native";
+import { Text, TextInput } from "@/components/ui/typography";
 import { ArrowsLeftRight } from "phosphor-react-native";
 import { foreignCurrencies, isValidRate } from "@evensplit/shared";
 import { Card } from "@/components/ui/Card";

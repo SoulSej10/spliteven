@@ -1,4 +1,5 @@
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
 
 export function SegmentedControl<T extends string>({

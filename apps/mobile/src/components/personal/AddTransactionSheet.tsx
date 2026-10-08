@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Alert, Pressable, ScrollView, Text, View } from "react-native";
+import { Alert, Pressable, ScrollView, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { createPersonalTransactionSchema } from "@evensplit/shared";
 import { BottomSheet } from "@/components/ui/BottomSheet";

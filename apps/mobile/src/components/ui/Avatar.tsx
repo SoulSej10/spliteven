@@ -1,4 +1,5 @@
-import { Image, Text, View } from "react-native";
+import { Image, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { initials } from "@/lib/format";
 import { cn } from "@/lib/cn";
 

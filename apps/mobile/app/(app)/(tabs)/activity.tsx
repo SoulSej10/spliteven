@@ -1,5 +1,6 @@
 import { useMemo } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowsLeftRight as ArrowRightLeft, Receipt } from "phosphor-react-native";
 import { Card } from "@/components/ui/Card";

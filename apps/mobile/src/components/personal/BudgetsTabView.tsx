@@ -1,5 +1,6 @@
 import { useMemo } from "react";
-import { Alert, Pressable, Text, View } from "react-native";
+import { Alert, Pressable, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { computeBudgetProgress, computeBudgetSuggestions, filterTransactionsForCurrentMonth } from "@evensplit/shared";
 import { PiggyBank, Sparkle, Trash as Trash2 } from "phosphor-react-native";
 import { Card } from "@/components/ui/Card";

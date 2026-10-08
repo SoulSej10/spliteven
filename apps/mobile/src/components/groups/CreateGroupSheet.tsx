@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Alert, Pressable, Text, View } from "react-native";
+import { Alert, Pressable, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { router } from "expo-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { createGroupSchema } from "@evensplit/shared";

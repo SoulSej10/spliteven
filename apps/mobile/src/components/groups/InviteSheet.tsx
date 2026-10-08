@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Alert, Share, Text, View } from "react-native";
+import { Alert, Share, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import * as Clipboard from "expo-clipboard";
 import * as Linking from "expo-linking";
 import { Copy, PaperPlaneTilt as Send, UserPlus } from "phosphor-react-native";

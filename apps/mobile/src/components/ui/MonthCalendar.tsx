@@ -1,4 +1,5 @@
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { CaretLeft as ChevronLeft, CaretRight as ChevronRight } from "phosphor-react-native";
 import type { DailyTotal } from "@evensplit/shared";
 import { formatMoney } from "@/lib/format";

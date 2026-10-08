@@ -1,4 +1,5 @@
-import { Modal, Pressable, Text, View } from "react-native";
+import { Modal, Pressable, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { CheckCircle, Warning } from "phosphor-react-native";
 import { Button } from "./Button";
 import { cn } from "@/lib/cn";

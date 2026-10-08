@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
-import { Dimensions, Modal, Pressable, Text, View } from "react-native";
+import { Dimensions, Modal, Pressable, View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { Button } from "@/components/ui/Button";
 import { hasSeenPageTour, setPageTourShown } from "@/lib/device-flags";
 import { palette } from "@/theme/palette";

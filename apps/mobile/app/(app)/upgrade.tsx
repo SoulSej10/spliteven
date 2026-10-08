@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Alert, Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Alert, Image, Pressable, ScrollView, View } from "react-native";
+import { Text, TextInput } from "@/components/ui/typography";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useColorScheme } from "nativewind";

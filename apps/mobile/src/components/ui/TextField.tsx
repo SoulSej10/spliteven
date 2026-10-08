@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Pressable, Text, TextInput, View, type TextInputProps } from "react-native";
+import { Pressable, View, type TextInputProps } from "react-native";
+import { Text, TextInput } from "@/components/ui/typography";
 import { Eye, EyeSlash } from "phosphor-react-native";
 import { cn } from "@/lib/cn";
 import { palette } from "@/theme/palette";

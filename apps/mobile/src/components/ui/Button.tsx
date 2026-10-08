@@ -1,4 +1,5 @@
-import { ActivityIndicator, Pressable, Text, type PressableProps } from "react-native";
+import { ActivityIndicator, Pressable, type PressableProps } from "react-native";
+import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
 import { palette } from "@/theme/palette";
 

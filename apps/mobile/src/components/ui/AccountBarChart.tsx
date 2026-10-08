@@ -1,4 +1,5 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { Text } from "@/components/ui/typography";
 import Svg, { Rect } from "react-native-svg";
 import { formatMoney } from "@/lib/format";
 import { palette } from "@/theme/palette";
