@@ -7,6 +7,7 @@ import { SkeletonCardRows } from "@/components/ui/Skeleton";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { useDeletePersonalCategory, usePersonalCategories } from "@/hooks/use-personal";
 import { AddCategorySheet } from "@/components/personal/AddCategorySheet";
+import { palette } from "@/theme/palette";
 
 /** The "Add" action lives in finances.tsx's floating action button, not inline here - editing an existing category is inline. */
 export function CategoriesTabView() {
@@ -42,10 +43,10 @@ export function CategoriesTabView() {
               </Text>
               <View className="flex-row items-center gap-4">
                 <Pressable onPress={() => setEditing(c)} hitSlop={10}>
-                  <Pencil color="#6B7169" size={16} />
+                  <Pencil color={palette.muted} size={16} />
                 </Pressable>
                 <Pressable onPress={() => onDelete(c.id, c.name)} hitSlop={10}>
-                  <Trash2 color="#D95F5F" size={16} />
+                  <Trash2 color={palette.negative} size={16} />
                 </Pressable>
               </View>
             </Card>
@@ -60,7 +61,7 @@ export function CategoriesTabView() {
       {categories?.length === 0 && (
         <View className="items-center gap-2 py-14">
           <View className="h-14 w-14 items-center justify-center rounded-full bg-primary-light">
-            <Tag color="#2F8F7D" size={22} />
+            <Tag color={palette.primary} size={22} />
           </View>
           <Text className="text-sm text-neutral-500">No categories yet.</Text>
         </View>

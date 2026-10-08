@@ -14,6 +14,7 @@ import {
 } from "@/hooks/use-personal";
 import { formatDate } from "@/lib/format";
 import type { PersonalTransaction } from "@evensplit/shared";
+import { palette } from "@/theme/palette";
 
 /** income/group_reimbursement both mean "cash came in" - positive tint. expense/group_advance both mean "cash left" - negative tint. transfer is neutral. */
 export function TransactionIcon({ kind }: { kind: PersonalTransaction["kind"] }) {
@@ -22,9 +23,9 @@ export function TransactionIcon({ kind }: { kind: PersonalTransaction["kind"] })
   const tint = isCredit ? "bg-positive/10" : isDebit ? "bg-negative/10" : "bg-neutral-500/10";
   return (
     <View className={`h-9 w-9 items-center justify-center rounded-lg ${tint}`}>
-      {isCredit && <ArrowDownLeft color="#009B87" size={16} />}
-      {isDebit && <ArrowUpRight color="#D95F5F" size={16} />}
-      {kind === "transfer" && <ArrowLeftRight color="#6B7169" size={16} />}
+      {isCredit && <ArrowDownLeft color={palette.positive} size={16} />}
+      {isDebit && <ArrowUpRight color={palette.negative} size={16} />}
+      {kind === "transfer" && <ArrowLeftRight color={palette.muted} size={16} />}
     </View>
   );
 }
@@ -93,7 +94,7 @@ export function RecordsTabView() {
           hitSlop={10}
           className="h-8 w-8 items-center justify-center rounded-lg bg-neutral-500/10"
         >
-          <ChevronLeft color="#6B7169" size={16} />
+          <ChevronLeft color={palette.muted} size={16} />
         </Pressable>
         <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
           {MONTH_NAMES[month.month]} {month.year}
@@ -104,14 +105,14 @@ export function RecordsTabView() {
           hitSlop={10}
           className={`h-8 w-8 items-center justify-center rounded-lg bg-neutral-500/10 ${isCurrentMonth ? "opacity-30" : ""}`}
         >
-          <ChevronRight color="#6B7169" size={16} />
+          <ChevronRight color={palette.muted} size={16} />
         </Pressable>
       </View>
 
       {(accounts?.length ?? 0) === 0 && (
         <View className="items-center gap-2 py-14">
           <View className="h-14 w-14 items-center justify-center rounded-full bg-primary-light">
-            <Receipt color="#2F8F7D" size={22} />
+            <Receipt color={palette.primary} size={22} />
           </View>
           <Text className="text-sm text-neutral-500">Add an account before logging a transaction.</Text>
         </View>
@@ -120,7 +121,7 @@ export function RecordsTabView() {
       {(accounts?.length ?? 0) > 0 && monthTransactions.length === 0 && (
         <View className="items-center gap-2 py-14">
           <View className="h-14 w-14 items-center justify-center rounded-full bg-primary-light">
-            <Receipt color="#2F8F7D" size={22} />
+            <Receipt color={palette.primary} size={22} />
           </View>
           <Text className="text-sm text-neutral-500">
             {isCurrentMonth ? "No transactions yet. Log your first one." : "No transactions this month."}
@@ -148,7 +149,7 @@ export function RecordsTabView() {
                 </Text>
                 {groupInfo && tx.linked_group_id && (
                   <Pressable onPress={() => router.push(`/(app)/groups/${tx.linked_group_id}`)} hitSlop={4}>
-                    <Text className="mt-0.5 text-xs font-medium text-primary" numberOfLines={1}>
+                    <Text className="mt-0.5 text-xs font-medium text-primary-deep" numberOfLines={1}>
                       From {groupInfo.name}
                     </Text>
                   </Pressable>

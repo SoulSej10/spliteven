@@ -99,7 +99,7 @@ export function AddTransactionSheet({
               kind === k.value ? "border-primary bg-primary-light" : "border-neutral-500/20"
             )}
           >
-            <Text className={cn("text-sm font-semibold", kind === k.value ? "text-primary" : "text-neutral-500")}>
+            <Text className={cn("text-sm font-semibold", kind === k.value ? "text-primary-deep" : "text-neutral-500")}>
               {k.label}
             </Text>
           </Pressable>
@@ -120,7 +120,7 @@ export function AddTransactionSheet({
                 accountId === a.id ? "border-primary bg-primary-light" : "border-neutral-500/20"
               )}
             >
-              <Text className={cn("text-sm font-medium", accountId === a.id ? "text-primary" : "text-neutral-500")}>
+              <Text className={cn("text-sm font-medium", accountId === a.id ? "text-primary-deep" : "text-neutral-500")}>
                 {a.name}
               </Text>
             </Pressable>
@@ -146,7 +146,7 @@ export function AddTransactionSheet({
                   <Text
                     className={cn(
                       "text-sm font-medium",
-                      transferAccountId === a.id ? "text-primary" : "text-neutral-500"
+                      transferAccountId === a.id ? "text-primary-deep" : "text-neutral-500"
                     )}
                   >
                     {a.name}
@@ -169,7 +169,7 @@ export function AddTransactionSheet({
                 )}
               >
                 <Text
-                  className={cn("text-sm font-medium", categoryId === c.id ? "text-primary" : "text-neutral-500")}
+                  className={cn("text-sm font-medium", categoryId === c.id ? "text-primary-deep" : "text-neutral-500")}
                 >
                   {c.icon ? `${c.icon} ` : ""}
                   {c.name}

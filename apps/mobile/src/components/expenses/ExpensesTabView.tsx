@@ -10,6 +10,7 @@ import { SpendingChart } from "@/components/expenses/SpendingChart";
 import { useGroupExpenses } from "@/hooks/use-group-detail";
 import { formatDate } from "@/lib/format";
 import type { ExpenseWithShares } from "@/lib/api/expenses";
+import { palette } from "@/theme/palette";
 
 export function ExpensesTabView({
   groupId,
@@ -41,7 +42,7 @@ export function ExpensesTabView({
   if ((expenses?.length ?? 0) === 0) {
     return (
       <View className="items-center gap-2 py-14">
-        <Receipt color="#6B7169" size={22} />
+        <Receipt color={palette.muted} size={22} />
         <Text className="text-sm text-neutral-500">No expenses yet. Add the first one.</Text>
       </View>
     );
@@ -66,7 +67,7 @@ export function ExpensesTabView({
                   </Text>
                   {expense.is_recurring && (
                     <View className="flex-row items-center gap-0.5 rounded-pill bg-primary-light px-1.5 py-0.5">
-                      <Repeat color="#2F8F7D" size={10} />
+                      <Repeat color={palette.primary} size={10} />
                     </View>
                   )}
                 </View>

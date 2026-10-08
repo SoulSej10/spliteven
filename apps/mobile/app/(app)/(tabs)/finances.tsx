@@ -20,6 +20,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useSettingsDrawer } from "@/context/settings-drawer";
 import { usePersonalAccounts } from "@/hooks/use-personal";
 import { PageTour, usePageTour } from "@/components/onboarding/PageTour";
+import { palette } from "@/theme/palette";
 
 type Tab = "overview" | "records" | "analysis" | "budgets" | "accounts" | "categories";
 
@@ -95,7 +96,7 @@ export default function FinancesScreen() {
           className="h-10 w-10 items-center justify-center rounded-full bg-surface active:opacity-70 dark:bg-surface-dark"
           accessibilityLabel="Activity"
         >
-          <Bell color="#0A0A0A" size={18} />
+          <Bell color={palette.ink} size={18} />
         </Pressable>
       </View>
 
@@ -135,7 +136,7 @@ export default function FinancesScreen() {
             elevation: 8,
           }}
         >
-          <Plus color="white" size={28} />
+          <Plus color={palette.onPrimary} size={28} />
         </Pressable>
       )}
 

@@ -14,8 +14,9 @@ import { AccountBarChart, type AccountActivity } from "@/components/ui/AccountBa
 import { cn } from "@/lib/cn";
 import { usePersonalAccounts, usePersonalCategories, usePersonalTransactions } from "@/hooks/use-personal";
 import { formatMoney } from "@/lib/format";
+import { palette } from "@/theme/palette";
+import { DONUT_COLORS } from "@/theme/chartColors";
 
-const DONUT_COLORS = ["#2F8F7D", "#5FBBA5", "#F5A524", "#009B87", "#D95F5F", "#726C7D"];
 const CATEGORY_ALL = "__all__";
 const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
@@ -104,7 +105,7 @@ export function AnalysisTabView() {
     return (
       <View className="items-center gap-2 py-14">
         <View className="h-14 w-14 items-center justify-center rounded-full bg-primary-light">
-          <PieChart color="#2F8F7D" size={22} />
+          <PieChart color={palette.primary} size={22} />
         </View>
         <Text className="text-sm text-neutral-500">Log a few transactions to see your breakdown.</Text>
       </View>
@@ -119,7 +120,7 @@ export function AnalysisTabView() {
           hitSlop={10}
           className="h-8 w-8 items-center justify-center rounded-lg bg-neutral-500/10"
         >
-          <ChevronLeft color="#6B7169" size={16} />
+          <ChevronLeft color={palette.muted} size={16} />
         </Pressable>
         <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
           {MONTH_NAMES[calendarDate.getMonth()]} {calendarDate.getFullYear()}
@@ -130,7 +131,7 @@ export function AnalysisTabView() {
           hitSlop={10}
           className={cn("h-8 w-8 items-center justify-center rounded-lg bg-neutral-500/10", isCurrentMonth && "opacity-30")}
         >
-          <ChevronRight color="#6B7169" size={16} />
+          <ChevronRight color={palette.muted} size={16} />
         </Pressable>
       </View>
 
@@ -139,7 +140,7 @@ export function AnalysisTabView() {
         className="flex-row items-center justify-center gap-1.5 self-center rounded-pill border border-neutral-500/25 px-4 py-2"
       >
         <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">{currentLabel}</Text>
-        <ChevronDown color="#6B7169" size={16} />
+        <ChevronDown color={palette.muted} size={16} />
       </Pressable>
 
       {(viewType === "expense-overview" || viewType === "income-overview") && (
@@ -189,7 +190,7 @@ export function AnalysisTabView() {
               series={[
                 {
                   label: kind === "expense" ? "Expense" : "Income",
-                  color: kind === "expense" ? "#D95F5F" : "#009B87",
+                  color: kind === "expense" ? palette.negative : palette.positive,
                   points: flowSeries.points,
                 },
               ]}
@@ -209,7 +210,7 @@ export function AnalysisTabView() {
                 <Text
                   className={cn(
                     "text-xs font-medium",
-                    categoryFilter === CATEGORY_ALL ? "text-primary" : "text-neutral-500"
+                    categoryFilter === CATEGORY_ALL ? "text-primary-deep" : "text-neutral-500"
                   )}
                 >
                   All categories
@@ -224,7 +225,7 @@ export function AnalysisTabView() {
                     categoryFilter === c.id ? "border-primary bg-primary-light" : "border-neutral-500/20"
                   )}
                 >
-                  <Text className={cn("text-xs font-medium", categoryFilter === c.id ? "text-primary" : "text-neutral-500")}>
+                  <Text className={cn("text-xs font-medium", categoryFilter === c.id ? "text-primary-deep" : "text-neutral-500")}>
                     {c.icon ? `${c.icon} ` : ""}
                     {c.name}
                   </Text>
@@ -264,7 +265,7 @@ export function AnalysisTabView() {
             <Text
               className={cn(
                 "text-base",
-                viewType === opt.value ? "font-semibold text-primary" : "text-neutral-900 dark:text-neutral-100"
+                viewType === opt.value ? "font-semibold text-primary-deep" : "text-neutral-900 dark:text-neutral-100"
               )}
             >
               {opt.label}

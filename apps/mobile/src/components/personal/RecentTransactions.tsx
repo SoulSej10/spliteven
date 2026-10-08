@@ -7,6 +7,7 @@ import { MoneyText } from "@/components/ui/MoneyText";
 import { usePersonalAccounts, usePersonalCategories, usePersonalTransactions } from "@/hooks/use-personal";
 import { formatDate } from "@/lib/format";
 import { TransactionIcon, transactionLabel } from "./RecordsTabView";
+import { palette } from "@/theme/palette";
 
 const RECENT_COUNT = 6;
 
@@ -36,8 +37,8 @@ export function RecentTransactions() {
           onPress={() => router.navigate({ pathname: "/(app)/(tabs)/finances", params: { tab: "records" } })}
           className="flex-row items-center gap-1 active:opacity-70"
         >
-          <Text className="text-sm font-semibold text-primary">See all</Text>
-          <ArrowRight color="#2F8F7D" size={14} />
+          <Text className="text-sm font-semibold text-primary-deep">See all</Text>
+          <ArrowRight color={palette.primary} size={14} />
         </Pressable>
       </View>
 

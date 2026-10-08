@@ -2,6 +2,7 @@ import { Modal, Pressable, Text, View } from "react-native";
 import { CheckCircle, Warning } from "phosphor-react-native";
 import { Button } from "./Button";
 import { cn } from "@/lib/cn";
+import { palette } from "@/theme/palette";
 
 type Tone = "info" | "success" | "warning";
 
@@ -18,9 +19,9 @@ const TONE_ICON_BG: Record<Tone, string> = {
 };
 
 const TONE_ICON_COLOR: Record<Tone, string> = {
-  info: "#2F8F7D",
-  success: "#2F8F7D",
-  warning: "#D95F5F",
+  info: palette.primary,
+  success: palette.primary,
+  warning: palette.negative,
 };
 
 /**

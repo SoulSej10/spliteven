@@ -113,7 +113,7 @@ export function OverviewTab({
         <h3 className="mb-2 text-sm font-medium text-muted-foreground">Recent expenses</h3>
         {recentExpenses.length === 0 ? (
           <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-border py-10 text-center">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-light text-primary">
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-light text-primary-deep">
               <Receipt className="h-5 w-5" />
             </span>
             <p className="text-sm text-muted-foreground">No expenses yet.</p>

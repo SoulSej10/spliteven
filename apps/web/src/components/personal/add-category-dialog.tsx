@@ -147,7 +147,7 @@ export function EditCategoryButton({ category }: { category: PersonalCategory })
       category={category}
       trigger={
         <button
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-primary-light hover:text-primary"
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-primary-light hover:text-primary-deep"
           aria-label={`Edit ${category.name}`}
         >
           <Pencil className="h-4 w-4" />

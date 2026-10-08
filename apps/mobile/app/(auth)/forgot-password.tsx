@@ -10,11 +10,12 @@ import { passwordResetRequestSchema, type PasswordResetRequestInput } from "@eve
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { getSupabaseClient } from "@/lib/supabase/client";
+import { palette } from "@/theme/palette";
 
 export default function ForgotPasswordScreen() {
   const [sent, setSent] = useState(false);
   const { colorScheme } = useColorScheme();
-  const iconColor = colorScheme === "dark" ? "#F4F5F3" : "#0A0A0A";
+  const iconColor = palette.ink;
   const { handleSubmit, formState, setValue, watch } = useForm<PasswordResetRequestInput>({
     resolver: zodResolver(passwordResetRequestSchema),
     defaultValues: { email: "" },
@@ -42,7 +43,7 @@ export default function ForgotPasswordScreen() {
 
       <View className="mb-8 items-center gap-3">
         <View className="h-14 w-14 items-center justify-center rounded-card bg-primary-light">
-          <Mail color="#2F8F7D" size={24} />
+          <Mail color={palette.primary} size={24} />
         </View>
         <Text className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
           Reset your password

@@ -4,11 +4,12 @@ import { router } from "expo-router";
 import { useColorScheme } from "nativewind";
 import { ArrowLeft } from "phosphor-react-native";
 import { TermsOfServiceContent } from "@/components/legal/TermsOfServiceContent";
+import { palette } from "@/theme/palette";
 
 /** Read-only view of the same terms shown at the first-run gate, reachable anytime from Settings. */
 export default function TermsOfServiceScreen() {
   const { colorScheme } = useColorScheme();
-  const iconColor = colorScheme === "dark" ? "#F4F5F3" : "#0A0A0A";
+  const iconColor = palette.ink;
 
   return (
     <SafeAreaView className="flex-1 bg-neutral-100 dark:bg-neutral-900">

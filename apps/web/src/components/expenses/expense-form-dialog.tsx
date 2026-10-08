@@ -340,7 +340,7 @@ export function ExpenseFormDialog({
                   onClick={() => setSplitType(t)}
                   className={`rounded-lg border px-2 py-1.5 text-xs font-medium transition-colors ${
                     splitType === t
-                      ? "border-primary bg-primary-light text-primary"
+                      ? "border-primary bg-primary-light text-primary-deep"
                       : "border-border text-muted-foreground"
                   }`}
                 >

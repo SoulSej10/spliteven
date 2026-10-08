@@ -197,7 +197,7 @@ function LandingPageContent() {
                 href={PENIKO_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-0.5 text-[11px] font-medium text-muted-foreground hover:text-primary"
+                className="mt-0.5 text-[11px] font-medium text-muted-foreground hover:text-primary-deep"
               >
                 by {PENIKO_NAME}
               </a>
@@ -238,7 +238,7 @@ function LandingPageContent() {
             className="animate-in fade-in slide-in-from-bottom-3 flex flex-col items-start gap-5 duration-700"
             style={{ animationFillMode: "backwards" }}
           >
-            <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-primary">
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-primary-deep">
               <span className="h-1.5 w-1.5 rounded-full bg-primary" />
               Shared expenses, sorted
             </span>
@@ -352,7 +352,7 @@ function LandingPageContent() {
             Real screens from the web app and the Android app, not mockups.
           </p>
 
-          <h3 className="mt-10 text-sm font-semibold uppercase tracking-wide text-primary">
+          <h3 className="mt-10 text-sm font-semibold uppercase tracking-wide text-primary-deep">
             On the web
           </h3>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -360,7 +360,7 @@ function LandingPageContent() {
           </p>
           <WebScreensCarousel screens={webScreens} />
 
-          <h3 className="mt-14 text-sm font-semibold uppercase tracking-wide text-primary">
+          <h3 className="mt-14 text-sm font-semibold uppercase tracking-wide text-primary-deep">
             On Android
           </h3>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -440,7 +440,7 @@ function LandingPageContent() {
             </div>
 
             <div className="rounded-lg border border-border/60 bg-card p-6">
-              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-light text-primary">
+              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-light text-primary-deep">
                 <Users className="h-5 w-5" />
               </span>
               <h3 className="mt-4 font-medium">Groups for every crew</h3>
@@ -450,7 +450,7 @@ function LandingPageContent() {
             </div>
 
             <div className="rounded-lg border border-border/60 bg-card p-6">
-              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-light text-primary">
+              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-light text-primary-deep">
                 <Receipt className="h-5 w-5" />
               </span>
               <h3 className="mt-4 font-medium">Receipts and categories</h3>
@@ -464,7 +464,7 @@ function LandingPageContent() {
         {/* Split types: chip row, a different layout family from the bento above */}
         <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <div className="rounded-lg border border-border/60 bg-card p-8">
-            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-light text-primary">
+            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-light text-primary-deep">
               <SlidersHorizontal className="h-5 w-5" />
             </span>
             <h2 className="mt-4 text-2xl font-semibold tracking-tight">Split it your way</h2>
@@ -499,7 +499,7 @@ function LandingPageContent() {
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
                 {financeFeatures.map((feature) => (
                   <div key={feature.title} className="rounded-lg border border-border/60 bg-card p-5">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-light text-primary">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-light text-primary-deep">
                       <feature.icon className="h-4 w-4" />
                     </span>
                     <h3 className="mt-3 text-sm font-medium">{feature.title}</h3>
@@ -516,7 +516,7 @@ function LandingPageContent() {
                   <p className="text-xs text-muted-foreground">Total balance</p>
                   <p className="mt-1 font-mono text-2xl font-semibold tabular-nums">₱42,180.50</p>
                 </div>
-                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-light text-primary">
+                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-light text-primary-deep">
                   <Wallet className="h-5 w-5" />
                 </span>
               </div>
@@ -569,7 +569,7 @@ function LandingPageContent() {
         <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
             <div>
-              <span className="text-xs font-semibold uppercase tracking-wide text-primary">
+              <span className="text-xs font-semibold uppercase tracking-wide text-primary-deep">
                 Shared + personal, connected
               </span>
               <h2 className="mt-2 max-w-md text-2xl font-semibold tracking-tight sm:text-3xl">
@@ -595,7 +595,7 @@ function LandingPageContent() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">When they pay you back</span>
-                  <span className="text-xs font-medium text-primary">Not counted as income</span>
+                  <span className="text-xs font-medium text-primary-deep">Not counted as income</span>
                 </div>
               </div>
             </div>
@@ -610,7 +610,7 @@ function LandingPageContent() {
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {moreFeatures.map((feature) => (
               <div key={feature.title} className="flex gap-4 rounded-lg border border-border/60 bg-card p-5">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-light text-primary">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-light text-primary-deep">
                   <feature.icon className="h-4 w-4" />
                 </span>
                 <div>
@@ -653,7 +653,7 @@ function LandingPageContent() {
                   <ul className="mt-5 flex-1 space-y-2">
                     {plan.features.map((feature) => (
                       <li key={feature} className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary-deep" />
                         {feature}
                       </li>
                     ))}
@@ -676,7 +676,7 @@ function LandingPageContent() {
         <section id="download" className="mx-auto w-full max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-lg border border-border/60 bg-card p-6">
-              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-light text-primary">
+              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-light text-primary-deep">
                 <ShieldCheck className="h-5 w-5" />
               </span>
               <h3 className="mt-4 font-medium">Your data, protected</h3>
@@ -686,7 +686,7 @@ function LandingPageContent() {
               </p>
             </div>
             <div className="rounded-lg border border-border/60 bg-card p-6">
-              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-light text-primary">
+              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-light text-primary-deep">
                 <DownloadSimple className="h-5 w-5" />
               </span>
               <h3 className="mt-4 font-medium">On the web, and on Android today</h3>
@@ -748,7 +748,7 @@ function LandingPageContent() {
         <section className="mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6">
           <div className="flex flex-col items-start gap-4 rounded-lg border border-border/60 bg-card p-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-primary">Built by {PENIKO_NAME}</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-primary-deep">Built by {PENIKO_NAME}</p>
               <p className="mt-1.5 font-medium">SplitEven is a {PENIKO_NAME} product.</p>
               <p className="mt-1 max-w-xl text-sm text-muted-foreground">
                 {PENIKO_NAME} makes friendly software for small businesses. See what else we&apos;re building.

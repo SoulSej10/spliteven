@@ -17,12 +17,13 @@ import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 import { useAuth } from "@/hooks/use-auth";
 import { listMySubscriptionRequests, submitSubscriptionRequest } from "@/lib/api/subscriptions";
+import { palette } from "@/theme/palette";
 
 const MAYA_QR = require("../../assets/payments/maya-qr.jpg");
 
 export default function UpgradeScreen() {
   const { colorScheme } = useColorScheme();
-  const iconColor = colorScheme === "dark" ? "#F4F5F3" : "#0A0A0A";
+  const iconColor = palette.ink;
   const { authUser, profile } = useAuth();
   const queryClient = useQueryClient();
 
@@ -110,12 +111,12 @@ export default function UpgradeScreen() {
             >
               <View className="flex-row items-center justify-between">
                 <Text className="text-lg font-bold text-neutral-900 dark:text-neutral-100">{plan.name}</Text>
-                <Text className="font-mono text-base font-semibold text-primary">{plan.priceLabel}</Text>
+                <Text className="font-mono text-base font-semibold text-primary-deep">{plan.priceLabel}</Text>
               </View>
               <View className="gap-1.5">
                 {plan.features.map((feature) => (
                   <View key={feature} className="flex-row items-center gap-2">
-                    <Check size={14} color="#2F8F7D" />
+                    <Check size={14} color={palette.primary} />
                     <Text className="flex-1 text-sm text-neutral-700 dark:text-neutral-300">{feature}</Text>
                   </View>
                 ))}
@@ -156,7 +157,7 @@ export default function UpgradeScreen() {
                   <Text
                     className={cn(
                       "text-xs font-medium",
-                      selectedMethod === m.id ? "text-primary" : "text-neutral-500"
+                      selectedMethod === m.id ? "text-primary-deep" : "text-neutral-500"
                     )}
                   >
                     {m.label}
@@ -186,7 +187,7 @@ export default function UpgradeScreen() {
                 onChangeText={setReferenceNumber}
                 placeholder="From your payment receipt"
                 className="rounded-xl border border-neutral-500/20 px-3 py-2.5 text-neutral-900 dark:text-neutral-100"
-                placeholderTextColor="#6B7169"
+                placeholderTextColor={palette.muted}
               />
             </View>
 

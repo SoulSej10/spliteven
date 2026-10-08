@@ -1,5 +1,6 @@
 import { Text, View } from "react-native";
 import type { MonthlyCashFlow } from "@evensplit/shared";
+import { palette, withAlpha } from "@/theme/palette";
 
 const MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const BAR_AREA_HEIGHT = 64;
@@ -20,13 +21,13 @@ export function CashFlowBars({ months }: { months: MonthlyCashFlow[] }) {
           <View key={m.key} className="flex-1 flex-row items-end justify-center gap-1">
             <View
               className="w-2.5 rounded-t-full"
-              style={{ height: barHeight(m.income), backgroundColor: "rgba(255,255,255,0.95)" }}
+              style={{ height: barHeight(m.income), backgroundColor: withAlpha(palette.onPrimary, 0.95) }}
             />
             <View
               className="w-2.5 rounded-t-full"
               style={{
                 height: barHeight(m.expense),
-                backgroundColor: "rgba(255,255,255,0.4)",
+                backgroundColor: withAlpha(palette.onPrimary, 0.4),
                 opacity: i === months.length - 1 ? 1 : 0.9,
               }}
             />
@@ -37,7 +38,7 @@ export function CashFlowBars({ months }: { months: MonthlyCashFlow[] }) {
         {months.map((m, i) => (
           <Text
             key={m.key}
-            className={`flex-1 text-center text-[10px] ${i === months.length - 1 ? "font-bold text-white" : "text-white/70"}`}
+            className={`flex-1 text-center text-[10px] ${i === months.length - 1 ? "font-bold text-on-primary" : "text-on-primary/70"}`}
           >
             {MONTH_SHORT[m.month]}
           </Text>
@@ -45,12 +46,12 @@ export function CashFlowBars({ months }: { months: MonthlyCashFlow[] }) {
       </View>
       <View className="mt-2 flex-row items-center justify-center gap-4">
         <View className="flex-row items-center gap-1.5">
-          <View className="h-2 w-2 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.95)" }} />
-          <Text className="text-[10px] text-white/80">Income</Text>
+          <View className="h-2 w-2 rounded-full" style={{ backgroundColor: withAlpha(palette.onPrimary, 0.95) }} />
+          <Text className="text-[10px] text-on-primary/80">Income</Text>
         </View>
         <View className="flex-row items-center gap-1.5">
-          <View className="h-2 w-2 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.4)" }} />
-          <Text className="text-[10px] text-white/80">Expense</Text>
+          <View className="h-2 w-2 rounded-full" style={{ backgroundColor: withAlpha(palette.onPrimary, 0.4) }} />
+          <Text className="text-[10px] text-on-primary/80">Expense</Text>
         </View>
       </View>
     </View>

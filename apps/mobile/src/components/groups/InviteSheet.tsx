@@ -7,6 +7,7 @@ import { BottomSheet } from "@/components/ui/BottomSheet";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/use-auth";
 import { createInvite } from "@/lib/api/invites";
+import { palette } from "@/theme/palette";
 
 export function InviteSheet({
   visible,
@@ -51,14 +52,14 @@ export function InviteSheet({
     <BottomSheet visible={visible} onClose={onClose} title="Invite to group">
       <View className="items-center gap-2">
         <View className="h-14 w-14 items-center justify-center rounded-card bg-primary-light">
-          <UserPlus color="#2F8F7D" size={24} />
+          <UserPlus color={palette.primary} size={24} />
         </View>
         <Text className="text-center text-neutral-500">
           Share this link — anyone with it can join the group. Expires in 7 days.
         </Text>
       </View>
 
-      <View className="rounded-card bg-neutral-100 p-3 dark:bg-white/5">
+      <View className="rounded-card bg-neutral-100 p-3 dark:bg-on-primary/5">
         <Text className="text-sm text-neutral-900 dark:text-neutral-100" numberOfLines={1}>
           {creating ? "Generating…" : inviteUrl ?? ""}
         </Text>
@@ -67,14 +68,14 @@ export function InviteSheet({
       <View className="flex-row gap-3">
         <Button variant="outline" className="flex-1" onPress={copyLink} disabled={!inviteUrl}>
           <View className="flex-row items-center gap-2">
-            <Copy size={16} color="#0A0A0A" />
+            <Copy size={16} color={palette.ink} />
             <Text className="font-semibold text-neutral-900 dark:text-neutral-100">Copy</Text>
           </View>
         </Button>
         <Button className="flex-1" onPress={shareLink} disabled={!inviteUrl}>
           <View className="flex-row items-center gap-2">
-            <Send size={16} color="white" />
-            <Text className="font-semibold text-white">Share</Text>
+            <Send size={16} color={palette.onPrimary} />
+            <Text className="font-semibold text-on-primary">Share</Text>
           </View>
         </Button>
       </View>

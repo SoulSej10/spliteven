@@ -1,6 +1,7 @@
 import { Text, View } from "react-native";
 import Svg, { Rect } from "react-native-svg";
 import { formatMoney } from "@/lib/format";
+import { palette } from "@/theme/palette";
 
 export interface AccountActivity {
   accountId: string;
@@ -50,15 +51,15 @@ export function AccountBarChart({ accounts }: { accounts: AccountActivity[] }) {
             <View className="gap-1">
               <View className="flex-row items-center gap-2">
                 <Svg width={BAR_WIDTH} height={8}>
-                  <Rect x={0} y={0} width={BAR_WIDTH} height={8} rx={4} fill="#6B7169" opacity={0.12} />
-                  <Rect x={0} y={0} width={expenseWidth} height={8} rx={4} fill="#D95F5F" />
+                  <Rect x={0} y={0} width={BAR_WIDTH} height={8} rx={4} fill={palette.muted} opacity={0.12} />
+                  <Rect x={0} y={0} width={expenseWidth} height={8} rx={4} fill={palette.negative} />
                 </Svg>
                 <Text className="text-xs text-neutral-500">{formatMoney(a.expense, a.currency)}</Text>
               </View>
               <View className="flex-row items-center gap-2">
                 <Svg width={BAR_WIDTH} height={8}>
-                  <Rect x={0} y={0} width={BAR_WIDTH} height={8} rx={4} fill="#6B7169" opacity={0.12} />
-                  <Rect x={0} y={0} width={incomeWidth} height={8} rx={4} fill="#009B87" />
+                  <Rect x={0} y={0} width={BAR_WIDTH} height={8} rx={4} fill={palette.muted} opacity={0.12} />
+                  <Rect x={0} y={0} width={incomeWidth} height={8} rx={4} fill={palette.positive} />
                 </Svg>
                 <Text className="text-xs text-neutral-500">{formatMoney(a.income, a.currency)}</Text>
               </View>

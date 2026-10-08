@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { useColorScheme } from "nativewind";
+import { palette } from "@/theme/palette";
 
 const BANDS = 10;
 
@@ -24,8 +24,7 @@ const BANDS = 10;
  * content underneath.
  */
 export function EdgeFade({ edge, size = 90 }: { edge: "bottom" | "left" | "right"; size?: number }) {
-  const { colorScheme } = useColorScheme();
-  const bg = colorScheme === "dark" ? "#16211B" : "#F7F8F7";
+  const bg = palette.background;
 
   const bands = Array.from({ length: BANDS }, (_, i) => Math.pow((i + 1) / BANDS, 1.5));
 

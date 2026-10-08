@@ -78,7 +78,7 @@ export default function ProfileSetupScreen() {
           <Avatar name={watch("display_name") || "?"} uri={avatarUri} size={88} logoFallback />
         </Pressable>
         <Pressable onPress={pickAvatar}>
-          <Text className="font-medium text-primary">Upload photo</Text>
+          <Text className="font-medium text-primary-deep">Upload photo</Text>
         </Pressable>
       </View>
 
@@ -106,7 +106,7 @@ export default function ProfileSetupScreen() {
                     selected ? "border-primary bg-primary-light" : "border-neutral-500/20"
                   )}
                 >
-                  <Text className={cn("font-medium", selected ? "text-primary" : "text-neutral-500")}>
+                  <Text className={cn("font-medium", selected ? "text-primary-deep" : "text-neutral-500")}>
                     {c}
                   </Text>
                 </Pressable>

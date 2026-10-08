@@ -1,6 +1,7 @@
 import { Pressable, Text, View } from "react-native";
 import { CaretRight } from "phosphor-react-native";
 import { formatMoney } from "@/lib/format";
+import { palette } from "@/theme/palette";
 
 export interface BreakdownRow {
   label: string;
@@ -42,7 +43,7 @@ export function CategoryBreakdownList({ rows, currency }: { rows: BreakdownRow[]
             <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {formatMoney(r.amount, currency)}
             </Text>
-            {r.onPress && <CaretRight size={13} color="#6B7169" />}
+            {r.onPress && <CaretRight size={13} color={palette.muted} />}
           </View>
           <View className="flex-row items-center gap-2">
             <View className="h-1.5 flex-1 overflow-hidden rounded-full bg-neutral-500/15">

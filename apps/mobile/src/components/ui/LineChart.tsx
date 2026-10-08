@@ -1,5 +1,6 @@
 import { Text, View } from "react-native";
 import Svg, { Circle, Line, Polyline } from "react-native-svg";
+import { palette } from "@/theme/palette";
 
 export interface LineSeries {
   label: string;
@@ -49,7 +50,7 @@ export function LineChart({
         ))}
       </View>
       <Svg width={width} height={height}>
-        <Line x1={0} y1={height - padding} x2={width} y2={height - padding} stroke="#6B7169" strokeOpacity={0.15} />
+        <Line x1={0} y1={height - padding} x2={width} y2={height - padding} stroke={palette.muted} strokeOpacity={0.15} />
         {series.map((s) => {
           const points = s.points.map((v, i) => toXY(i, v).join(",")).join(" ");
           return (

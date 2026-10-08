@@ -1,6 +1,7 @@
 import { Text, View } from "react-native";
 import { WarningCircle as AlertCircle } from "phosphor-react-native";
 import { Button } from "@/components/ui/Button";
+import { palette } from "@/theme/palette";
 
 /**
  * Inline error state for a failed query — friendly message + retry action.
@@ -18,7 +19,7 @@ export function ErrorState({
   return (
     <View className="items-center gap-3 rounded-card bg-negative/5 px-5 py-10">
       <View className="h-12 w-12 items-center justify-center rounded-full bg-negative/10">
-        <AlertCircle color="#D95F5F" size={22} />
+        <AlertCircle color={palette.negative} size={22} />
       </View>
       <Text className="text-center text-sm text-neutral-500">{message}</Text>
       {onRetry && (

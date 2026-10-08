@@ -219,7 +219,7 @@ function ExpenseRow({
       <TableCell>
         <ExpenseFormDialog
           trigger={
-            <button className="flex min-w-0 items-center gap-1.5 text-left font-medium hover:text-primary">
+            <button className="flex min-w-0 items-center gap-1.5 text-left font-medium hover:text-primary-deep">
               <span className="max-w-[220px] truncate">{expense.description}</span>
               {expense.is_recurring && (
                 <Badge variant="secondary" className="shrink-0 gap-1">
@@ -240,7 +240,7 @@ function ExpenseRow({
         <div className="flex items-center gap-2">
           <Avatar className="h-6 w-6">
             <AvatarImage src={payer?.avatar_url ?? undefined} />
-            <AvatarFallback className="bg-primary-light text-[10px] text-primary">
+            <AvatarFallback className="bg-primary-light text-[10px] text-primary-deep">
               {payer?.display_name ? initials(payer.display_name) : "?"}
             </AvatarFallback>
           </Avatar>

@@ -28,7 +28,7 @@ export function Avatar({
       ) : logoFallback ? (
         <Image source={LOGO} style={{ width: size, height: size }} resizeMode="cover" />
       ) : (
-        <Text className="font-semibold text-primary" style={{ fontSize: size * 0.38 }}>
+        <Text className="font-semibold text-primary-deep" style={{ fontSize: size * 0.38 }}>
           {name ? initials(name) : "?"}
         </Text>
       )}

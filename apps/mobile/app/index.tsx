@@ -3,6 +3,7 @@ import { ActivityIndicator, View } from "react-native";
 import { Redirect } from "expo-router";
 import { useAuth } from "@/hooks/use-auth";
 import { hasAcceptedPrivacyPolicy } from "@/lib/device-flags";
+import { palette } from "@/theme/palette";
 
 /** M1 — Splash / auth check: routes to the privacy gate, login, or the app shell. */
 export default function SplashGate() {
@@ -20,7 +21,7 @@ export default function SplashGate() {
   if (loading || checkingPolicy) {
     return (
       <View className="flex-1 items-center justify-center bg-neutral-100 dark:bg-neutral-900">
-        <ActivityIndicator color="#2F8F7D" size="large" />
+        <ActivityIndicator color={palette.primary} size="large" />
       </View>
     );
   }

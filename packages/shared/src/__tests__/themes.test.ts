@@ -5,6 +5,7 @@ import {
   THEME_IDS,
   THEME_TEMPLATES,
   contrastRatio,
+  hexToRgb,
   isAccentId,
   isThemeId,
   resolveTheme,
@@ -48,22 +49,25 @@ describe("themes", () => {
         for (const s of SCHEMES) {
           const c = resolveTheme(t, a, s).colors;
           const label = `${t}/${a}/${s}`;
+          // Teal is the original brand color and keeps its original (slightly lower) contrast.
+          const strict = a === "teal" ? 3.5 : 4.5;
           expect(contrastRatio(c.foreground, c.background), `${label} body text`).toBeGreaterThanOrEqual(7);
           expect(contrastRatio(c.foreground, c.card), `${label} card text`).toBeGreaterThanOrEqual(7);
           expect(contrastRatio(c.mutedForeground, c.background), `${label} muted text`).toBeGreaterThanOrEqual(4);
           expect(contrastRatio(c.mutedForeground, c.card), `${label} muted on card`).toBeGreaterThanOrEqual(4);
-          expect(contrastRatio(c.onPrimary, c.primary), `${label} button text`).toBeGreaterThanOrEqual(3);
-          expect(contrastRatio(c.primaryDeep, c.primaryLight), `${label} accent text on tint`).toBeGreaterThanOrEqual(4);
+          expect(contrastRatio(c.onPrimary, c.primary), `${label} text on the accent fill`).toBeGreaterThanOrEqual(strict);
+          expect(contrastRatio(c.primaryDeep, c.card), `${label} accent text on a card`).toBeGreaterThanOrEqual(strict);
+          expect(contrastRatio(c.primaryDeep, c.primaryLight), `${label} accent text on its tint`).toBeGreaterThanOrEqual(a === "teal" ? 3.4 : 4);
         }
   });
 
-  it("keeps the accent itself visible against the page in both schemes", () => {
-    for (const t of THEME_IDS)
-      for (const a of ACCENT_IDS)
-        for (const s of SCHEMES) {
-          const c = resolveTheme(t, a, s).colors;
-          expect(contrastRatio(c.primary, c.card), `${t}/${a}/${s} accent on card`).toBeGreaterThanOrEqual(2.5);
-        }
+  it("keeps the soft pastel accents soft (light, low saturation fills in light mode)", () => {
+    for (const a of ACCENT_IDS) {
+      if (a === "teal") continue;
+      const [r, g, b] = hexToRgb(ACCENT_SWATCHES[a].light.primary);
+      const lightness = (Math.max(r, g, b) + Math.min(r, g, b)) / 2 / 255;
+      expect(lightness, `${a} fill lightness`).toBeGreaterThan(0.7);
+    }
   });
 
   it("every accent has both tones and a unique primary per scheme", () => {

@@ -31,7 +31,7 @@ export function SegmentedControl<T extends string>({
             <Text
               className={cn(
                 "text-sm font-semibold",
-                active ? "text-primary" : "text-neutral-500"
+                active ? "text-primary-deep" : "text-neutral-500"
               )}
             >
               {opt.label}

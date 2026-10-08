@@ -17,7 +17,7 @@ import { cn } from "@/lib/cn";
 type ButtonTone = "digit" | "op" | "muted" | "primary";
 
 const TONE_CLASSES: Record<ButtonTone, string> = {
-  digit: "bg-neutral-100 dark:bg-white/5",
+  digit: "bg-neutral-100 dark:bg-on-primary/5",
   op: "bg-primary-light",
   muted: "bg-transparent",
   primary: "bg-primary",
@@ -25,9 +25,9 @@ const TONE_CLASSES: Record<ButtonTone, string> = {
 
 const TONE_TEXT_CLASSES: Record<ButtonTone, string> = {
   digit: "text-neutral-900 dark:text-neutral-100",
-  op: "text-primary",
+  op: "text-primary-deep",
   muted: "text-neutral-500",
-  primary: "text-white",
+  primary: "text-on-primary",
 };
 
 function CalcButton({
@@ -158,7 +158,7 @@ export function AmountField({
           value={calc.display}
           onChangeText={handleTyped}
           className={cn(
-            "rounded-card bg-neutral-100 px-4 py-3 text-right font-mono text-2xl font-bold tabular-nums text-neutral-900 dark:bg-white/5 dark:text-neutral-100",
+            "rounded-card bg-neutral-100 px-4 py-3 text-right font-mono text-2xl font-bold tabular-nums text-neutral-900 dark:bg-on-primary/5 dark:text-neutral-100",
             error && "border border-negative"
           )}
         />

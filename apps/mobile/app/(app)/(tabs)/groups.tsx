@@ -14,6 +14,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useSettingsDrawer } from "@/context/settings-drawer";
 import { useMyGroups } from "@/hooks/use-groups";
 import { PageTour, usePageTour } from "@/components/onboarding/PageTour";
+import { palette } from "@/theme/palette";
 
 /**
  * The "Groups" tab - every group the user belongs to, plus the entry
@@ -48,7 +49,7 @@ export default function GroupsListScreen() {
           className="h-10 w-10 items-center justify-center rounded-full bg-surface active:opacity-70 dark:bg-surface-dark"
           accessibilityLabel="Activity"
         >
-          <Bell color="#0A0A0A" size={18} />
+          <Bell color={palette.ink} size={18} />
         </Pressable>
       </View>
 
@@ -80,7 +81,7 @@ export default function GroupsListScreen() {
         {!isLoading && !isError && groups?.length === 0 && (
           <View className="mt-10 items-center gap-3">
             <View className="h-16 w-16 items-center justify-center rounded-full bg-primary-light">
-              <Users color="#2F8F7D" size={28} />
+              <Users color={palette.primary} size={28} />
             </View>
             <Text className="text-base font-medium text-neutral-900 dark:text-neutral-100">
               No groups yet
@@ -92,7 +93,7 @@ export default function GroupsListScreen() {
               onPress={() => setSheetOpen(true)}
               className="mt-2 rounded-pill bg-primary px-5 py-3 active:opacity-90"
             >
-              <Text className="font-semibold text-white">Create your first group</Text>
+              <Text className="font-semibold text-on-primary">Create your first group</Text>
             </Pressable>
           </View>
         )}
@@ -121,7 +122,7 @@ export default function GroupsListScreen() {
           elevation: 8,
         }}
       >
-        <Plus color="white" size={28} />
+        <Plus color={palette.onPrimary} size={28} />
       </Pressable>
 
       <CreateGroupSheet visible={sheetOpen} onClose={() => setSheetOpen(false)} />

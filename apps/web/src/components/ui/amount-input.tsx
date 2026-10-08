@@ -18,7 +18,7 @@ type ButtonTone = "digit" | "op" | "muted" | "primary";
 
 const TONE_CLASSES: Record<ButtonTone, string> = {
   digit: "bg-muted/60 hover:bg-muted text-foreground",
-  op: "bg-primary-light text-primary hover:opacity-80",
+  op: "bg-primary-light text-primary-deep hover:opacity-80",
   muted: "bg-transparent text-muted-foreground hover:bg-muted",
   primary: "bg-primary text-primary-foreground hover:opacity-90",
 };

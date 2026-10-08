@@ -129,7 +129,7 @@ export function AddAccountSheet({
                 type === t.value ? "border-primary bg-primary-light" : "border-neutral-500/20"
               )}
             >
-              <Text className={cn("text-sm font-medium", type === t.value ? "text-primary" : "text-neutral-500")}>
+              <Text className={cn("text-sm font-medium", type === t.value ? "text-primary-deep" : "text-neutral-500")}>
                 {t.label}
               </Text>
             </Pressable>
@@ -149,7 +149,7 @@ export function AddAccountSheet({
                 currency === c ? "border-primary bg-primary-light" : "border-neutral-500/20"
               )}
             >
-              <Text className={cn("text-sm font-medium", currency === c ? "text-primary" : "text-neutral-500")}>
+              <Text className={cn("text-sm font-medium", currency === c ? "text-primary-deep" : "text-neutral-500")}>
                 {c}
               </Text>
             </Pressable>

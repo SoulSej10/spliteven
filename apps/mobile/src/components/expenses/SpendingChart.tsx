@@ -7,11 +7,11 @@ import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { DonutChart } from "@/components/ui/DonutChart";
 import { formatMoney } from "@/lib/format";
 import type { ExpenseWithShares } from "@/lib/api/expenses";
+import { palette } from "@/theme/palette";
+import { BAR_COLORS, DONUT_COLORS } from "@/theme/chartColors";
 
 type ChartMode = "category" | "member";
 
-const BAR_COLORS = ["#2F8F7D", "#009B87", "#E0A63A", "#6B7169", "#D95F5F", "#8AB9AC"];
-const DONUT_COLORS = ["#2F8F7D", "#5FBBA5", "#F5A524", "#009B87", "#D95F5F", "#726C7D"];
 
 /**
  * Lightweight spending breakdown chart (Phase 6 stretch, best-effort) —
@@ -101,7 +101,7 @@ export function SpendingChart({
                   </Text>
                 </View>
                 <Svg width={barMaxWidth} height={8}>
-                  <Rect x={0} y={0} width={barMaxWidth} height={8} rx={4} fill="#6B7169" opacity={0.12} />
+                  <Rect x={0} y={0} width={barMaxWidth} height={8} rx={4} fill={palette.muted} opacity={0.12} />
                   <Rect
                     x={0}
                     y={0}

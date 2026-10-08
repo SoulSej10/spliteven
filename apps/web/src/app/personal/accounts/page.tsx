@@ -51,7 +51,7 @@ export default function PersonalAccountsPage() {
 
       {!isLoading && accounts?.length === 0 && (
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border py-16 text-center">
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary">
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary-deep">
             <Wallet className="h-6 w-6" />
           </span>
           <p className="font-medium">No accounts yet</p>
@@ -95,7 +95,7 @@ export default function PersonalAccountsPage() {
                           account={account}
                           trigger={
                             <button
-                              className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-primary-light hover:text-primary"
+                              className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-primary-light hover:text-primary-deep"
                               aria-label={`Edit ${account.name}`}
                             >
                               <Pencil className="h-4 w-4" />

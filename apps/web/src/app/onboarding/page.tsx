@@ -72,11 +72,11 @@ function OnboardingForm() {
             <div className="flex flex-col items-center gap-3">
               <Avatar className="h-20 w-20">
                 <AvatarImage src={avatarPreview ?? undefined} alt="Avatar" />
-                <AvatarFallback className="bg-primary-light text-lg text-primary">
+                <AvatarFallback className="bg-primary-light text-lg text-primary-deep">
                   {initials(watch("display_name") || "?")}
                 </AvatarFallback>
               </Avatar>
-              <label className="cursor-pointer text-sm text-primary hover:underline">
+              <label className="cursor-pointer text-sm text-primary-deep hover:underline">
                 Upload photo
                 <input type="file" accept="image/*" className="hidden" onChange={onAvatarChange} />
               </label>

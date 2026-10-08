@@ -99,7 +99,7 @@ export function MonthCalendar({
                   isToday && "bg-primary-light"
                 )}
               >
-                <span className={cn("text-xs", isToday ? "font-bold text-primary" : "text-foreground")}>{day}</span>
+                <span className={cn("text-xs", isToday ? "font-bold text-primary-deep" : "text-foreground")}>{day}</span>
               </div>
               {amount > 0 ? (
                 <span className={cn("text-[9px] font-medium", kind === "expense" ? "text-negative" : "text-positive")}>

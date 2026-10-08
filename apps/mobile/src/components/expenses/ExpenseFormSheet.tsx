@@ -17,6 +17,7 @@ import { cn } from "@/lib/cn";
 import { notifyLocal } from "@/lib/notifications";
 import { usePlan } from "@/hooks/use-plan";
 import { handlePlanLimitError, showUpgradePrompt } from "@/lib/plan-prompt";
+import { palette } from "@/theme/palette";
 
 const SPLIT_LABELS: Record<SplitType, string> = {
   equal: "Equal",
@@ -262,7 +263,7 @@ export function ExpenseFormSheet({
               <Text
                 className={cn(
                   "text-sm font-medium",
-                  paidBy === m.user_id ? "text-primary" : "text-neutral-500"
+                  paidBy === m.user_id ? "text-primary-deep" : "text-neutral-500"
                 )}
               >
                 {m.users?.display_name ?? "Member"}
@@ -288,7 +289,7 @@ export function ExpenseFormSheet({
               <Text
                 className={cn(
                   "text-sm font-medium",
-                  paidFromAccountId === null ? "text-primary" : "text-neutral-500"
+                  paidFromAccountId === null ? "text-primary-deep" : "text-neutral-500"
                 )}
               >
                 Not linked
@@ -306,7 +307,7 @@ export function ExpenseFormSheet({
                 <Text
                   className={cn(
                     "text-sm font-medium",
-                    paidFromAccountId === a.id ? "text-primary" : "text-neutral-500"
+                    paidFromAccountId === a.id ? "text-primary-deep" : "text-neutral-500"
                   )}
                 >
                   {a.name}
@@ -333,7 +334,7 @@ export function ExpenseFormSheet({
                 category === c ? "border-primary bg-primary-light" : "border-neutral-500/20"
               )}
             >
-              <Text className={cn("text-sm font-medium", category === c ? "text-primary" : "text-neutral-500")}>
+              <Text className={cn("text-sm font-medium", category === c ? "text-primary-deep" : "text-neutral-500")}>
                 {c}
               </Text>
             </Pressable>
@@ -353,7 +354,7 @@ export function ExpenseFormSheet({
                 splitType === t ? "border-primary bg-primary-light" : "border-neutral-500/20"
               )}
             >
-              <Text className={cn("text-xs font-semibold", splitType === t ? "text-primary" : "text-neutral-500")}>
+              <Text className={cn("text-xs font-semibold", splitType === t ? "text-primary-deep" : "text-neutral-500")}>
                 {SPLIT_LABELS[t]}
               </Text>
             </Pressable>
@@ -376,7 +377,7 @@ export function ExpenseFormSheet({
                     isSelected ? "border-primary bg-primary" : "border-neutral-500/40"
                   )}
                 >
-                  {isSelected && <Check size={12} color="white" />}
+                  {isSelected && <Check size={12} color={palette.onPrimary} />}
                 </Pressable>
                 <Avatar name={m.users?.display_name} uri={m.users?.avatar_url} size={26} />
                 <Text className="flex-1 text-sm text-neutral-900 dark:text-neutral-100" numberOfLines={1}>
@@ -413,7 +414,7 @@ export function ExpenseFormSheet({
           className="flex-row items-center justify-between rounded-card border border-neutral-500/20 px-4 py-3"
         >
           <View className="flex-row items-center gap-2">
-            <Repeat size={16} color={isRecurring ? "#2F8F7D" : "#6B7169"} />
+            <Repeat size={16} color={isRecurring ? palette.primary : palette.muted} />
             <Text className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
               Recurring expense
             </Text>
@@ -429,7 +430,7 @@ export function ExpenseFormSheet({
               isRecurring ? "border-primary bg-primary" : "border-neutral-500/40"
             )}
           >
-            {isRecurring && <Check size={12} color="white" />}
+            {isRecurring && <Check size={12} color={palette.onPrimary} />}
           </View>
         </Pressable>
 
@@ -447,7 +448,7 @@ export function ExpenseFormSheet({
                 <Text
                   className={cn(
                     "text-xs font-semibold",
-                    frequency === f.value ? "text-primary" : "text-neutral-500"
+                    frequency === f.value ? "text-primary-deep" : "text-neutral-500"
                   )}
                 >
                   {f.label}
@@ -462,7 +463,7 @@ export function ExpenseFormSheet({
         onPress={() => (allows("receipts") ? pickReceipt() : showUpgradePrompt("receipts"))}
         className="flex-row items-center gap-2 rounded-card border border-dashed border-neutral-500/30 px-4 py-3"
       >
-        <ImageIcon size={18} color="#6B7169" />
+        <ImageIcon size={18} color={palette.muted} />
         <Text className="text-sm text-neutral-500">
           {receiptUri ? "Receipt attached" : "Attach receipt (optional)"}
         </Text>

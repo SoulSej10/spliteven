@@ -15,7 +15,8 @@ import {
 } from "@expo-google-fonts/sora";
 import "../global.css";
 import { Providers } from "@/components/Providers";
-import { loadStoredColorScheme } from "@/lib/appearance";
+import { loadStoredAppearance, loadStoredColorScheme, type StoredAppearance } from "@/lib/appearance";
+import { AppThemeProvider } from "@/theme/ThemeProvider";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -54,38 +55,40 @@ function RootLayout() {
     Sora_700Bold,
     Sora_800ExtraBold,
   });
-  const [schemeRestored, setSchemeRestored] = useState(false);
+  const [appearance, setAppearance] = useState<StoredAppearance | null>(null);
 
-  // Restore the saved light/dark choice while the splash screen is still up, so a
-  // dark-mode user never sees a light flash and the choice survives app restarts.
+  // Restore the saved light/dark mode and theme/color while the splash screen is still
+  // up, so nobody sees a flash of the default look and choices survive app restarts.
   useEffect(() => {
     let active = true;
-    loadStoredColorScheme().then((scheme) => {
+    Promise.all([loadStoredColorScheme(), loadStoredAppearance()]).then(([scheme, stored]) => {
       colorScheme.set(scheme);
-      if (active) setSchemeRestored(true);
+      if (active) setAppearance(stored);
     });
     return () => {
       active = false;
     };
   }, []);
 
-  const ready = fontsLoaded && schemeRestored;
+  const ready = fontsLoaded && appearance !== null;
 
   useEffect(() => {
     if (ready) void SplashScreen.hideAsync();
   }, [ready]);
 
-  if (!ready) return null;
+  if (!ready || !appearance) return null;
 
   return (
     <Providers>
-      <StatusBar style="auto" />
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="(auth)" />
-        <Stack.Screen name="(app)" />
-        <Stack.Screen name="invite/[code]" options={{ presentation: "modal", headerShown: true, title: "Join group" }} />
-      </Stack>
+      <AppThemeProvider initial={appearance}>
+        <StatusBar style="auto" />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="(auth)" />
+          <Stack.Screen name="(app)" />
+          <Stack.Screen name="invite/[code]" options={{ presentation: "modal", headerShown: true, title: "Join group" }} />
+        </Stack>
+      </AppThemeProvider>
     </Providers>
   );
 }

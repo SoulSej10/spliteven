@@ -16,6 +16,7 @@ import {
 } from "@/hooks/use-personal";
 import { formatDate, formatMoney } from "@/lib/format";
 import type { PersonalTransaction } from "@evensplit/shared";
+import { palette } from "@/theme/palette";
 
 const RECENT_COUNT = 5;
 
@@ -25,9 +26,9 @@ function TransactionIcon({ kind }: { kind: PersonalTransaction["kind"] }) {
   const tint = isCredit ? "bg-positive/10" : isDebit ? "bg-negative/10" : "bg-neutral-500/10";
   return (
     <View className={`h-9 w-9 items-center justify-center rounded-lg ${tint}`}>
-      {isCredit && <ArrowDownLeft color="#009B87" size={16} />}
-      {isDebit && <ArrowUpRight color="#D95F5F" size={16} />}
-      {kind === "transfer" && <ArrowLeftRight color="#6B7169" size={16} />}
+      {isCredit && <ArrowDownLeft color={palette.positive} size={16} />}
+      {isDebit && <ArrowUpRight color={palette.negative} size={16} />}
+      {kind === "transfer" && <ArrowLeftRight color={palette.muted} size={16} />}
     </View>
   );
 }
@@ -68,7 +69,7 @@ export function OverviewTabView({ onNavigateTab }: { onNavigateTab: (tab: "accou
         <View className="flex-row items-center justify-between">
           <Text className="text-sm font-medium text-neutral-500">Accounts</Text>
           <Pressable onPress={() => onNavigateTab("accounts")}>
-            <Text className="text-sm font-semibold text-primary">See all</Text>
+            <Text className="text-sm font-semibold text-primary-deep">See all</Text>
           </Pressable>
         </View>
         {!accountsLoading && (accounts ?? []).length === 0 && (
@@ -97,7 +98,7 @@ export function OverviewTabView({ onNavigateTab }: { onNavigateTab: (tab: "accou
         <Pressable onPress={() => onNavigateTab("budgets")}>
           <Card className="gap-2">
             <View className="flex-row items-center gap-2">
-              <PiggyBank color="#2F8F7D" size={16} />
+              <PiggyBank color={palette.primary} size={16} />
               <Text className="flex-1 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                 {budgetHighlight.category_name} budget
               </Text>
@@ -122,7 +123,7 @@ export function OverviewTabView({ onNavigateTab }: { onNavigateTab: (tab: "accou
         <View className="flex-row items-center justify-between">
           <Text className="text-sm font-medium text-neutral-500">Recent transactions</Text>
           <Pressable onPress={() => onNavigateTab("records")}>
-            <Text className="text-sm font-semibold text-primary">See all</Text>
+            <Text className="text-sm font-semibold text-primary-deep">See all</Text>
           </Pressable>
         </View>
         {!transactionsLoading && recentTransactions.length === 0 && (

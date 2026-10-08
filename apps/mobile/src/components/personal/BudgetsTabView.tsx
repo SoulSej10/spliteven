@@ -15,6 +15,7 @@ import {
   useUpsertPersonalBudget,
 } from "@/hooks/use-personal";
 import { formatMoney } from "@/lib/format";
+import { palette } from "@/theme/palette";
 
 /** The "Set budget" action lives in finances.tsx's floating action button, not inline here. */
 export function BudgetsTabView() {
@@ -60,7 +61,7 @@ export function BudgetsTabView() {
       {suggestions.length > 0 && (
         <View className="gap-2">
           <View className="flex-row items-center gap-1.5">
-            <Sparkle color="#6B7169" size={13} />
+            <Sparkle color={palette.muted} size={13} />
             <Text className="text-xs font-medium text-neutral-500">
               {suggestions[0]?.is_starter ? "Try a starter budget" : "Suggested, based on last month"}
             </Text>
@@ -79,7 +80,7 @@ export function BudgetsTabView() {
                 onPress={() => onAddSuggestion(s.category_id, s.suggested_limit)}
                 disabled={upsertBudget.isPending}
               >
-                <Text className="text-sm font-semibold text-primary">Set {formatMoney(s.suggested_limit, currency)}</Text>
+                <Text className="text-sm font-semibold text-primary-deep">Set {formatMoney(s.suggested_limit, currency)}</Text>
               </Button>
             </Card>
           ))}
@@ -89,7 +90,7 @@ export function BudgetsTabView() {
       {progress.length === 0 && suggestions.length === 0 && (
         <View className="items-center gap-2 py-14">
           <View className="h-14 w-14 items-center justify-center rounded-full bg-primary-light">
-            <PiggyBank color="#2F8F7D" size={22} />
+            <PiggyBank color={palette.primary} size={22} />
           </View>
           <Text className="text-sm text-neutral-500">Set a monthly limit for a category to track it here.</Text>
         </View>
@@ -112,7 +113,7 @@ export function BudgetsTabView() {
                   {formatMoney(p.spent, currency)} / {formatMoney(p.limit, currency)}
                 </Text>
                 <Pressable onPress={() => onDelete(budget.id)} hitSlop={10}>
-                  <Trash2 color="#D95F5F" size={14} />
+                  <Trash2 color={palette.negative} size={14} />
                 </Pressable>
               </View>
             </View>

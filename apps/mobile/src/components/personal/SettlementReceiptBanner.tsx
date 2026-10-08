@@ -8,6 +8,7 @@ import { confirmSettlementReceipt } from "@/lib/api/settlements";
 import { usePersonalAccounts } from "@/hooks/use-personal";
 import { formatMoney } from "@/lib/format";
 import { cn } from "@/lib/cn";
+import { palette } from "@/theme/palette";
 
 /**
  * Settlement recording intentionally leaves the receiver's side manual
@@ -66,8 +67,8 @@ export function SettlementReceiptBanner({
                   confirmingId === s.id && "opacity-50"
                 )}
               >
-                <CheckCircle2 color="white" size={14} />
-                <Text className="text-xs font-semibold text-white">{a.name}</Text>
+                <CheckCircle2 color={palette.onPrimary} size={14} />
+                <Text className="text-xs font-semibold text-on-primary">{a.name}</Text>
               </Pressable>
             ))}
           </View>

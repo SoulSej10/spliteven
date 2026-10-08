@@ -8,6 +8,7 @@ import { ErrorState } from "@/components/ui/ErrorState";
 import { useAuth } from "@/hooks/use-auth";
 import { useMyGroups, useAllActivity } from "@/hooks/use-groups";
 import { formatDateTime, formatMoney } from "@/lib/format";
+import { palette } from "@/theme/palette";
 
 /**
  * Top-level Activity tab — a merged feed of expenses/settlements across
@@ -55,9 +56,9 @@ export default function ActivityScreen() {
               <Card key={`${item.type}-${item.id}`} className="mb-2 flex-row items-center gap-3 py-3">
                 <View className="h-9 w-9 items-center justify-center rounded-full bg-primary-light">
                   {item.type === "expense_added" ? (
-                    <Receipt color="#2F8F7D" size={16} />
+                    <Receipt color={palette.primary} size={16} />
                   ) : (
-                    <ArrowRightLeft color="#2F8F7D" size={16} />
+                    <ArrowRightLeft color={palette.primary} size={16} />
                   )}
                 </View>
                 <View className="flex-1">

@@ -9,10 +9,11 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/use-auth";
 import { listPendingSubscriptionRequests, reviewSubscriptionRequest } from "@/lib/api/subscriptions";
+import { palette } from "@/theme/palette";
 
 export default function AdminSubscriptionsScreen() {
   const { colorScheme } = useColorScheme();
-  const iconColor = colorScheme === "dark" ? "#F4F5F3" : "#0A0A0A";
+  const iconColor = palette.ink;
   const { authUser } = useAuth();
   const queryClient = useQueryClient();
   const isAdmin = authUser?.email === SUBSCRIPTION_ADMIN_EMAIL;
@@ -59,7 +60,7 @@ export default function AdminSubscriptionsScreen() {
                 <Text className="font-semibold text-neutral-900 dark:text-neutral-100">
                   {req.users.display_name}
                 </Text>
-                <Text className="font-mono text-sm font-semibold text-primary">
+                <Text className="font-mono text-sm font-semibold text-primary-deep">
                   {SUBSCRIPTION_PLANS[req.plan].priceLabel}
                 </Text>
               </View>

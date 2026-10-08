@@ -13,6 +13,7 @@ import {
   usePersonalTransactions,
 } from "@/hooks/use-personal";
 import { AddAccountSheet, type AccountPrefill } from "@/components/personal/AddAccountSheet";
+import { palette } from "@/theme/palette";
 
 /**
  * Common account types most people have, shown as inactive "template" cards
@@ -54,7 +55,7 @@ export function AccountsTabView() {
       {accounts?.length === 0 && (
         <View className="items-center gap-2 py-14">
           <View className="h-14 w-14 items-center justify-center rounded-full bg-primary-light">
-            <Wallet color="#2F8F7D" size={22} />
+            <Wallet color={palette.primary} size={22} />
           </View>
           <Text className="text-sm text-neutral-500">No accounts yet. Add cash, a card, or savings.</Text>
         </View>
@@ -74,7 +75,7 @@ export function AccountsTabView() {
               </View>
               <MoneyText amount={balance} currency={account.currency} tone="neutral" />
               <Pressable onPress={() => setEditing(account)} hitSlop={10} className="ml-1">
-                <Pencil color="#6B7169" size={16} />
+                <Pencil color={palette.muted} size={16} />
               </Pressable>
             </Card>
           </Pressable>
@@ -84,7 +85,7 @@ export function AccountsTabView() {
       {suggestions.length > 0 && (
         <View className="gap-2">
           <View className="flex-row items-center gap-1.5">
-            <Sparkle color="#6B7169" size={13} />
+            <Sparkle color={palette.muted} size={13} />
             <Text className="text-xs font-medium text-neutral-500">You might also want</Text>
           </View>
           {suggestions.map((s) => (
@@ -98,8 +99,8 @@ export function AccountsTabView() {
               </View>
               <Button variant="outline" size="sm" onPress={() => setAddingSuggestion(s)}>
                 <View className="flex-row items-center gap-1">
-                  <Plus color="#2F8F7D" size={14} />
-                  <Text className="text-sm font-semibold text-primary">Add</Text>
+                  <Plus color={palette.primary} size={14} />
+                  <Text className="text-sm font-semibold text-primary-deep">Add</Text>
                 </View>
               </Button>
             </Card>

@@ -26,6 +26,7 @@ import { useGroup, useGroupExpenses, useGroupRealtime, useGroupSettlements } fro
 import { archiveGroup, leaveGroup } from "@/lib/api/groups";
 import type { ExpenseWithShares } from "@/lib/api/expenses";
 import { buildGroupLedgerCsv, exportAndShareCsv } from "@/lib/csv";
+import { palette } from "@/theme/palette";
 
 type Tab = "overview" | "expenses" | "balances" | "activity";
 
@@ -34,7 +35,7 @@ export default function GroupDetailScreen() {
   const { authUser } = useAuth();
   const queryClient = useQueryClient();
   const { colorScheme } = useColorScheme();
-  const headerIconColor = colorScheme === "dark" ? "#F4F5F3" : "#0A0A0A";
+  const headerIconColor = palette.ink;
 
   const { data: group, isLoading, isError, refetch } = useGroup(groupId);
   const { data: expenses } = useGroupExpenses(groupId);
@@ -115,7 +116,7 @@ export default function GroupDetailScreen() {
           onPress={() => refetch()}
           className="rounded-pill bg-primary px-5 py-2.5 active:opacity-90"
         >
-          <Text className="font-semibold text-white">Try again</Text>
+          <Text className="font-semibold text-on-primary">Try again</Text>
         </Pressable>
       </SafeAreaView>
     );
@@ -227,12 +228,12 @@ export default function GroupDetailScreen() {
           disabled={Math.abs(myBalance) < 0.005}
           onPress={() => setTab("balances")}
         >
-          <ArrowLeftRight color="#2F8F7D" size={18} />
-          <Text className="font-semibold text-primary">Settle up</Text>
+          <ArrowLeftRight color={palette.primary} size={18} />
+          <Text className="font-semibold text-primary-deep">Settle up</Text>
         </Button>
         <Button size="lg" className="flex-1 flex-row gap-2" onPress={() => setAddExpenseOpen(true)}>
-          <Plus color="white" size={18} />
-          <Text className="font-semibold text-white">Add expense</Text>
+          <Plus color={palette.onPrimary} size={18} />
+          <Text className="font-semibold text-on-primary">Add expense</Text>
         </Button>
       </BottomActionBar>
 
@@ -279,7 +280,7 @@ export default function GroupDetailScreen() {
           }}
           className="flex-row items-center gap-3 py-3"
         >
-          <Download size={18} color="#2F8F7D" />
+          <Download size={18} color={palette.primary} />
           <Text className="text-base text-neutral-900 dark:text-neutral-100">Export CSV</Text>
         </Pressable>
         {isOwner && (
@@ -290,7 +291,7 @@ export default function GroupDetailScreen() {
             }}
             className="flex-row items-center gap-3 py-3"
           >
-            <Pencil size={18} color="#2F8F7D" />
+            <Pencil size={18} color={palette.primary} />
             <Text className="text-base text-neutral-900 dark:text-neutral-100">Edit group</Text>
           </Pressable>
         )}
@@ -302,7 +303,7 @@ export default function GroupDetailScreen() {
             }}
             className="flex-row items-center gap-3 py-3"
           >
-            <Archive size={18} color="#2F8F7D" />
+            <Archive size={18} color={palette.primary} />
             <Text className="text-base text-neutral-900 dark:text-neutral-100">Archive group</Text>
           </Pressable>
         )}
@@ -313,7 +314,7 @@ export default function GroupDetailScreen() {
           }}
           className="flex-row items-center gap-3 py-3"
         >
-          <LogOut size={18} color="#D95F5F" />
+          <LogOut size={18} color={palette.negative} />
           <Text className="text-base text-negative">Leave group</Text>
         </Pressable>
       </BottomSheet>

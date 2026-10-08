@@ -5,6 +5,7 @@ import { computeAllAccountBalances, computeMonthlyCashFlow } from "@evensplit/sh
 import { formatMoney } from "@/lib/format";
 import { usePersonalAccounts, usePersonalTransactions } from "@/hooks/use-personal";
 import { CashFlowBars } from "./CashFlowBars";
+import { palette } from "@/theme/palette";
 
 /**
  * Home hero: where the money stands (total balance), how this month is going
@@ -32,18 +33,18 @@ export function CashFlowCard() {
   const TrendIcon = positive ? TrendUp : TrendDown;
 
   return (
-    <View className="mb-4 overflow-hidden rounded-card bg-primary-deep">
+    <View className="mb-4 overflow-hidden rounded-card bg-primary">
       <View className="gap-4 bg-primary/95 px-5 py-5">
         <View className="flex-row items-start justify-between">
           <View className="flex-1">
-            <Text className="text-xs font-medium text-white/70">Total balance</Text>
-            <Text className="mt-1 text-3xl font-extrabold text-white" numberOfLines={1} adjustsFontSizeToFit>
+            <Text className="text-xs font-medium text-on-primary/70">Total balance</Text>
+            <Text className="mt-1 text-3xl font-extrabold text-on-primary" numberOfLines={1} adjustsFontSizeToFit>
               {formatMoney(total, currency)}
             </Text>
           </View>
-          <View className="flex-row items-center gap-1.5 rounded-pill bg-white/15 px-3 py-1.5">
-            <TrendIcon color="white" size={14} weight="bold" />
-            <Text className="text-xs font-bold text-white">
+          <View className="flex-row items-center gap-1.5 rounded-pill bg-on-primary/15 px-3 py-1.5">
+            <TrendIcon color={palette.onPrimary} size={14} weight="bold" />
+            <Text className="text-xs font-bold text-on-primary">
               {positive ? "+" : "-"}
               {formatMoney(Math.abs(current.net), currency)} this month
             </Text>
@@ -51,31 +52,31 @@ export function CashFlowCard() {
         </View>
 
         <View className="flex-row gap-3">
-          <View className="flex-1 flex-row items-center gap-2 rounded-lg bg-white/10 px-3 py-2.5">
-            <View className="h-7 w-7 items-center justify-center rounded-lg bg-white/15">
-              <ArrowDownLeft color="white" size={14} />
+          <View className="flex-1 flex-row items-center gap-2 rounded-lg bg-on-primary/10 px-3 py-2.5">
+            <View className="h-7 w-7 items-center justify-center rounded-lg bg-on-primary/15">
+              <ArrowDownLeft color={palette.onPrimary} size={14} />
             </View>
             <View className="shrink">
-              <Text className="text-[10px] text-white/70">Income (mo.)</Text>
-              <Text className="text-sm font-bold text-white" numberOfLines={1}>
+              <Text className="text-[10px] text-on-primary/70">Income (mo.)</Text>
+              <Text className="text-sm font-bold text-on-primary" numberOfLines={1}>
                 {formatMoney(current.income, currency)}
               </Text>
             </View>
           </View>
-          <View className="flex-1 flex-row items-center gap-2 rounded-lg bg-white/10 px-3 py-2.5">
-            <View className="h-7 w-7 items-center justify-center rounded-lg bg-white/15">
-              <ArrowUpRight color="white" size={14} />
+          <View className="flex-1 flex-row items-center gap-2 rounded-lg bg-on-primary/10 px-3 py-2.5">
+            <View className="h-7 w-7 items-center justify-center rounded-lg bg-on-primary/15">
+              <ArrowUpRight color={palette.onPrimary} size={14} />
             </View>
             <View className="shrink">
-              <Text className="text-[10px] text-white/70">Expense (mo.)</Text>
-              <Text className="text-sm font-bold text-white" numberOfLines={1}>
+              <Text className="text-[10px] text-on-primary/70">Expense (mo.)</Text>
+              <Text className="text-sm font-bold text-on-primary" numberOfLines={1}>
                 {formatMoney(current.expense, currency)}
               </Text>
             </View>
           </View>
         </View>
 
-        <View className="rounded-lg bg-white/10 px-3 pb-3 pt-3">
+        <View className="rounded-lg bg-on-primary/10 px-3 pb-3 pt-3">
           <CashFlowBars months={months} />
         </View>
       </View>

@@ -1,9 +1,10 @@
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Tabs } from "expo-router";
-import { useColorScheme } from "nativewind";
+import { useAppTheme } from "@/theme/ThemeProvider";
 import { ChartBar as BarChart3, House as Home, Users, Wallet } from "phosphor-react-native";
 import { SettingsDrawerProvider } from "@/context/settings-drawer";
 import { SettingsDrawer } from "@/components/settings/SettingsDrawer";
+import { palette } from "@/theme/palette";
 
 /**
  * A standard fixed, full-width bottom tab bar — not floating with side
@@ -22,25 +23,25 @@ import { SettingsDrawer } from "@/components/settings/SettingsDrawer";
  */
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
-  const { colorScheme } = useColorScheme();
-  const isDark = colorScheme === "dark";
+  const { version } = useAppTheme();
 
   return (
     <SettingsDrawerProvider>
       <Tabs
+        key={version}
         screenOptions={{
           headerShown: false,
-          tabBarActiveTintColor: "#2F8F7D",
-          tabBarInactiveTintColor: isDark ? "#8A8F8C" : "#6B7169",
+          tabBarActiveTintColor: palette.primary,
+          tabBarInactiveTintColor: palette.muted,
           tabBarShowLabel: true,
           tabBarLabelStyle: { fontSize: 10, fontWeight: "600" },
           tabBarStyle: {
             height: 56 + insets.bottom,
             paddingTop: 8,
             paddingBottom: insets.bottom || 8,
-            backgroundColor: isDark ? "#1E2E27" : "#FFFFFF",
+            backgroundColor: palette.card,
             borderTopWidth: 1,
-            borderTopColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(10,10,10,0.08)",
+            borderTopColor: palette.border,
             elevation: 0,
           },
         }}

@@ -28,8 +28,9 @@ import { usePersonalAccounts, usePersonalCategories, usePersonalTransactions } f
 import { formatMoney } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import { PageTour, usePageTour } from "@/components/onboarding/PageTour";
+import { palette } from "@/theme/palette";
+import { DONUT_COLORS } from "@/theme/chartColors";
 
-const DONUT_COLORS = ["#2F8F7D", "#5FBBA5", "#F5A524", "#009B87", "#D95F5F", "#726C7D"];
 const CATEGORY_ALL = "__all__";
 const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
@@ -212,7 +213,7 @@ export default function InsightsScreen() {
           className="h-10 w-10 items-center justify-center rounded-full bg-surface active:opacity-70 dark:bg-surface-dark"
           accessibilityLabel="Activity"
         >
-          <Bell color="#0A0A0A" size={18} />
+          <Bell color={palette.ink} size={18} />
         </Pressable>
       </View>
 
@@ -231,14 +232,14 @@ export default function InsightsScreen() {
         {!isLoading && !isError && (
           <View ref={statsRef} collapsable={false} className="flex-row gap-3">
             <Card className="flex-1 items-start gap-1">
-              <Layers color="#2F8F7D" size={18} />
+              <Layers color={palette.primary} size={18} />
               <Text className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
                 {groups?.length ?? 0}
               </Text>
               <Text className="text-xs text-neutral-500">Active groups</Text>
             </Card>
             <Card className="flex-1 items-start gap-1">
-              <Receipt color="#2F8F7D" size={18} />
+              <Receipt color={palette.primary} size={18} />
               <Text className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
                 {expenses?.length ?? 0}
               </Text>
@@ -250,7 +251,7 @@ export default function InsightsScreen() {
         {!isLoading && !isError && locked && (
           <Card className="items-center gap-3 border-2 border-accent bg-accent/10 py-6">
             <View className="h-12 w-12 items-center justify-center rounded-full bg-accent/20">
-              <Crown size={24} color="#F5A524" weight="fill" />
+              <Crown size={24} color={palette.highlight} weight="fill" />
             </View>
             <Text className="text-center text-base font-semibold text-neutral-900 dark:text-neutral-100">
               {PLAN_FEATURE_COPY.insights.title}
@@ -285,7 +286,7 @@ export default function InsightsScreen() {
               hitSlop={10}
               className="h-8 w-8 items-center justify-center rounded-lg bg-neutral-500/10"
             >
-              <ChevronLeft color="#6B7169" size={16} />
+              <ChevronLeft color={palette.muted} size={16} />
             </Pressable>
             <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {MONTH_NAMES[calendarDate.getMonth()]} {calendarDate.getFullYear()}
@@ -295,7 +296,7 @@ export default function InsightsScreen() {
               hitSlop={10}
               className="h-8 w-8 items-center justify-center rounded-lg bg-neutral-500/10"
             >
-              <ChevronRight color="#6B7169" size={16} />
+              <ChevronRight color={palette.muted} size={16} />
             </Pressable>
           </View>
         )}
@@ -398,7 +399,7 @@ export default function InsightsScreen() {
                   <Text
                     className={cn(
                       "text-xs font-medium",
-                      categoryFilter === CATEGORY_ALL ? "text-primary" : "text-neutral-500"
+                      categoryFilter === CATEGORY_ALL ? "text-primary-deep" : "text-neutral-500"
                     )}
                   >
                     All categories
@@ -416,7 +417,7 @@ export default function InsightsScreen() {
                     <Text
                       className={cn(
                         "text-xs font-medium capitalize",
-                        categoryFilter === label ? "text-primary" : "text-neutral-500"
+                        categoryFilter === label ? "text-primary-deep" : "text-neutral-500"
                       )}
                     >
                       {label}

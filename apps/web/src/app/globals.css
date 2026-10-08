@@ -70,7 +70,7 @@
   --primary: #2f8f7d;
   --primary-foreground: #ffffff;
   --primary-light: #e8f4f0;
-  --primary-deep: #1f6355;
+  --primary-deep: #2f8f7d; /* readable accent text shade; same as primary for the original teal */
   --secondary: #e8f4f0; /* primary-light */
   --secondary-foreground: #2f8f7d;
   --muted: #ececea;
@@ -113,7 +113,7 @@
   --primary: #5fbba5;
   --primary-foreground: #16211b;
   --primary-light: rgba(95, 187, 165, 0.16);
-  --primary-deep: #86cdbb;
+  --primary-deep: #5fbba5;
   --secondary: rgba(95, 187, 165, 0.16);
   --secondary-foreground: #86cdbb;
   --muted: #223229;

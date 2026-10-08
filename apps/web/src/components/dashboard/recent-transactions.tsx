@@ -54,7 +54,7 @@ export function RecentTransactions() {
     <div className="mb-8">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-base font-semibold">Recent transactions</h2>
-        <Link href="/personal" className="flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+        <Link href="/personal" className="flex items-center gap-1 text-sm font-medium text-primary-deep hover:underline">
           See all <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>

@@ -2,6 +2,7 @@ import { Pressable, Text, View } from "react-native";
 import { CaretLeft as ChevronLeft, CaretRight as ChevronRight } from "phosphor-react-native";
 import type { DailyTotal } from "@evensplit/shared";
 import { formatMoney } from "@/lib/format";
+import { palette } from "@/theme/palette";
 
 const WEEKDAYS = ["S", "M", "T", "W", "T", "F", "S"];
 const MONTH_NAMES = [
@@ -49,7 +50,7 @@ export function MonthCalendar({
     <View className="gap-3">
       <View className="flex-row items-center justify-between">
         <Pressable onPress={onPrevMonth} hitSlop={10} className="h-8 w-8 items-center justify-center rounded-lg bg-neutral-500/10">
-          <ChevronLeft color="#726C7D" size={16} />
+          <ChevronLeft color={palette.muted} size={16} />
         </Pressable>
         <View className="items-center">
           <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
@@ -60,7 +61,7 @@ export function MonthCalendar({
           </Text>
         </View>
         <Pressable onPress={onNextMonth} hitSlop={10} className="h-8 w-8 items-center justify-center rounded-lg bg-neutral-500/10">
-          <ChevronRight color="#726C7D" size={16} />
+          <ChevronRight color={palette.muted} size={16} />
         </Pressable>
       </View>
 
@@ -85,7 +86,7 @@ export function MonthCalendar({
                 className={`h-7 w-7 items-center justify-center rounded-full ${isToday ? "bg-primary-light" : ""}`}
               >
                 <Text
-                  className={`text-xs ${isToday ? "font-bold text-primary" : "text-neutral-900 dark:text-neutral-100"}`}
+                  className={`text-xs ${isToday ? "font-bold text-primary-deep" : "text-neutral-900 dark:text-neutral-100"}`}
                 >
                   {day}
                 </Text>

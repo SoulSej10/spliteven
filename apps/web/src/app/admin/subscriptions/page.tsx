@@ -50,7 +50,7 @@ function AdminSubscriptionsContent() {
                 <CardContent className="space-y-2 py-4">
                   <div className="flex items-center justify-between">
                     <p className="font-semibold">{req.users.display_name}</p>
-                    <p className="font-mono text-sm font-semibold text-primary">
+                    <p className="font-mono text-sm font-semibold text-primary-deep">
                       {SUBSCRIPTION_PLANS[req.plan].priceLabel}
                     </p>
                   </div>

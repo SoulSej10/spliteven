@@ -122,7 +122,7 @@ export function SettleUpSheet({
                 method === m ? "border-primary bg-primary-light" : "border-neutral-500/20"
               )}
             >
-              <Text className={cn("text-sm font-medium", method === m ? "text-primary" : "text-neutral-500")}>
+              <Text className={cn("text-sm font-medium", method === m ? "text-primary-deep" : "text-neutral-500")}>
                 {m}
               </Text>
             </Pressable>
@@ -146,7 +146,7 @@ export function SettleUpSheet({
               <Text
                 className={cn(
                   "text-sm font-medium",
-                  fromAccountId === null ? "text-primary" : "text-neutral-500"
+                  fromAccountId === null ? "text-primary-deep" : "text-neutral-500"
                 )}
               >
                 Not linked
@@ -164,7 +164,7 @@ export function SettleUpSheet({
                 <Text
                   className={cn(
                     "text-sm font-medium",
-                    fromAccountId === a.id ? "text-primary" : "text-neutral-500"
+                    fromAccountId === a.id ? "text-primary-deep" : "text-neutral-500"
                   )}
                 >
                   {a.name}

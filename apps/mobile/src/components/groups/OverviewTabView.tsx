@@ -8,6 +8,7 @@ import { MoneyText } from "@/components/ui/MoneyText";
 import { SkeletonCardRows } from "@/components/ui/Skeleton";
 import { formatMoney } from "@/lib/format";
 import { useGroupBalances, useGroupExpenses, useGroupSettlements } from "@/hooks/use-group-detail";
+import { palette } from "@/theme/palette";
 
 /**
  * Group Overview - a snapshot composed entirely from data the screen
@@ -81,7 +82,7 @@ export function OverviewTabView({
         {recentExpenses.length === 0 ? (
           <View className="items-center gap-2 py-10">
             <View className="h-12 w-12 items-center justify-center rounded-full bg-primary-light">
-              <Receipt color="#2F8F7D" size={20} />
+              <Receipt color={palette.primary} size={20} />
             </View>
             <Text className="text-sm text-neutral-500">No expenses yet.</Text>
           </View>

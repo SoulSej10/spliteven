@@ -65,7 +65,7 @@ export function AddBudgetSheet({ visible, onClose }: { visible: boolean; onClose
                 )}
               >
                 <Text
-                  className={cn("text-sm font-medium", categoryId === c.id ? "text-primary" : "text-neutral-500")}
+                  className={cn("text-sm font-medium", categoryId === c.id ? "text-primary-deep" : "text-neutral-500")}
                 >
                   {c.icon ? `${c.icon} ` : ""}
                   {c.name}

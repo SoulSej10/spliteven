@@ -15,6 +15,7 @@ import { AcceptTermsGate } from "@/components/legal/AcceptTermsGate";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import { isPasswordPwned } from "@/lib/pwned-password";
 import { hasAcceptedPrivacyPolicy, setPrivacyPolicyAccepted } from "@/lib/device-flags";
+import { palette } from "@/theme/palette";
 
 export default function SignUpScreen() {
   const [submitting, setSubmitting] = useState(false);
@@ -33,7 +34,7 @@ export default function SignUpScreen() {
     };
   }, []);
   const { colorScheme } = useColorScheme();
-  const iconColor = colorScheme === "dark" ? "#F4F5F3" : "#0A0A0A";
+  const iconColor = palette.ink;
   const { handleSubmit, formState, setValue, watch } = useForm<SignUpInput>({
     resolver: zodResolver(signUpSchema),
     defaultValues: { email: "", password: "", confirmPassword: "" },
@@ -155,7 +156,7 @@ export default function SignUpScreen() {
             <Text className="text-neutral-500">Already have an account?</Text>
             <Link href="/(auth)/login" asChild>
               <Pressable>
-                <Text className="font-semibold text-primary">Log in</Text>
+                <Text className="font-semibold text-primary-deep">Log in</Text>
               </Pressable>
             </Link>
           </View>
@@ -169,14 +170,14 @@ export default function SignUpScreen() {
         <Text className="text-center text-xs text-neutral-500">
           By creating an account, you agree to our{" "}
           <Text
-            className="font-semibold text-primary"
+            className="font-semibold text-primary-deep"
             onPress={() => Linking.openURL("https://evensplit-eight.vercel.app/terms-of-service")}
           >
             Terms of Service
           </Text>{" "}
           and{" "}
           <Text
-            className="font-semibold text-primary"
+            className="font-semibold text-primary-deep"
             onPress={() => Linking.openURL("https://evensplit-eight.vercel.app/privacy-policy")}
           >
             Privacy Policy

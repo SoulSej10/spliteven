@@ -116,7 +116,7 @@ export function BalancesTab({
                       <div className="flex items-center gap-2.5">
                         <Avatar className="h-8 w-8">
                           <AvatarImage src={avatar(b.user_id)} />
-                          <AvatarFallback className="bg-primary-light text-primary">
+                          <AvatarFallback className="bg-primary-light text-primary-deep">
                             {initials(name(b.user_id))}
                           </AvatarFallback>
                         </Avatar>

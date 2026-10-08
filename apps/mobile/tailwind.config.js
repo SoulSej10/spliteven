@@ -1,43 +1,47 @@
 /** @type {import('tailwindcss').Config} */
+
+// Colors and corner radii are CSS variables supplied at runtime by
+// src/theme/ThemeProvider.tsx (values built in src/theme/vars.ts from the
+// shared theme data in packages/shared/src/themes.ts), so one className like
+// `bg-primary` or `rounded-card` follows whichever template + accent the user
+// picked, in light or dark. `<alpha-value>` keeps opacity suffixes (bg-primary/20) working.
+const color = (name) => `rgb(var(--c-${name}) / <alpha-value>)`;
+
 module.exports = {
   content: ["./app/**/*.{js,jsx,ts,tsx}", "./src/**/*.{js,jsx,ts,tsx}"],
   presets: [require("nativewind/preset")],
   darkMode: "class",
   theme: {
     extend: {
-      // SplitEven brand tokens v8 — same teal-green family kept (a prior
-      // plum/indigo hue swap was tried and reverted per feedback), but
-      // desaturated and lightened per "too strong, not the right vibe, do
-      // a friendlier makeover": the old primary (#16A88F) and dark-mode
-      // bright variant (#35D6B5) read as neon, and the dark-mode background
-      // (#0A120D) was near-black. Both are toned down here while staying
-      // recognizably the same brand color, not a hue change.
       colors: {
         primary: {
-          DEFAULT: "#2F8F7D",
-          light: "#E8F4F0",
-          bright: "#5FBBA5", // for dark-mode text/icons on the dark bg
-          soft: "#86CDBB",
-          deep: "#1F6355", // for gradients / pressed states
+          DEFAULT: color("primary"),
+          light: color("primary-light"),
+          bright: color("primary-bright"), // for dark-mode text/icons on the dark bg
+          soft: color("primary-soft"),
+          deep: color("primary-deep"), // for gradients / pressed states
         },
+        // Text/icons that sit on top of `primary` (white on deep accents, dark ink on light ones).
+        "on-primary": color("on-primary"),
         accent: {
-          DEFAULT: "#F5A524", // warm amber - CTAs, streaks, highlights
-          light: "#FDF1DC",
-          deep: "#B9790F",
+          DEFAULT: color("accent"), // warm amber - CTAs, streaks, highlights
+          light: color("accent-light"),
+          deep: color("accent-deep"),
         },
-        positive: "#009B87", // emerald - financial gains only, never decorative
-        negative: "#D95F5F", // soft coral/red
-        warning: "#E0A63A", // warm amber
-        surface: "#FFFFFF",
+        positive: color("positive"), // financial gains only, never decorative
+        negative: color("negative"),
+        warning: color("warning"),
+        surface: color("surface"),
         neutral: {
-          900: "#16211B", // dark-mode screen background — softened from near-black for a friendlier feel
-          500: "#6B7169",
-          100: "#F4F5F3",
+          900: color("n900"),
+          700: color("n700"),
+          500: color("n500"),
+          300: color("n300"),
+          200: color("n200"),
+          100: color("n100"),
         },
-        // Dark mode card surface (applied via `dark:bg-surface-dark`) — a
-        // visible step lighter than neutral-900 so cards actually read as
-        // raised against the background.
-        "surface-dark": "#1E2E27",
+        // Dark mode card surface (applied via `dark:bg-surface-dark`).
+        "surface-dark": color("surface-dark"),
       },
       // Font swapped from Plus Jakarta Sans to Sora per feedback ("too
       // standard, give it character but still comprehensive") - Sora's
@@ -67,16 +71,18 @@ module.exports = {
         "3xl": ["32px", { lineHeight: "36px" }],
         "4xl": ["38px", { lineHeight: "42px" }],
       },
-      // v3: less "stadium pill", more geometric edge per feedback - buttons
-      // and chips now use a modest rounded-rect instead of a full capsule.
-      // Circles (avatars, FABs) are unaffected since those use `rounded-full`
-      // directly, not this token.
-      // v4: cards were still reading as "over-rounded / generic" per
-      // feedback - card radius nudged down again for a semi-soft, more
-      // deliberate edge (not fully squared, not a soft blob).
+      // The whole radius scale follows the theme template (Classic is the
+      // tightest, Sakura Milk the bubbliest); `rounded-full` (circles,
+      // avatars, FABs) is unaffected. At scale 1 these match the previous
+      // fixed values: card 14px, pill 10px.
       borderRadius: {
-        card: "14px",
-        pill: "10px",
+        md: "var(--r-md)",
+        lg: "var(--r-lg)",
+        xl: "var(--r-xl)",
+        "2xl": "var(--r-2xl)",
+        "3xl": "var(--r-3xl)",
+        card: "var(--r-card)",
+        pill: "var(--r-pill)",
       },
     },
   },

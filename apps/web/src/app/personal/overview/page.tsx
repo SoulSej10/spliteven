@@ -63,7 +63,7 @@ export default function PersonalOverviewPage() {
       <div>
         <div className="mb-2 flex items-center justify-between">
           <h2 className="text-sm font-medium text-muted-foreground">Accounts</h2>
-          <Link href="/personal/accounts" className="text-sm font-medium text-primary hover:underline">
+          <Link href="/personal/accounts" className="text-sm font-medium text-primary-deep hover:underline">
             See all
           </Link>
         </div>
@@ -111,7 +111,7 @@ export default function PersonalOverviewPage() {
         <Link href="/personal/budgets">
           <Card className="gap-2 p-4">
             <div className="flex items-center gap-2">
-              <PiggyBank className="h-4 w-4 text-primary" />
+              <PiggyBank className="h-4 w-4 text-primary-deep" />
               <p className="flex-1 text-sm font-semibold">{budgetHighlight.category_name} budget</p>
               <p className="text-xs text-muted-foreground">
                 {formatMoney(budgetHighlight.spent, accounts?.[0]?.currency ?? "PHP")} /{" "}
@@ -137,7 +137,7 @@ export default function PersonalOverviewPage() {
       <div>
         <div className="mb-2 flex items-center justify-between">
           <h2 className="text-sm font-medium text-muted-foreground">Recent transactions</h2>
-          <Link href="/personal" className="text-sm font-medium text-primary hover:underline">
+          <Link href="/personal" className="text-sm font-medium text-primary-deep hover:underline">
             See all
           </Link>
         </div>

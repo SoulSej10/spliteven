@@ -101,7 +101,7 @@ export default function PersonalCategoriesPage() {
         <>
           {categories?.length === 0 && (
             <div className="mb-6 flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border py-16 text-center">
-              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary">
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary-deep">
                 <Tag className="h-6 w-6" />
               </span>
               <p className="font-medium">No categories yet</p>

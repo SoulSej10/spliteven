@@ -120,7 +120,7 @@ export default function CategoryTrailPage({
                       {entry.groups && entry.linked_group_id && (
                         <Link
                           href={`/groups/${entry.linked_group_id}`}
-                          className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                          className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-primary-deep hover:underline"
                         >
                           <UsersThree className="h-3 w-3" /> Your share from {entry.groups.name}
                         </Link>
@@ -144,7 +144,7 @@ export default function CategoryTrailPage({
 
       {trail.entries.length > 0 && (
         <div className="flex items-center gap-3 rounded-xl border border-primary/30 bg-primary-light p-4">
-          <CheckCircle className="h-6 w-6 text-primary" weight="fill" />
+          <CheckCircle className="h-6 w-6 text-primary-deep" weight="fill" />
           <div>
             <p className="text-xs text-muted-foreground">Total, matching Analysis</p>
             <p className="font-mono text-lg font-semibold tabular-nums">{formatMoney(trail.total, currency)}</p>

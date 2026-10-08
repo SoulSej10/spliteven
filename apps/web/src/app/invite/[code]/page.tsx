@@ -57,7 +57,7 @@ function JoinGroupContent({ code }: { code: string }) {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <Card className="w-full max-w-sm rounded-2xl border-border/60 shadow-sm">
         <CardHeader className="items-center text-center">
-          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-light text-primary">
+          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-light text-primary-deep">
             <Users className="h-6 w-6" />
           </span>
           <CardTitle>Join group</CardTitle>

@@ -60,7 +60,7 @@ function GroupsContent() {
 
       {!isLoading && !isError && groups?.length === 0 && (
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border py-16 text-center">
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary">
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary-deep">
             <Users className="h-6 w-6" />
           </span>
           <p className="font-medium">No groups yet</p>

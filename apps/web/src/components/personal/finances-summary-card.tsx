@@ -32,7 +32,7 @@ export function FinancesSummaryCard() {
   if (!accounts || accounts.length === 0) return null;
 
   return (
-    <div className="mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-primary-deep to-primary px-6 py-5 text-primary-foreground shadow-sm">
+    <div className="mb-6 overflow-hidden rounded-2xl bg-primary px-6 py-5 text-primary-foreground shadow-sm">
       <p className="text-xs font-medium text-primary-foreground/70">Total balance</p>
       <p className="mt-1 text-3xl font-extrabold">{formatMoney(total, currency)}</p>
       <div className="mt-4 grid grid-cols-2 gap-3 sm:max-w-sm">

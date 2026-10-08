@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { Easing, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { X } from "phosphor-react-native";
 import { cn } from "@/lib/cn";
+import { palette } from "@/theme/palette";
 
 const SHEET_HEIGHT = Dimensions.get("window").height;
 // A percentage maxHeight string on this absolutely-positioned (bottom-anchored,
@@ -101,7 +102,7 @@ export function BottomSheet({
                   hitSlop={12}
                   className="h-8 w-8 items-center justify-center rounded-full bg-neutral-100 dark:bg-white/10"
                 >
-                  <X size={16} color="#6B7169" />
+                  <X size={16} color={palette.muted} />
                 </Pressable>
               </View>
             )}

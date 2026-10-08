@@ -157,7 +157,7 @@ export function InsightsTab({
   if (!expenses || expenses.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-border py-16 text-center">
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary">
+        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary-deep">
           <PieChartIcon className="h-6 w-6" />
         </span>
         <p className="font-medium">No spending to chart yet</p>

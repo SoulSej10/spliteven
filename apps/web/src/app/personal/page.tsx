@@ -76,7 +76,7 @@ export default function PersonalRecordsPage() {
 
       {!isLoading && (accounts?.length ?? 0) === 0 && (
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border py-16 text-center">
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary">
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary-deep">
             <Receipt className="h-6 w-6" />
           </span>
           <p className="font-medium">Add an account first</p>
@@ -88,7 +88,7 @@ export default function PersonalRecordsPage() {
 
       {!isLoading && (accounts?.length ?? 0) > 0 && transactions?.length === 0 && (
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border py-16 text-center">
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary">
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary-deep">
             <Receipt className="h-6 w-6" />
           </span>
           <p className="font-medium">No transactions yet</p>
@@ -127,7 +127,7 @@ export default function PersonalRecordsPage() {
                           {tx.groups && tx.linked_group_id && (
                             <Link
                               href={`/groups/${tx.linked_group_id}`}
-                              className="block truncate text-xs font-medium text-primary hover:underline"
+                              className="block truncate text-xs font-medium text-primary-deep hover:underline"
                             >
                               From {tx.groups.name}
                             </Link>

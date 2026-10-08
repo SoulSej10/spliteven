@@ -126,7 +126,7 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
                             className={cn(
                               "flex items-center gap-2.5 rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors",
                               childActive
-                                ? "bg-primary-light text-primary"
+                                ? "bg-primary-light text-primary-deep"
                                 : "text-muted-foreground hover:bg-muted hover:text-foreground"
                             )}
                           >
@@ -148,7 +148,7 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
         <div className="flex items-center gap-2 rounded-lg p-2">
           <Avatar className="h-9 w-9">
             <AvatarImage src={profile?.avatar_url ?? undefined} alt={profile?.display_name} />
-            <AvatarFallback className="bg-primary-light text-primary">
+            <AvatarFallback className="bg-primary-light text-primary-deep">
               {/* eslint-disable-next-line @next/next/no-img-element -- small local asset, not worth next/image's overhead here */}
               <img src="/logo-mark.png" alt="" className="h-full w-full object-cover" />
             </AvatarFallback>

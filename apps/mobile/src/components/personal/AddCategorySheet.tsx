@@ -103,7 +103,7 @@ export function AddCategorySheet({
                 kind === k ? "border-primary bg-primary-light" : "border-neutral-500/20"
               )}
             >
-              <Text className={cn("text-sm font-medium capitalize", kind === k ? "text-primary" : "text-neutral-500")}>
+              <Text className={cn("text-sm font-medium capitalize", kind === k ? "text-primary-deep" : "text-neutral-500")}>
                 {k}
               </Text>
             </Pressable>

@@ -42,7 +42,7 @@ export interface AccentTones {
   onPrimary: string;
   /** Very soft tint of the accent, for chips and highlighted rows. */
   tint: string;
-  /** Darker (light mode) / lighter (dark mode) shade for accent-colored text on the tint. */
+  /** Readable shade for accent-colored text and icons: darker in light mode, lighter in dark mode. */
   deep: string;
 }
 
@@ -149,53 +149,56 @@ export const THEME_TEMPLATES: Record<ThemeId, ThemeTemplate> = {
 };
 
 export const ACCENT_SWATCHES: Record<AccentId, AccentSwatch> = {
+  // Teal is the original brand color, kept exactly as it was for the Classic look.
   teal: {
     id: "teal",
     name: "Teal",
-    light: { primary: "#2F8F7D", onPrimary: "#FFFFFF", tint: "#E8F4F0", deep: "#1F6355" },
-    dark: { primary: "#5FBBA5", onPrimary: "#16211B", tint: "#243A32", deep: "#86CDBB" },
+    light: { primary: "#2F8F7D", onPrimary: "#FFFFFF", tint: "#E8F4F0", deep: "#2F8F7D" },
+    dark: { primary: "#5FBBA5", onPrimary: "#16211B", tint: "#243A32", deep: "#5FBBA5" },
   },
+  // The rest are soft pastels: gentle fills with dark ink on top, plus a deeper
+  // (light mode) or lighter (dark mode) shade, `deep`, for accent-colored text.
   rose: {
     id: "rose",
     name: "Rose",
-    light: { primary: "#D8527F", onPrimary: "#FFFFFF", tint: "#FDE6EE", deep: "#A93D66" },
-    dark: { primary: "#F08FB0", onPrimary: "#2A1620", tint: "#4A2D3E", deep: "#F7B3CA" },
+    light: { primary: "#F5B3CB", onPrimary: "#5C2440", tint: "#FDEBF2", deep: "#B03A67" },
+    dark: { primary: "#D898B2", onPrimary: "#2A1620", tint: "#46303D", deep: "#F2BDD0" },
   },
   peach: {
     id: "peach",
     name: "Peach",
-    light: { primary: "#D96A3F", onPrimary: "#FFFFFF", tint: "#FDEADF", deep: "#A24521" },
-    dark: { primary: "#F5A183", onPrimary: "#2B1A12", tint: "#4A3328", deep: "#F9C3AD" },
+    light: { primary: "#F8C4A8", onPrimary: "#5A2F1A", tint: "#FEEEE4", deep: "#A8501F" },
+    dark: { primary: "#E2AE96", onPrimary: "#2B1A12", tint: "#473529", deep: "#F5CDB9" },
   },
   honey: {
     id: "honey",
     name: "Honey",
-    light: { primary: "#CF8A12", onPrimary: "#2E1F06", tint: "#FBEFD6", deep: "#8A5C0C" },
-    dark: { primary: "#EDBE5C", onPrimary: "#2B2108", tint: "#463B22", deep: "#F4D58F" },
+    light: { primary: "#F7DE9E", onPrimary: "#4D3A0C", tint: "#FCF3DC", deep: "#7F5A08" },
+    dark: { primary: "#DFC384", onPrimary: "#2B2108", tint: "#433A22", deep: "#F2DCA6" },
   },
   mint: {
     id: "mint",
     name: "Mint",
-    light: { primary: "#2A9D7C", onPrimary: "#FFFFFF", tint: "#E2F5EE", deep: "#1D6F58" },
-    dark: { primary: "#6FD1B3", onPrimary: "#10241D", tint: "#243E36", deep: "#9CE0CB" },
+    light: { primary: "#ADE3CE", onPrimary: "#1F4A3B", tint: "#E7F7F1", deep: "#1F7458" },
+    dark: { primary: "#8FCDB6", onPrimary: "#10241D", tint: "#243A33", deep: "#B9E6D4" },
   },
   sky: {
     id: "sky",
     name: "Sky",
-    light: { primary: "#3F8FCF", onPrimary: "#FFFFFF", tint: "#E3F1FB", deep: "#2A6A9B" },
-    dark: { primary: "#7DBDEB", onPrimary: "#0F2230", tint: "#243A4B", deep: "#A8D4F2" },
+    light: { primary: "#B1D8F3", onPrimary: "#1F4660", tint: "#E8F3FC", deep: "#28679A" },
+    dark: { primary: "#95C0DE", onPrimary: "#0F2230", tint: "#233748", deep: "#BFDDF0" },
   },
   periwinkle: {
     id: "periwinkle",
     name: "Periwinkle",
-    light: { primary: "#6F68D8", onPrimary: "#FFFFFF", tint: "#ECEAFC", deep: "#4B45A8" },
-    dark: { primary: "#A59DF2", onPrimary: "#1B1738", tint: "#37325E", deep: "#C3BDF7" },
+    light: { primary: "#C1BCF6", onPrimary: "#33307A", tint: "#EFEDFD", deep: "#4A44A6" },
+    dark: { primary: "#A8A2E3", onPrimary: "#1B1738", tint: "#35305A", deep: "#CBC7F4" },
   },
   orchid: {
     id: "orchid",
     name: "Orchid",
-    light: { primary: "#A855CC", onPrimary: "#FFFFFF", tint: "#F3E6FA", deep: "#7C3E9E" },
-    dark: { primary: "#CD9BE8", onPrimary: "#26132F", tint: "#43304F", deep: "#E0BDF2" },
+    light: { primary: "#E1BAF1", onPrimary: "#4C2563", tint: "#F6EBFC", deep: "#78399A" },
+    dark: { primary: "#C69EDC", onPrimary: "#26132F", tint: "#41304D", deep: "#E4C6F1" },
   },
 };
 
@@ -245,7 +248,7 @@ export interface ResolvedColors {
   onPrimary: string;
   primaryLight: string;
   primaryDeep: string;
-  /** The accent's dark-mode tone: for text/icons that must pop on dark surfaces. */
+  /** The accent's dark-mode text shade: for text/icons that must pop on dark surfaces. */
   primaryBright: string;
   /** A softer companion shade of the accent. */
   primarySoft: string;
@@ -288,8 +291,8 @@ export function resolveTheme(themeId: ThemeId, accentId: AccentId, scheme: Color
       onPrimary: tones.onPrimary,
       primaryLight: tones.tint,
       primaryDeep: tones.deep,
-      primaryBright: swatch.dark.primary,
-      primarySoft: swatch.dark.deep,
+      primaryBright: swatch.dark.deep,
+      primarySoft: swatch.dark.primary,
       highlight: status.highlight,
       highlightTint: status.highlightTint,
       highlightDeep: status.highlightDeep,

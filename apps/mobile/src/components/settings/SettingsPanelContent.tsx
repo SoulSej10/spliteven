@@ -22,6 +22,7 @@ import { hasShownNotificationNudge, setNotificationNudgeShown } from "@/lib/devi
 import { upsertProfile } from "@/lib/api/profile";
 import { saveColorScheme } from "@/lib/appearance";
 import { EditProfileSheet } from "./EditProfileSheet";
+import { AppearancePicker } from "./AppearancePicker";
 import {
   usePersonalAccounts,
   usePersonalCategories,
@@ -36,6 +37,7 @@ import {
   summarizePersonalImport,
 } from "@/lib/csv";
 import { useQueryClient } from "@tanstack/react-query";
+import { palette } from "@/theme/palette";
 
 function goToFinancesTab(tab: string, onClose: () => void) {
   onClose();
@@ -251,10 +253,10 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
         <Pressable
           onPress={onClose}
           hitSlop={12}
-          className="h-8 w-8 items-center justify-center rounded-full bg-neutral-100 dark:bg-white/10"
+          className="h-8 w-8 items-center justify-center rounded-full bg-neutral-100 dark:bg-on-primary/10"
           accessibilityLabel="Close settings"
         >
-          <X size={16} color="#6B7169" />
+          <X size={16} color={palette.muted} />
         </Pressable>
       </View>
 
@@ -274,7 +276,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
             </Text>
           </View>
           <Pressable onPress={() => setEditProfileVisible(true)}>
-            <ChevronRight color="#6B7169" size={20} />
+            <ChevronRight color={palette.muted} size={20} />
           </Pressable>
         </Card>
 
@@ -287,7 +289,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
           >
             <Card className="flex-row items-center gap-3 border-2 border-accent bg-accent/10">
               <View className="h-10 w-10 items-center justify-center rounded-full bg-accent/20">
-                <Crown size={20} color="#F5A524" weight="fill" />
+                <Crown size={20} color={palette.highlight} weight="fill" />
               </View>
               <View className="flex-1">
                 <Text className="font-semibold text-neutral-900 dark:text-neutral-100">Upgrade to Pro</Text>
@@ -295,7 +297,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
                   Unlimited groups, insights, and more from {SUBSCRIPTION_PLANS.pro.priceLabel}
                 </Text>
               </View>
-              <ChevronRight color="#F5A524" size={18} />
+              <ChevronRight color={palette.highlight} size={18} />
             </Card>
           </Pressable>
         ) : (
@@ -307,7 +309,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
           >
             <Card className="flex-row items-center gap-3">
               <View className="h-10 w-10 items-center justify-center rounded-full bg-accent/20">
-                <Crown size={20} color="#F5A524" weight="fill" />
+                <Crown size={20} color={palette.highlight} weight="fill" />
               </View>
               <View className="flex-1">
                 <Text className="font-semibold text-neutral-900 dark:text-neutral-100">
@@ -315,7 +317,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
                 </Text>
                 <Text className="text-xs text-neutral-500">Manage your subscription</Text>
               </View>
-              <ChevronRight color="#6B7169" size={18} />
+              <ChevronRight color={palette.muted} size={18} />
             </Card>
           </Pressable>
         )}
@@ -324,7 +326,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
           <Pressable onPress={() => { onClose(); router.push("/(app)/admin-subscriptions"); }}>
             <Card className="flex-row items-center justify-between">
               <Text className="font-semibold text-neutral-900 dark:text-neutral-100">Subscription requests</Text>
-              <ChevronRight color="#6B7169" size={18} />
+              <ChevronRight color={palette.muted} size={18} />
             </Card>
           </Pressable>
         ) : null}
@@ -345,7 +347,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
                 <Text
                   className={cn(
                     "text-xs font-medium",
-                    c === profile?.default_currency ? "text-primary" : "text-neutral-500"
+                    c === profile?.default_currency ? "text-primary-deep" : "text-neutral-500"
                   )}
                 >
                   {c}
@@ -363,40 +365,40 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
               className="flex-row items-center justify-between py-2"
             >
               <View className="flex-row items-center gap-2.5">
-                <Wallet size={17} color="#2F8F7D" />
+                <Wallet size={17} color={palette.primary} />
                 <Text className="text-neutral-900 dark:text-neutral-100">Accounts</Text>
               </View>
-              <ChevronRight color="#6B7169" size={17} />
+              <ChevronRight color={palette.muted} size={17} />
             </Pressable>
             <Pressable
               onPress={() => goToFinancesTab("categories", onClose)}
               className="flex-row items-center justify-between py-2"
             >
               <View className="flex-row items-center gap-2.5">
-                <Tag size={17} color="#2F8F7D" />
+                <Tag size={17} color={palette.primary} />
                 <Text className="text-neutral-900 dark:text-neutral-100">Categories</Text>
               </View>
-              <ChevronRight color="#6B7169" size={17} />
+              <ChevronRight color={palette.muted} size={17} />
             </Pressable>
             <Pressable
               onPress={() => goToFinancesTab("budgets", onClose)}
               className="flex-row items-center justify-between py-2"
             >
               <View className="flex-row items-center gap-2.5">
-                <PiggyBank size={17} color="#2F8F7D" />
+                <PiggyBank size={17} color={palette.primary} />
                 <Text className="text-neutral-900 dark:text-neutral-100">Budgets</Text>
               </View>
-              <ChevronRight color="#6B7169" size={17} />
+              <ChevronRight color={palette.muted} size={17} />
             </Pressable>
             <Pressable
               onPress={() => goToFinancesTab("records", onClose)}
               className="flex-row items-center justify-between py-2"
             >
               <View className="flex-row items-center gap-2.5">
-                <ListChecks size={17} color="#2F8F7D" />
+                <ListChecks size={17} color={palette.primary} />
                 <Text className="text-neutral-900 dark:text-neutral-100">Transactions</Text>
               </View>
-              <ChevronRight color="#6B7169" size={17} />
+              <ChevronRight color={palette.muted} size={17} />
             </Pressable>
           </View>
         </Card>
@@ -408,10 +410,10 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
             className="flex-row items-center justify-between py-1"
           >
             <View className="flex-row items-center gap-2.5">
-              <KeyRound size={17} color="#2F8F7D" />
+              <KeyRound size={17} color={palette.primary} />
               <Text className="text-neutral-900 dark:text-neutral-100">Change password</Text>
             </View>
-            <ChevronRight color="#6B7169" size={17} />
+            <ChevronRight color={palette.muted} size={17} />
           </Pressable>
           {showPasswordForm && (
             <View className="mt-3 gap-2.5">
@@ -430,7 +432,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
                 autoCapitalize="none"
               />
               <Button onPress={onSubmitPassword} loading={changingPassword}>
-                <Text className="font-semibold text-white">Update password</Text>
+                <Text className="font-semibold text-on-primary">Update password</Text>
               </Button>
             </View>
           )}
@@ -440,17 +442,17 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
           <Text className="mb-3 font-semibold text-neutral-900 dark:text-neutral-100">Data</Text>
           <Pressable onPress={onExport} disabled={exporting} className="flex-row items-center justify-between py-2">
             <View className="flex-row items-center gap-2.5">
-              <Download size={17} color="#2F8F7D" />
+              <Download size={17} color={palette.primary} />
               <Text className="text-neutral-900 dark:text-neutral-100">Export data (CSV)</Text>
             </View>
-            <ChevronRight color="#6B7169" size={17} />
+            <ChevronRight color={palette.muted} size={17} />
           </Pressable>
           <Pressable onPress={onImport} disabled={importing} className="flex-row items-center justify-between py-2">
             <View className="flex-row items-center gap-2.5">
-              <Upload size={17} color="#2F8F7D" />
+              <Upload size={17} color={palette.primary} />
               <Text className="text-neutral-900 dark:text-neutral-100">Import data (CSV)</Text>
             </View>
-            <ChevronRight color="#6B7169" size={17} />
+            <ChevronRight color={palette.muted} size={17} />
           </Pressable>
         </Card>
 
@@ -465,16 +467,19 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
                 setColorScheme(next);
                 void saveColorScheme(next);
               }}
-              trackColor={{ true: "#2F8F7D", false: "#D9DCD6" }}
+              trackColor={{ true: palette.primaryFill, false: palette.track }}
+              thumbColor={palette.primary}
             />
+          </View>
+          <View className="mt-5">
+            <AppearancePicker />
           </View>
         </Card>
 
         <Card>
           <Text className="mb-3 font-semibold text-neutral-900 dark:text-neutral-100">Notifications</Text>
           <Text className="mb-3 text-xs text-neutral-500">
-            You'll get a local notification when you add an expense or settle up. Notifying other members needs a
-            backend push service (not yet built).
+            You'll get a notification on this device when someone in your groups adds an expense or settles up.
           </Text>
           <View className="gap-3">
             <View className="flex-row items-center justify-between">
@@ -482,7 +487,8 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
               <Switch
                 value={notifExpenses}
                 onValueChange={setNotifExpenses}
-                trackColor={{ true: "#2F8F7D", false: "#D9DCD6" }}
+                trackColor={{ true: palette.primaryFill, false: palette.track }}
+              thumbColor={palette.primary}
               />
             </View>
             <View className="flex-row items-center justify-between">
@@ -490,7 +496,8 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
               <Switch
                 value={notifSettlements}
                 onValueChange={setNotifSettlements}
-                trackColor={{ true: "#2F8F7D", false: "#D9DCD6" }}
+                trackColor={{ true: palette.primaryFill, false: palette.track }}
+              thumbColor={palette.primary}
               />
             </View>
           </View>
@@ -505,10 +512,10 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
             className="flex-row items-center justify-between py-1"
           >
             <View className="flex-row items-center gap-2.5">
-              <ShieldCheck size={17} color="#2F8F7D" />
+              <ShieldCheck size={17} color={palette.primary} />
               <Text className="text-neutral-900 dark:text-neutral-100">Privacy policy</Text>
             </View>
-            <ChevronRight color="#6B7169" size={17} />
+            <ChevronRight color={palette.muted} size={17} />
           </Pressable>
           <Pressable
             onPress={() => {
@@ -518,10 +525,10 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
             className="flex-row items-center justify-between py-1"
           >
             <View className="flex-row items-center gap-2.5">
-              <ShieldCheck size={17} color="#2F8F7D" />
+              <ShieldCheck size={17} color={palette.primary} />
               <Text className="text-neutral-900 dark:text-neutral-100">Terms of service</Text>
             </View>
-            <ChevronRight color="#6B7169" size={17} />
+            <ChevronRight color={palette.muted} size={17} />
           </Pressable>
         </Card>
 
@@ -537,14 +544,14 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
         <View className="flex-row gap-3">
           <Button variant="outline" size="sm" className="flex-1" onPress={onSignOut}>
             <View className="flex-row items-center gap-1.5">
-              <LogOut size={13} color="#0A0A0A" />
+              <LogOut size={13} color={palette.ink} />
               <Text className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Sign out</Text>
             </View>
           </Button>
 
           <Button variant="outline" size="sm" className="flex-1 border-negative/40" onPress={onDeleteAccount}>
             <View className="flex-row items-center gap-1.5">
-              <Trash2 size={13} color="#D95F5F" />
+              <Trash2 size={13} color={palette.negative} />
               <Text className="text-xs font-semibold text-negative">Delete account</Text>
             </View>
           </Button>

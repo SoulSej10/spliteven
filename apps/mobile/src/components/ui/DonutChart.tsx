@@ -1,5 +1,6 @@
 import { Text, View } from "react-native";
 import Svg, { Path } from "react-native-svg";
+import { palette } from "@/theme/palette";
 
 export interface DonutSegment {
   label: string;
@@ -67,7 +68,7 @@ export function DonutChart({
       <View style={{ width: size, height: size }}>
         <Svg width={size} height={size}>
           {wedges.length === 0 ? (
-            <Path d={wedgePath(cx, cy, rOuter, rInner, 0, 359.99)} fill="#6B7169" opacity={0.12} />
+            <Path d={wedgePath(cx, cy, rOuter, rInner, 0, 359.99)} fill={palette.muted} opacity={0.12} />
           ) : (
             wedges.map((w) => <Path key={w.label} d={w.path} fill={w.color} />)
           )}

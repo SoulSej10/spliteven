@@ -8,6 +8,7 @@ import { computeCategoryBreakdown, computeCategoryTrail } from "@evensplit/share
 import { Card } from "@/components/ui/Card";
 import { usePersonalAccounts, usePersonalCategories, usePersonalTransactions } from "@/hooks/use-personal";
 import { formatDate, formatMoney } from "@/lib/format";
+import { palette } from "@/theme/palette";
 
 const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
@@ -26,7 +27,7 @@ export default function CategoryTrailScreen() {
     kind: string;
   }>();
   const { colorScheme } = useColorScheme();
-  const iconColor = colorScheme === "dark" ? "#F4F5F3" : "#0A0A0A";
+  const iconColor = palette.ink;
 
   const { data: transactions, isLoading } = usePersonalTransactions();
   const { data: accounts } = usePersonalAccounts();
@@ -143,8 +144,8 @@ export default function CategoryTrailScreen() {
                     </Text>
                     {group && (
                       <View className="flex-row items-center gap-1">
-                        <UsersThree size={12} color="#6B7169" />
-                        <Text className="text-xs font-medium text-primary" numberOfLines={1}>
+                        <UsersThree size={12} color={palette.muted} />
+                        <Text className="text-xs font-medium text-primary-deep" numberOfLines={1}>
                           Your share from {group.name}
                         </Text>
                       </View>
@@ -164,7 +165,7 @@ export default function CategoryTrailScreen() {
 
         {trail.entries.length > 0 && (
           <Card className="flex-row items-center gap-3 border border-primary/30 bg-primary-light dark:bg-primary/15">
-            <CheckCircle size={22} color="#2F8F7D" weight="fill" />
+            <CheckCircle size={22} color={palette.primary} weight="fill" />
             <View className="flex-1">
               <Text className="text-xs text-neutral-500">Total, matching Analysis</Text>
               <Text className="text-lg font-extrabold text-neutral-900 dark:text-neutral-100">

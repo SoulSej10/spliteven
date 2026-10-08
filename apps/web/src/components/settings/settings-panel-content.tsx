@@ -249,12 +249,12 @@ export function SettingsPanelContent({ onClose }: { onClose?: () => void }) {
             <div className="flex items-center gap-4">
               <Avatar className="h-16 w-16">
                 <AvatarImage src={avatarPreview ?? undefined} />
-                <AvatarFallback className="bg-primary-light text-lg text-primary">
+                <AvatarFallback className="bg-primary-light text-lg text-primary-deep">
                   {/* eslint-disable-next-line @next/next/no-img-element -- small local asset, not worth next/image's overhead here */}
                   <img src="/logo-mark.png" alt="" className="h-full w-full object-cover" />
                 </AvatarFallback>
               </Avatar>
-              <label className="cursor-pointer text-sm text-primary hover:underline">
+              <label className="cursor-pointer text-sm text-primary-deep hover:underline">
                 Change photo
                 <input type="file" accept="image/*" className="hidden" onChange={onAvatarChange} />
               </label>
@@ -324,7 +324,7 @@ export function SettingsPanelContent({ onClose }: { onClose?: () => void }) {
             className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-sm hover:bg-muted"
           >
             <span className="flex items-center gap-2.5">
-              <Wallet className="h-4 w-4 text-primary" /> Accounts
+              <Wallet className="h-4 w-4 text-primary-deep" /> Accounts
             </span>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
           </button>
@@ -334,7 +334,7 @@ export function SettingsPanelContent({ onClose }: { onClose?: () => void }) {
             className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-sm hover:bg-muted"
           >
             <span className="flex items-center gap-2.5">
-              <Tag className="h-4 w-4 text-primary" /> Categories
+              <Tag className="h-4 w-4 text-primary-deep" /> Categories
             </span>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
           </button>
@@ -344,7 +344,7 @@ export function SettingsPanelContent({ onClose }: { onClose?: () => void }) {
             className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-sm hover:bg-muted"
           >
             <span className="flex items-center gap-2.5">
-              <PiggyBank className="h-4 w-4 text-primary" /> Budgets
+              <PiggyBank className="h-4 w-4 text-primary-deep" /> Budgets
             </span>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
           </button>
@@ -354,7 +354,7 @@ export function SettingsPanelContent({ onClose }: { onClose?: () => void }) {
             className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-sm hover:bg-muted"
           >
             <span className="flex items-center gap-2.5">
-              <ListChecks className="h-4 w-4 text-primary" /> Transactions
+              <ListChecks className="h-4 w-4 text-primary-deep" /> Transactions
             </span>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
           </button>
@@ -424,7 +424,7 @@ export function SettingsPanelContent({ onClose }: { onClose?: () => void }) {
             className="flex w-full items-center justify-between rounded-2xl px-4 py-3 text-sm hover:bg-muted"
           >
             <span className="flex items-center gap-2.5">
-              <ShieldCheck className="h-4 w-4 text-primary" /> Privacy policy
+              <ShieldCheck className="h-4 w-4 text-primary-deep" /> Privacy policy
             </span>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
           </button>
@@ -434,7 +434,7 @@ export function SettingsPanelContent({ onClose }: { onClose?: () => void }) {
             className="flex w-full items-center justify-between px-4 py-3 text-sm hover:bg-muted"
           >
             <span className="flex items-center gap-2.5">
-              <ShieldCheck className="h-4 w-4 text-primary" /> Terms of service
+              <ShieldCheck className="h-4 w-4 text-primary-deep" /> Terms of service
             </span>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
           </button>

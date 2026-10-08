@@ -26,6 +26,7 @@ import { formatMoney } from "@/lib/format";
 import { CreateGroupSheet } from "@/components/groups/CreateGroupSheet";
 import { JoinGroupSheet } from "@/components/groups/JoinGroupSheet";
 import { PageTour, usePageTour } from "@/components/onboarding/PageTour";
+import { palette } from "@/theme/palette";
 
 const GROUPS_PREVIEW_COUNT = 2;
 const UPCOMING_PREVIEW_COUNT = 3;
@@ -113,7 +114,7 @@ export default function HomeScreen() {
           className="h-10 w-10 items-center justify-center rounded-full bg-surface active:opacity-70 dark:bg-surface-dark"
           accessibilityLabel="Activity"
         >
-          <Bell color="#0A0A0A" size={18} />
+          <Bell color={palette.ink} size={18} />
         </Pressable>
       </View>
 
@@ -137,21 +138,21 @@ export default function HomeScreen() {
             onPress={() => setQuickAddKind("income")}
             className="flex-1 items-center gap-1.5 rounded-card bg-surface py-3 active:opacity-80 dark:bg-surface-dark"
           >
-            <ArrowDownLeft color="#009B87" size={18} />
+            <ArrowDownLeft color={palette.positive} size={18} />
             <Text className="text-xs font-medium text-neutral-900 dark:text-neutral-100">Income</Text>
           </Pressable>
           <Pressable
             onPress={() => setQuickAddKind("expense")}
             className="flex-1 items-center gap-1.5 rounded-card bg-surface py-3 active:opacity-80 dark:bg-surface-dark"
           >
-            <ArrowUpRight color="#D95F5F" size={18} />
+            <ArrowUpRight color={palette.negative} size={18} />
             <Text className="text-xs font-medium text-neutral-900 dark:text-neutral-100">Expense</Text>
           </Pressable>
           <Pressable
             onPress={() => setQuickAddKind("transfer")}
             className="flex-1 items-center gap-1.5 rounded-card bg-surface py-3 active:opacity-80 dark:bg-surface-dark"
           >
-            <ArrowRightLeft color="#6B7169" size={18} />
+            <ArrowRightLeft color={palette.muted} size={18} />
             <Text className="text-xs font-medium text-neutral-900 dark:text-neutral-100">Transfer</Text>
           </Pressable>
         </View>
@@ -166,7 +167,7 @@ export default function HomeScreen() {
           <Pressable onPress={() => router.navigate("/(app)/(tabs)/finances")}>
             <Card className="mb-6 gap-2">
               <View className="flex-row items-center gap-2">
-                <PiggyBank color="#2F8F7D" size={16} />
+                <PiggyBank color={palette.primary} size={16} />
                 <Text className="flex-1 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                   {budgetHighlight.category_name} budget
                 </Text>
@@ -193,7 +194,7 @@ export default function HomeScreen() {
             {upcomingRecurring.map((e) => (
               <Card key={e.id} className="flex-row items-center gap-3 py-2.5">
                 <View className="h-8 w-8 items-center justify-center rounded-lg bg-neutral-500/10">
-                  <Clock color="#6B7169" size={14} />
+                  <Clock color={palette.muted} size={14} />
                 </View>
                 <Text className="flex-1 text-sm text-neutral-900 dark:text-neutral-100" numberOfLines={1}>
                   {e.description}
@@ -212,8 +213,8 @@ export default function HomeScreen() {
             onPress={() => router.navigate("/(app)/(tabs)/groups")}
             className="flex-row items-center gap-1 active:opacity-70"
           >
-            <Text className="text-sm font-semibold text-primary">See all</Text>
-            <ArrowRight color="#2F8F7D" size={14} />
+            <Text className="text-sm font-semibold text-primary-deep">See all</Text>
+            <ArrowRight color={palette.primary} size={14} />
           </Pressable>
         </View>
 

@@ -3,6 +3,7 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 import { useColorScheme } from "nativewind";
 import { EdgeFade } from "@/components/ui/EdgeFade";
 import { cn } from "@/lib/cn";
+import { palette } from "@/theme/palette";
 
 /** Horizontally scrollable pill tab row — used where SegmentedControl's fixed-width
  *  equal-flex layout would be too cramped (more than ~3 options). */
@@ -17,12 +18,12 @@ export function PillTabs<T extends string>({
 }) {
   // Background color is applied via inline style, not a toggling className,
   // because a conditionally-applied className (especially a slash-opacity
-  // one like `dark:bg-white/5`) on a Pressable is a documented
+  // one like `dark:bg-on-primary/5`) on a Pressable is a documented
   // nativewind/react-native-css-interop + expo-router race condition
   // (nativewind/nativewind#1536, #1557, #1711) that intermittently throws
   // "Couldn't find a navigation context" on press.
   const { colorScheme } = useColorScheme();
-  const inactiveBg = colorScheme === "dark" ? "rgba(255,255,255,0.05)" : "#F7F8F7";
+  const inactiveBg = colorScheme === "dark" ? "rgba(255,255,255,0.05)" : palette.card;
 
   // The ScrollView otherwise always starts at offset 0, so if `value` is set
   // from outside (e.g. Settings' "Manage" shortcuts jumping straight to a
@@ -55,10 +56,10 @@ export function PillTabs<T extends string>({
                 offsets.current[opt.value] = e.nativeEvent.layout.x;
               }}
               className="flex-row items-center gap-1 rounded-lg px-3 py-1.5"
-              style={{ backgroundColor: active ? "#2F8F7D" : inactiveBg }}
+              style={{ backgroundColor: active ? palette.primary : inactiveBg }}
             >
-              {opt.icon && <opt.icon color={active ? "white" : "#6B7169"} size={12} />}
-              <Text className={cn("text-xs font-semibold", active ? "text-white" : "text-neutral-500")}>
+              {opt.icon && <opt.icon color={active ? "white" : palette.muted} size={12} />}
+              <Text className={cn("text-xs font-semibold", active ? "text-on-primary" : "text-neutral-500")}>
                 {opt.label}
               </Text>
             </Pressable>

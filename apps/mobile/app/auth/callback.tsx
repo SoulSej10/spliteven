@@ -3,6 +3,7 @@ import { ActivityIndicator, Text, View } from "react-native";
 import { router } from "expo-router";
 import * as Linking from "expo-linking";
 import { applyAuthCallbackUrl } from "@/lib/supabase/authDeepLink";
+import { palette } from "@/theme/palette";
 
 /**
  * Landing target for Supabase email-confirmation and OAuth redirect links
@@ -61,7 +62,7 @@ export default function AuthCallbackScreen() {
 
   return (
     <View className="flex-1 items-center justify-center gap-3 bg-neutral-100 px-8 dark:bg-neutral-900">
-      <ActivityIndicator color="#2F8F7D" size="large" />
+      <ActivityIndicator color={palette.primary} size="large" />
       {failed && (
         <Text className="text-center text-sm text-neutral-500">
           Couldn&apos;t confirm automatically - redirecting you to log in…

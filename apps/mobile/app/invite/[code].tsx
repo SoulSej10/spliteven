@@ -8,6 +8,7 @@ import { AuthGuard } from "@/components/AuthGuard";
 import { useAuth } from "@/hooks/use-auth";
 import { acceptInvite, fetchInviteByCode, type InvitePreview } from "@/lib/api/invites";
 import { handlePlanLimitError } from "@/lib/plan-prompt";
+import { palette } from "@/theme/palette";
 
 function JoinGroupContent({ code }: { code: string }) {
   const { authUser } = useAuth();
@@ -49,11 +50,11 @@ function JoinGroupContent({ code }: { code: string }) {
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-neutral-100 px-6 dark:bg-neutral-900">
       <View className="h-16 w-16 items-center justify-center rounded-card bg-primary-light">
-        <Users color="#2F8F7D" size={28} />
+        <Users color={palette.primary} size={28} />
       </View>
       <Text className="mt-4 text-xl font-bold text-neutral-900 dark:text-neutral-100">Join group</Text>
 
-      {loading && <ActivityIndicator className="mt-6" color="#2F8F7D" />}
+      {loading && <ActivityIndicator className="mt-6" color={palette.primary} />}
       {!loading && error && <Text className="mt-4 text-center text-negative">{error}</Text>}
       {!loading && !error && (
         <>

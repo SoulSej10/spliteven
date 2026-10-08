@@ -91,7 +91,7 @@ export function CreateGroupSheet({ visible, onClose }: { visible: boolean; onClo
                 currency === c ? "border-primary bg-primary-light" : "border-neutral-500/20"
               )}
             >
-              <Text className={cn("text-sm font-medium", currency === c ? "text-primary" : "text-neutral-500")}>
+              <Text className={cn("text-sm font-medium", currency === c ? "text-primary-deep" : "text-neutral-500")}>
                 {c}
               </Text>
             </Pressable>

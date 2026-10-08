@@ -126,7 +126,7 @@ export default function PersonalAnalysisPage() {
   if (!transactions || transactions.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-border py-16 text-center">
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary">
+        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary-deep">
           <PieChartIcon className="h-6 w-6" />
         </span>
         <p className="font-medium">No transactions to chart yet</p>
@@ -261,7 +261,7 @@ export default function PersonalAnalysisPage() {
                 onClick={() => setCategoryFilter(CATEGORY_ALL)}
                 className={`rounded-full border px-3 py-1.5 text-xs font-medium ${
                   categoryFilter === CATEGORY_ALL
-                    ? "border-primary bg-primary-light text-primary"
+                    ? "border-primary bg-primary-light text-primary-deep"
                     : "border-border text-muted-foreground"
                 }`}
               >
@@ -274,7 +274,7 @@ export default function PersonalAnalysisPage() {
                   onClick={() => setCategoryFilter(c.id)}
                   className={`rounded-full border px-3 py-1.5 text-xs font-medium ${
                     categoryFilter === c.id
-                      ? "border-primary bg-primary-light text-primary"
+                      ? "border-primary bg-primary-light text-primary-deep"
                       : "border-border text-muted-foreground"
                   }`}
                 >

@@ -178,7 +178,7 @@ function DashboardContent() {
         <Link href="/personal/budgets">
           <Card className="mb-6 gap-2 p-4">
             <div className="flex items-center gap-2">
-              <PiggyBank className="h-4 w-4 text-primary" />
+              <PiggyBank className="h-4 w-4 text-primary-deep" />
               <p className="flex-1 text-sm font-semibold">{budgetHighlight.category_name} budget</p>
               <p className="text-xs text-muted-foreground">
                 {formatMoney(budgetHighlight.spent, accounts?.[0]?.currency ?? "PHP")} /{" "}
@@ -222,7 +222,7 @@ function DashboardContent() {
 
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-base font-semibold">Your groups</h2>
-        <Link href="/groups" className="flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+        <Link href="/groups" className="flex items-center gap-1 text-sm font-medium text-primary-deep hover:underline">
           See all <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>

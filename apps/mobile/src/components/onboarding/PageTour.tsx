@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type RefObject } from "react";
 import { Dimensions, Modal, Pressable, Text, View } from "react-native";
 import { Button } from "@/components/ui/Button";
 import { hasSeenPageTour, setPageTourShown } from "@/lib/device-flags";
+import { palette } from "@/theme/palette";
 
 export interface TourStep {
   ref: RefObject<View | null>;
@@ -107,7 +108,7 @@ export function PageTour({
               height: rect.height + 12,
               borderRadius: 16,
               borderWidth: 2,
-              borderColor: "#5FBBA5",
+              borderColor: palette.primaryBright,
             }}
           />
         )}
@@ -142,7 +143,7 @@ export function PageTour({
               ))}
             </View>
             <Button size="sm" onPress={() => (isLast ? finish() : setStep((s) => s + 1))}>
-              <Text className="text-sm font-semibold text-white">{isLast ? "Got it" : "Next"}</Text>
+              <Text className="text-sm font-semibold text-on-primary">{isLast ? "Got it" : "Next"}</Text>
             </Button>
           </View>
         </View>

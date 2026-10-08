@@ -4,6 +4,7 @@ import { router } from "expo-router";
 import * as Notifications from "expo-notifications";
 import { useAuth } from "@/hooks/use-auth";
 import { registerForPushTokenAsync, savePushToken } from "@/lib/notifications";
+import { palette } from "@/theme/palette";
 
 export function AuthGuard({ children }: { children: ReactNode }) {
   const { session, loading } = useAuth();
@@ -29,7 +30,7 @@ export function AuthGuard({ children }: { children: ReactNode }) {
   if (loading || !session) {
     return (
       <View className="flex-1 items-center justify-center bg-neutral-100 dark:bg-neutral-900">
-        <ActivityIndicator color="#2F8F7D" size="large" />
+        <ActivityIndicator color={palette.primary} size="large" />
       </View>
     );
   }

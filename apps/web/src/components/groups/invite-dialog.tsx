@@ -49,7 +49,7 @@ export function InviteDialog({ groupId, trigger }: { groupId: string; trigger: R
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="rounded-2xl sm:max-w-sm">
         <DialogHeader>
-          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-light text-primary">
+          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-light text-primary-deep">
             <UserPlus className="h-6 w-6" />
           </span>
           <DialogTitle className="text-center">Invite to group</DialogTitle>

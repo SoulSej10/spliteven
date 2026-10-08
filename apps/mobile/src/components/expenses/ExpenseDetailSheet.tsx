@@ -9,6 +9,7 @@ import { Avatar } from "@/components/ui/Avatar";
 import { MoneyText } from "@/components/ui/MoneyText";
 import { deleteExpense, type ExpenseWithShares } from "@/lib/api/expenses";
 import { formatDate } from "@/lib/format";
+import { palette } from "@/theme/palette";
 
 export function ExpenseDetailSheet({
   visible,
@@ -68,7 +69,7 @@ export function ExpenseDetailSheet({
         <View className="flex-row gap-3">
           <Button variant="outline" className="flex-1" onPress={onEdit}>
             <View className="flex-row items-center gap-2">
-              <Pencil size={16} color="#0A0A0A" />
+              <Pencil size={16} color={palette.ink} />
               <Text className="font-semibold text-neutral-900 dark:text-neutral-100">Edit</Text>
             </View>
           </Button>

@@ -104,12 +104,12 @@ function UpgradeContent() {
                 <CardContent className="space-y-3 py-5">
                   <div className="flex items-center justify-between">
                     <p className="text-lg font-bold">{plan.name}</p>
-                    <p className="font-mono text-sm font-semibold text-primary">{plan.priceLabel}</p>
+                    <p className="font-mono text-sm font-semibold text-primary-deep">{plan.priceLabel}</p>
                   </div>
                   <ul className="space-y-1.5">
                     {plan.features.map((feature) => (
                       <li key={feature} className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                        <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary-deep" />
                         {feature}
                       </li>
                     ))}
@@ -148,7 +148,7 @@ function UpgradeContent() {
                     className={cn(
                       "rounded-full border px-3.5 py-1.5 text-xs font-medium",
                       selectedMethod === m.id
-                        ? "border-primary bg-primary-light text-primary"
+                        ? "border-primary bg-primary-light text-primary-deep"
                         : "border-border/60 text-muted-foreground"
                     )}
                   >

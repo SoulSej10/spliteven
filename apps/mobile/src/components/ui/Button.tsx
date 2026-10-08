@@ -1,5 +1,6 @@
 import { ActivityIndicator, Pressable, Text, type PressableProps } from "react-native";
 import { cn } from "@/lib/cn";
+import { palette } from "@/theme/palette";
 
 type Variant = "primary" | "secondary" | "outline" | "ghost" | "destructive";
 type Size = "default" | "sm" | "lg" | "icon";
@@ -13,8 +14,8 @@ const VARIANT_STYLES: Record<Variant, string> = {
 };
 
 const VARIANT_TEXT: Record<Variant, string> = {
-  primary: "text-white",
-  secondary: "text-primary",
+  primary: "text-on-primary",
+  secondary: "text-primary-deep",
   outline: "text-neutral-900 dark:text-neutral-100",
   ghost: "text-neutral-900 dark:text-neutral-100",
   destructive: "text-white",
@@ -59,7 +60,7 @@ export function Button({
       {...props}
     >
       {loading ? (
-        <ActivityIndicator color={variant === "primary" || variant === "destructive" ? "#fff" : "#2F8F7D"} />
+        <ActivityIndicator color={variant === "primary" || variant === "destructive" ? "#fff" : palette.primary} />
       ) : typeof children === "string" ? (
         <Text className={cn("font-semibold text-base", VARIANT_TEXT[variant], textClassName)}>
           {children}

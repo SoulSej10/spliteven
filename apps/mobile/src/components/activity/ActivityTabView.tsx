@@ -6,6 +6,7 @@ import { SkeletonCardRows } from "@/components/ui/Skeleton";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { useGroupActivity } from "@/hooks/use-group-detail";
 import { formatDateTime, formatMoney } from "@/lib/format";
+import { palette } from "@/theme/palette";
 
 export function ActivityTabView({
   groupId,
@@ -47,9 +48,9 @@ export function ActivityTabView({
         <Card key={`${item.type}-${item.id}`} className="flex-row items-center gap-3 py-3">
           <View className="h-9 w-9 items-center justify-center rounded-full bg-primary-light">
             {item.type === "expense_added" ? (
-              <Receipt color="#2F8F7D" size={16} />
+              <Receipt color={palette.primary} size={16} />
             ) : (
-              <ArrowRightLeft color="#2F8F7D" size={16} />
+              <ArrowRightLeft color={palette.primary} size={16} />
             )}
           </View>
           <View className="flex-1">

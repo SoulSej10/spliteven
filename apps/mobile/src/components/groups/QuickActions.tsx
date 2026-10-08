@@ -1,5 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 import { Plus, UserPlus } from "phosphor-react-native";
+import { palette } from "@/theme/palette";
 
 interface QuickAction {
   label: string;
@@ -45,7 +46,7 @@ export function QuickActions({
           }}
         >
           <View className="h-11 w-11 items-center justify-center rounded-lg bg-neutral-500/10">
-            <action.icon color="#6B7169" size={20} />
+            <action.icon color={palette.muted} size={20} />
           </View>
           <View className="shrink">
             <Text className="font-semibold text-neutral-900 dark:text-neutral-100" numberOfLines={1}>

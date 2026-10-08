@@ -72,7 +72,7 @@ export function OnboardingTour() {
     <Dialog open={open} onOpenChange={(next) => !next && finish()}>
       <DialogContent className="max-w-sm text-center" showCloseButton>
         <div className="flex flex-col items-center gap-4 py-2">
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary">
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary-deep">
             <Icon className="h-6 w-6" />
           </span>
           <h2 className="text-lg font-semibold">{current.title}</h2>

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 type MetricTone = "primary" | "positive" | "negative" | "warning" | "muted";
 
 const TONE_CLASSES: Record<MetricTone, string> = {
-  primary: "bg-primary-light text-primary",
+  primary: "bg-primary-light text-primary-deep",
   positive: "bg-positive/10 text-positive",
   negative: "bg-negative/10 text-negative",
   warning: "bg-warning/15 text-warning",

@@ -67,13 +67,13 @@ export function buildThemeCss(): string {
           "--primary-deep": tones.deep,
           "--secondary": tones.tint,
           "--secondary-foreground": tones.deep,
-          "--ring": tones.primary,
+          "--ring": tones.deep,
           "--chart-1": tones.primary,
           "--sidebar-primary": tones.primary,
           "--sidebar-primary-foreground": tones.onPrimary,
           "--sidebar-accent": tones.tint,
           "--sidebar-accent-foreground": tones.deep,
-          "--sidebar-ring": tones.primary,
+          "--sidebar-ring": tones.deep,
         })
       );
     }

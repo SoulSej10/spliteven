@@ -62,14 +62,14 @@ export default function LoginScreen() {
             error={formState.errors.password?.message}
           />
           <Pressable onPress={() => router.push("/(auth)/forgot-password")} className="self-end">
-            <Text className="text-sm font-medium text-primary">Forgot password?</Text>
+            <Text className="text-sm font-medium text-primary-deep">Forgot password?</Text>
           </Pressable>
 
           <View className="mt-2 flex-row items-center justify-center gap-1">
             <Text className="text-neutral-500">Don't have an account?</Text>
             <Link href="/(auth)/signup" asChild>
               <Pressable>
-                <Text className="font-semibold text-primary">Sign up</Text>
+                <Text className="font-semibold text-primary-deep">Sign up</Text>
               </Pressable>
             </Link>
           </View>
