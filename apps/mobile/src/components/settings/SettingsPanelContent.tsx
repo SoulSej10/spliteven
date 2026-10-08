@@ -8,7 +8,7 @@ import * as DocumentPicker from "expo-document-picker";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import { CaretRight as ChevronRight, Crown, Download, Key as KeyRound, ListChecks, SignOut as LogOut, PiggyBank, ShieldCheck, Tag, Trash as Trash2, Upload, Wallet, X } from "phosphor-react-native";
-import { PLANS_ENABLED, SUBSCRIPTION_ADMIN_EMAIL, SUBSCRIPTION_PLANS } from "@evensplit/shared";
+import { PLANS_ENABLED, SUBSCRIPTION_ADMIN_EMAIL, SUBSCRIPTION_PLANS, type AppUpdateInfo } from "@evensplit/shared";
 import { CURRENCIES } from "@/lib/format";
 import { Avatar } from "@/components/ui/Avatar";
 import { Card } from "@/components/ui/Card";
@@ -23,6 +23,8 @@ import { hasShownNotificationNudge, setNotificationNudgeShown } from "@/lib/devi
 import { upsertProfile } from "@/lib/api/profile";
 import { saveColorScheme } from "@/lib/appearance";
 import { EditProfileSheet } from "./EditProfileSheet";
+import { UpdateDialog } from "@/components/UpdatePrompt";
+import { fetchAvailableUpdate, installedVersion } from "@/lib/app-update";
 import { AppearancePicker } from "./AppearancePicker";
 import {
   usePersonalAccounts,
@@ -52,6 +54,21 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
   const [notifExpenses, setNotifExpenses] = useState(true);
   const [notifSettlements, setNotifSettlements] = useState(true);
   const [savingCurrency, setSavingCurrency] = useState(false);
+  const [checkingUpdate, setCheckingUpdate] = useState(false);
+  const [pendingUpdate, setPendingUpdate] = useState<AppUpdateInfo | null>(null);
+
+  async function onCheckForUpdates() {
+    setCheckingUpdate(true);
+    try {
+      const info = await fetchAvailableUpdate();
+      if (info) setPendingUpdate(info);
+      else Alert.alert("You are up to date", `SplitEven ${installedVersion()} is the latest version.`);
+    } catch {
+      Alert.alert("Could not check for updates", "Check your internet connection and try again.");
+    } finally {
+      setCheckingUpdate(false);
+    }
+  }
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -537,7 +554,10 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
           <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
             {Constants.expoConfig?.name ?? "SplitEven"}
           </Text>
-          <Text className="text-xs text-neutral-500">Version {Constants.expoConfig?.version ?? "1.0.0"}</Text>
+          <Text className="text-xs text-neutral-500">Version {installedVersion()}</Text>
+          <Button variant="outline" size="sm" className="mt-2" loading={checkingUpdate} onPress={onCheckForUpdates}>
+            Check for updates
+          </Button>
           <Text className="mt-2 text-xs text-neutral-500">Developed solo by Jess Anthony Tahil</Text>
           <Text className="text-xs text-neutral-500">A Peniko product</Text>
         </Card>
@@ -560,6 +580,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
       </ScrollView>
 
       <EditProfileSheet visible={editProfileVisible} onClose={() => setEditProfileVisible(false)} />
+      {pendingUpdate && <UpdateDialog info={pendingUpdate} visible onLater={() => setPendingUpdate(null)} />}
     </KeyboardAvoidingView>
   );
 }

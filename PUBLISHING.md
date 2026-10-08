@@ -78,3 +78,13 @@ gh release create v1.0.1 SplitEven.apk --repo SoulSej10/spliteven-app --title "S
 ```
 
 Old versions stay available under that repo's Releases page.
+
+### How installed apps find out about updates
+
+The app checks the latest release of `SoulSej10/spliteven-app` on launch and whenever it returns to the foreground, and shows an **Update available** dialog (release notes + Download button) when the release tag is newer than the installed version. People can also tap **Settings -> Check for updates**. For this to work:
+
+1. Bump `version` in `apps/mobile/app.json` (for example `1.1.0` -> `1.2.0`) **before** building. That string is what the installed app reports as its version.
+2. Create the release with a tag that equals the new version (`v1.2.0`), the asset named `SplitEven.apk`, and release notes in plain sentences: they are shown to users in the dialog.
+3. Do not mark the release as a draft or pre-release; those are ignored.
+
+Tapping Download opens the APK in the phone's browser; Android then offers to install it over the existing app, keeping the account and data.

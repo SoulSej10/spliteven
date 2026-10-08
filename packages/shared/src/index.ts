@@ -4,6 +4,7 @@ export * from "./balances";
 export * from "./personalFinance";
 export * from "./currency";
 export * from "./appIcons";
+export * from "./appUpdate";
 export * from "./calculator";
 export * from "./pwnedPassword";
 export * from "./subscriptions";
