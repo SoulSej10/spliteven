@@ -12,6 +12,7 @@ import { handlePlanLimitError, showUpgradePrompt } from "@/lib/plan-prompt";
 import { createGroup } from "@/lib/api/groups";
 import { CURRENCIES } from "@/lib/format";
 import { cn } from "@/lib/cn";
+import { AppIcon } from "@/components/ui/AppIcon";
 
 const ICONS = ["👥", "🏠", "✈️", "🍕", "🎉", "💰", "🚗", "🏖️"];
 
@@ -72,7 +73,7 @@ export function CreateGroupSheet({ visible, onClose }: { visible: boolean; onClo
               icon === i ? "bg-primary-light" : "bg-neutral-100 dark:bg-white/5"
             )}
           >
-            <Text className="text-xl">{i}</Text>
+            <AppIcon value={i} size={22} />
           </Pressable>
         ))}
       </View>

@@ -43,7 +43,7 @@ export default function PersonalRecordsPage() {
   function categoryLabel(id: string | null) {
     if (!id) return null;
     const c = categories?.find((cat) => cat.id === id);
-    return c ? `${c.icon ? `${c.icon} ` : ""}${c.name}` : null;
+    return c ? c.name : null;
   }
 
   async function onDelete(id: string) {

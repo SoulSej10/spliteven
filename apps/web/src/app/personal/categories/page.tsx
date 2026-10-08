@@ -9,6 +9,7 @@ import { TablePagination } from "@/components/ui/table-pagination";
 import { AddCategoryDialog, EditCategoryButton } from "@/components/personal/add-category-dialog";
 import { useDeletePersonalCategory, usePersonalCategories } from "@/hooks/use-personal";
 import { usePagination } from "@/hooks/use-pagination";
+import { AppIcon } from "@/components/ui/app-icon";
 
 function CategoryGroup({
   title,
@@ -39,7 +40,7 @@ function CategoryGroup({
                 <TableRow key={c.id}>
                   <TableCell className="w-full">
                     <span className="flex items-center gap-2">
-                      <span className="text-lg">{c.icon ?? "🏷️"}</span>
+                      <AppIcon value={c.icon} fallback="🏷️" size={18} />
                       {c.name}
                     </span>
                   </TableCell>

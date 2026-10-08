@@ -13,6 +13,7 @@ import { CategoryBreakdownList } from "@/components/ui/CategoryBreakdownList";
 import { AccountBarChart, type AccountActivity } from "@/components/ui/AccountBarChart";
 import { cn } from "@/lib/cn";
 import { usePersonalAccounts, usePersonalCategories, usePersonalTransactions } from "@/hooks/use-personal";
+import { useBaseTransactions } from "@/hooks/use-personal-totals";
 import { formatMoney } from "@/lib/format";
 import { palette } from "@/theme/palette";
 import { DONUT_COLORS } from "@/theme/chartColors";
@@ -50,18 +51,23 @@ function fullMonthSeries(dailyTotals: { date: string; expense: number; income: n
 
 export function AnalysisTabView() {
   const { data: transactions, isLoading } = usePersonalTransactions();
+  const { base: currency, transactions: baseTransactions } = useBaseTransactions();
   const { data: categories } = usePersonalCategories();
   const { data: accounts } = usePersonalAccounts();
   const [viewType, setViewType] = useState<ViewType>("expense-overview");
   const [pickerOpen, setPickerOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<string>(CATEGORY_ALL);
   const [calendarDate, setCalendarDate] = useState(() => new Date());
-  const currency = accounts?.[0]?.currency ?? "USD";
 
   const today = new Date();
   const isCurrentMonth = calendarDate.getFullYear() === today.getFullYear() && calendarDate.getMonth() === today.getMonth();
   const monthKey = `${calendarDate.getFullYear()}-${String(calendarDate.getMonth() + 1).padStart(2, "0")}`;
+  // Converted into the base currency so every total here matches the Home totals; per-account activity below stays in each account's own currency.
   const monthTransactions = useMemo(
+    () => baseTransactions.filter((t) => t.occurred_at.slice(0, 7) === monthKey),
+    [baseTransactions, monthKey]
+  );
+  const rawMonthTransactions = useMemo(
     () => (transactions ?? []).filter((t) => t.occurred_at.slice(0, 7) === monthKey),
     [transactions, monthKey]
   );
@@ -87,14 +93,14 @@ export function AnalysisTabView() {
     return (accounts ?? []).map((a) => {
       let expense = 0;
       let income = 0;
-      for (const t of monthTransactions) {
+      for (const t of rawMonthTransactions) {
         if (t.account_id !== a.id) continue;
         if (t.kind === "expense") expense += t.amount;
         else if (t.kind === "income") income += t.amount;
       }
       return { accountId: a.id, name: a.name, icon: a.icon, expense, income, currency: a.currency };
     });
-  }, [accounts, monthTransactions]);
+  }, [accounts, rawMonthTransactions]);
 
   const relevantCategories = (categories ?? []).filter((c) => c.kind === kind);
   const currentLabel = VIEW_OPTIONS.find((o) => o.value === viewType)?.label ?? "";

@@ -43,17 +43,15 @@ module.exports = {
         // Dark mode card surface (applied via `dark:bg-surface-dark`).
         "surface-dark": color("surface-dark"),
       },
-      // Font swapped from Plus Jakarta Sans to Sora per feedback ("too
-      // standard, give it character but still comprehensive") - Sora's
-      // rounded, slightly geometric letterforms read as more distinctive
-      // while staying just as legible at small sizes. Mirrors the web
-      // font swap in layout.tsx.
+      // Bricolage Grotesque: a characterful grotesque with quirky curves, picked so the
+      // app has its own personality instead of a generic UI face. Files live in assets/fonts
+      // and are loaded in app/_layout.tsx. Mirrors the web font in layout.tsx.
       fontFamily: {
-        sans: ["Sora_400Regular"],
-        medium: ["Sora_500Medium"],
-        semibold: ["Sora_600SemiBold"],
-        bold: ["Sora_700Bold"],
-        extrabold: ["Sora_800ExtraBold"],
+        sans: ["Bricolage_400Regular"],
+        medium: ["Bricolage_500Medium"],
+        semibold: ["Bricolage_600SemiBold"],
+        bold: ["Bricolage_700Bold"],
+        extrabold: ["Bricolage_800ExtraBold"],
       },
       // Text was reading too small across the app, so the whole scale was
       // bumped ~12.5% over Tailwind's RN defaults - that turned out to be

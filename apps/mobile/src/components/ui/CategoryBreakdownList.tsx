@@ -2,6 +2,7 @@ import { Pressable, Text, View } from "react-native";
 import { CaretRight } from "phosphor-react-native";
 import { formatMoney } from "@/lib/format";
 import { palette } from "@/theme/palette";
+import { AppIcon } from "@/components/ui/AppIcon";
 
 export interface BreakdownRow {
   label: string;
@@ -36,7 +37,7 @@ export function CategoryBreakdownList({ rows, currency }: { rows: BreakdownRow[]
           accessibilityHint={r.onPress ? "Shows the transactions behind this amount" : undefined}
         >
           <View className="flex-row items-center gap-2.5">
-            <Text className="text-base">{r.icon ?? "🏷️"}</Text>
+            <AppIcon value={r.icon} fallback="🏷️" size={18} />
             <Text className="flex-1 text-sm font-medium capitalize text-neutral-900 dark:text-neutral-100" numberOfLines={1}>
               {r.label}
             </Text>

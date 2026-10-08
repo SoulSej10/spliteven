@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useCreatePersonalAccount, useUpdatePersonalAccount } from "@/hooks/use-personal";
 import { CURRENCIES } from "@/lib/format";
 import { cn } from "@/lib/cn";
+import { AppIcon } from "@/components/ui/AppIcon";
 
 const ACCOUNT_TYPES: { value: PersonalAccountType; label: string }[] = [
   { value: "cash", label: "Cash" },
@@ -110,7 +111,7 @@ export function AddAccountSheet({
               icon === i ? "bg-primary-light" : "bg-neutral-100 dark:bg-white/5"
             )}
           >
-            <Text className="text-xl">{i}</Text>
+            <AppIcon value={i} size={22} />
           </Pressable>
         ))}
       </View>

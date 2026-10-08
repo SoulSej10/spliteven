@@ -17,6 +17,7 @@ import {
 import { formatDate, formatMoney } from "@/lib/format";
 import type { PersonalTransaction } from "@evensplit/shared";
 import { palette } from "@/theme/palette";
+import { AppIcon } from "@/components/ui/AppIcon";
 
 const RECENT_COUNT = 5;
 
@@ -80,7 +81,7 @@ export function OverviewTabView({ onNavigateTab }: { onNavigateTab: (tab: "accou
           return (
             <Card key={account.id} className="flex-row items-center gap-3 py-3">
               <View className="h-9 w-9 items-center justify-center rounded-full bg-primary-light">
-                <Text className="text-base">{account.icon ?? "💵"}</Text>
+                <AppIcon value={account.icon} fallback="💵" size={18} />
               </View>
               <View className="flex-1">
                 <Text className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{account.name}</Text>

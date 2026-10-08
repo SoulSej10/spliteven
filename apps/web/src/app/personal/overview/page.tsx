@@ -19,6 +19,7 @@ import {
 } from "@/hooks/use-personal";
 import { formatDate, formatMoney } from "@/lib/format";
 import type { PersonalTransaction } from "@evensplit/shared";
+import { AppIcon } from "@/components/ui/app-icon";
 
 function TransactionIcon({ kind }: { kind: PersonalTransaction["kind"] }) {
   if (kind === "income" || kind === "group_reimbursement") return <ArrowDownLeft className="h-4 w-4 text-positive" />;
@@ -89,7 +90,7 @@ export default function PersonalOverviewPage() {
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-light text-sm">
-                            {account.icon ?? "💵"}
+                            <AppIcon value={account.icon} fallback="💵" size={16} />
                           </span>
                           <p className="font-medium">{account.name}</p>
                         </div>

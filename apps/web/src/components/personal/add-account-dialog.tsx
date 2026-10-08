@@ -23,6 +23,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from "@/hooks/use-auth";
 import { useCreatePersonalAccount, useUpdatePersonalAccount } from "@/hooks/use-personal";
 import { CURRENCIES } from "@/lib/format";
+import { AppIcon } from "@/components/ui/app-icon";
 
 const ACCOUNT_TYPES = [
   { value: "cash", label: "Cash" },

@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCreatePersonalCategory, useUpdatePersonalCategory } from "@/hooks/use-personal";
+import { AppIcon } from "@/components/ui/app-icon";
 
 const ICONS = ["🛒", "🍔", "🚗", "🏠", "💡", "🎬", "💊", "📚", "✈️", "💰", "🎁", "📱"];
 

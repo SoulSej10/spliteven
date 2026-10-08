@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatMoney, initials } from "@/lib/format";
 import { useAuth } from "@/hooks/use-auth";
 import { useGroupNetBalance } from "@/hooks/use-group-balance-preview";
+import { AppIcon } from "@/components/ui/app-icon";
 
 /** One row of the Groups table: name/icon, member stack, currency, and this user's net balance as a status-style badge. */
 export function GroupTableRow({ group }: { group: GroupWithMembers }) {
@@ -26,7 +27,7 @@ export function GroupTableRow({ group }: { group: GroupWithMembers }) {
       <TableCell className="w-full">
         <Link href={`/groups/${group.id}`} className="flex items-center gap-3">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-light text-lg">
-            {group.icon || "👥"}
+            <AppIcon value={group.icon} fallback="👥" size={20} />
           </span>
           <div className="min-w-0">
             <p className="truncate font-medium">{group.name}</p>

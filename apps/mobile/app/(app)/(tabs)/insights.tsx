@@ -24,7 +24,8 @@ import { usePlan } from "@/hooks/use-plan";
 import { useAuth } from "@/hooks/use-auth";
 import { useSettingsDrawer } from "@/context/settings-drawer";
 import { useMyGroups, useAllExpenses } from "@/hooks/use-groups";
-import { usePersonalAccounts, usePersonalCategories, usePersonalTransactions } from "@/hooks/use-personal";
+import { usePersonalCategories } from "@/hooks/use-personal";
+import { useBaseTransactions } from "@/hooks/use-personal-totals";
 import { formatMoney } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import { PageTour, usePageTour } from "@/components/onboarding/PageTour";
@@ -42,11 +43,14 @@ function CategoryDonut({
   total,
   currency,
   categories,
+  onRowPress,
 }: {
   title: string;
   total: number;
   currency: string;
   categories: { label: string; icon?: string | null; amount: number }[];
+  /** Makes each category row tappable (used to open the trail behind a number). */
+  onRowPress?: (index: number) => void;
 }) {
   return (
     <Card className="gap-4">
@@ -72,6 +76,7 @@ function CategoryDonut({
           amount: c.amount,
           percent: total > 0 ? (c.amount / total) * 100 : 0,
           color: DONUT_COLORS[i % DONUT_COLORS.length],
+          onPress: onRowPress ? () => onRowPress(i) : undefined,
         }))}
       />
     </Card>
@@ -93,9 +98,8 @@ export default function InsightsScreen() {
   const { open: openSettings } = useSettingsDrawer();
   const { data: groups } = useMyGroups();
   const { data: expenses, isLoading, isError, refetch } = useAllExpenses();
-  const { data: personalTransactions } = usePersonalTransactions();
+  const { base: personalCurrency, transactions: personalTransactions } = useBaseTransactions();
   const { data: personalCategories } = usePersonalCategories();
-  const { data: personalAccounts } = usePersonalAccounts();
 
   const [view, setView] = useState<"personal" | "shared">("personal");
   const [categoryFilter, setCategoryFilter] = useState<string>(CATEGORY_ALL);
@@ -108,7 +112,6 @@ export default function InsightsScreen() {
   const { allows } = usePlan();
   const locked = !allows("insights");
 
-  const personalCurrency = personalAccounts?.[0]?.currency ?? "PHP";
   const monthKey = `${calendarDate.getFullYear()}-${String(calendarDate.getMonth() + 1).padStart(2, "0")}`;
 
   // Everything below is scoped to `calendarDate`'s month (not "now"), so the
@@ -319,6 +322,12 @@ export default function InsightsScreen() {
                 title="Personal spending by category"
                 total={personalMonthTotal}
                 currency={personalCurrency}
+                onRowPress={(i) =>
+                  router.push({
+                    pathname: "/(app)/category-trail",
+                    params: { categoryId: personalBreakdown[i].category_id ?? "none", month: monthKey, kind: "expense" },
+                  })
+                }
                 categories={personalBreakdown.map((c) => ({
                   label: c.category_name,
                   icon: personalCategories?.find((cat) => cat.id === c.category_id)?.icon,

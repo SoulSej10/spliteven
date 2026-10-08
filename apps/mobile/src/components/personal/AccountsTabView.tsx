@@ -13,7 +13,9 @@ import {
   usePersonalTransactions,
 } from "@/hooks/use-personal";
 import { AddAccountSheet, type AccountPrefill } from "@/components/personal/AddAccountSheet";
+import { CurrencyRatesCard } from "@/components/personal/CurrencyRatesCard";
 import { palette } from "@/theme/palette";
+import { AppIcon } from "@/components/ui/AppIcon";
 
 /**
  * Common account types most people have, shown as inactive "template" cards
@@ -52,6 +54,7 @@ export function AccountsTabView() {
 
   return (
     <View className="gap-3">
+      <CurrencyRatesCard />
       {accounts?.length === 0 && (
         <View className="items-center gap-2 py-14">
           <View className="h-14 w-14 items-center justify-center rounded-full bg-primary-light">
@@ -67,7 +70,7 @@ export function AccountsTabView() {
           <Pressable key={account.id} onLongPress={() => onArchive(account.id, account.name)}>
             <Card className="flex-row items-center gap-3 py-3">
               <View className="h-10 w-10 items-center justify-center rounded-full bg-primary-light">
-                <Text className="text-lg">{account.icon ?? "💵"}</Text>
+                <AppIcon value={account.icon} fallback="💵" size={20} />
               </View>
               <View className="flex-1">
                 <Text className="font-medium text-neutral-900 dark:text-neutral-100">{account.name}</Text>
@@ -91,7 +94,7 @@ export function AccountsTabView() {
           {suggestions.map((s) => (
             <Card key={s.type} className="flex-row items-center gap-3 py-3 opacity-60">
               <View className="h-10 w-10 items-center justify-center rounded-full bg-neutral-100 dark:bg-white/5">
-                <Text className="text-lg">{s.icon}</Text>
+                <AppIcon value={s.icon} size={20} />
               </View>
               <View className="flex-1">
                 <Text className="font-medium text-neutral-900 dark:text-neutral-100">{s.name}</Text>

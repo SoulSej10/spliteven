@@ -8,6 +8,7 @@ import { MoneyText } from "@/components/ui/MoneyText";
 import { useAuth } from "@/hooks/use-auth";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import type { GroupWithMembers } from "@/lib/api/groups";
+import { AppIcon } from "@/components/ui/AppIcon";
 
 export function GroupCard({ group }: { group: GroupWithMembers }) {
   const { authUser } = useAuth();
@@ -46,7 +47,7 @@ export function GroupCard({ group }: { group: GroupWithMembers }) {
     <Pressable onPress={() => router.push(`/(app)/groups/${group.id}`)}>
       <Card className="mb-3 flex-row items-center gap-4">
         <View className="h-14 w-14 items-center justify-center rounded-card bg-primary-light">
-          <Text className="text-2xl">{group.icon || "👥"}</Text>
+          <AppIcon value={group.icon} fallback="👥" size={26} />
         </View>
         <View className="flex-1">
           <Text className="text-base font-semibold text-neutral-900 dark:text-neutral-100">

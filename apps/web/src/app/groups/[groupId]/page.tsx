@@ -43,6 +43,7 @@ import { archiveGroup, leaveGroup, removeMember } from "@/lib/api/groups";
 import { formatMoney, initials } from "@/lib/format";
 import { downloadGroupLedgerCsv } from "@/lib/csv";
 import { DotsThreeVertical as MoreVertical, UserPlus, UserMinus, Archive, SignOut as LogOut, WarningCircle as AlertCircle, Download, Pencil } from "@phosphor-icons/react";
+import { AppIcon } from "@/components/ui/app-icon";
 
 /**
  * useSetBreadcrumbLabel reads BreadcrumbLabelProvider from context, which
@@ -152,7 +153,7 @@ function GroupDetailContent({ groupId }: { groupId: string }) {
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-light text-2xl">
-              {group.icon || "👥"}
+              <AppIcon value={group.icon} fallback="👥" size={26} />
             </span>
             <div>
               <h1 className="text-xl font-semibold tracking-tight">{group.name}</h1>

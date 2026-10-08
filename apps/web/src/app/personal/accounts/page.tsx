@@ -11,6 +11,7 @@ import { AddAccountDialog } from "@/components/personal/add-account-dialog";
 import { usePersonalAccounts, usePersonalTransactions, useArchivePersonalAccount } from "@/hooks/use-personal";
 import { usePagination } from "@/hooks/use-pagination";
 import { formatMoney } from "@/lib/format";
+import { AppIcon } from "@/components/ui/app-icon";
 
 export default function PersonalAccountsPage() {
   const { data: accounts, isLoading } = usePersonalAccounts();
@@ -80,7 +81,7 @@ export default function PersonalAccountsPage() {
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-light text-base">
-                          {account.icon ?? "💵"}
+                          <AppIcon value={account.icon} fallback="💵" size={18} />
                         </span>
                         <p className="font-medium">{account.name}</p>
                       </div>

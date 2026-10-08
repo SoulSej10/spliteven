@@ -108,7 +108,7 @@ export default function PersonalAnalysisPage() {
         if (t.kind === "expense") expense += t.amount;
         else if (t.kind === "income") income += t.amount;
       }
-      return { name: `${a.icon ?? "💵"} ${a.name}`, expense, income };
+      return { name: a.name, expense, income };
     });
   }, [accounts, monthTransactions]);
 
@@ -278,7 +278,6 @@ export default function PersonalAnalysisPage() {
                       : "border-border text-muted-foreground"
                   }`}
                 >
-                  {c.icon ? `${c.icon} ` : ""}
                   {c.name}
                 </button>
               ))}

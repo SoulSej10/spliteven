@@ -5,14 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { colorScheme } from "nativewind";
 import { I18nManager } from "react-native";
-import {
-  useFonts,
-  Sora_400Regular,
-  Sora_500Medium,
-  Sora_600SemiBold,
-  Sora_700Bold,
-  Sora_800ExtraBold,
-} from "@expo-google-fonts/sora";
+import { useFonts } from "expo-font";
 import "../global.css";
 import { Providers } from "@/components/Providers";
 import { loadStoredAppearance, loadStoredColorScheme, type StoredAppearance } from "@/lib/appearance";
@@ -49,11 +42,11 @@ colorScheme.set("light");
 
 function RootLayout() {
   const [fontsLoaded] = useFonts({
-    Sora_400Regular,
-    Sora_500Medium,
-    Sora_600SemiBold,
-    Sora_700Bold,
-    Sora_800ExtraBold,
+    Bricolage_400Regular: require("../assets/fonts/BricolageGrotesque_400Regular.ttf"),
+    Bricolage_500Medium: require("../assets/fonts/BricolageGrotesque_500Medium.ttf"),
+    Bricolage_600SemiBold: require("../assets/fonts/BricolageGrotesque_600SemiBold.ttf"),
+    Bricolage_700Bold: require("../assets/fonts/BricolageGrotesque_700Bold.ttf"),
+    Bricolage_800ExtraBold: require("../assets/fonts/BricolageGrotesque_800ExtraBold.ttf"),
   });
   const [appearance, setAppearance] = useState<StoredAppearance | null>(null);
 

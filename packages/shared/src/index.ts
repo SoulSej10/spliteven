@@ -2,6 +2,8 @@ export * from "./types";
 export * from "./schemas";
 export * from "./balances";
 export * from "./personalFinance";
+export * from "./currency";
+export * from "./appIcons";
 export * from "./calculator";
 export * from "./pwnedPassword";
 export * from "./subscriptions";

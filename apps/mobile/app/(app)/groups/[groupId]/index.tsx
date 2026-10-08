@@ -27,6 +27,7 @@ import { archiveGroup, leaveGroup } from "@/lib/api/groups";
 import type { ExpenseWithShares } from "@/lib/api/expenses";
 import { buildGroupLedgerCsv, exportAndShareCsv } from "@/lib/csv";
 import { palette } from "@/theme/palette";
+import { AppIcon } from "@/components/ui/AppIcon";
 
 type Tab = "overview" | "expenses" | "balances" | "activity";
 
@@ -157,7 +158,7 @@ export default function GroupDetailScreen() {
 
       <ScrollView contentContainerClassName="px-5 pb-40 pt-3" showsVerticalScrollIndicator={false}>
         <View className="mb-5 items-center gap-2">
-          <Text className="text-3xl">{group.icon || "👥"}</Text>
+          <AppIcon value={group.icon} fallback="👥" size={32} />
           <Text className="text-xl font-bold text-neutral-900 dark:text-neutral-100">{group.name}</Text>
           <View className="flex-row -space-x-2">
             {members.map((m) => (

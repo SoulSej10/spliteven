@@ -1,9 +1,7 @@
-import { useMemo } from "react";
 import { Text, View } from "react-native";
 import { ArrowDownLeft, ArrowUpRight } from "phosphor-react-native";
-import { computeAllAccountBalances, filterTransactionsForCurrentMonth } from "@evensplit/shared";
 import { formatMoney } from "@/lib/format";
-import { usePersonalAccounts, usePersonalTransactions } from "@/hooks/use-personal";
+import { usePersonalTotals } from "@/hooks/use-personal-totals";
 import { palette } from "@/theme/palette";
 
 /**
@@ -12,30 +10,18 @@ import { palette } from "@/theme/palette";
  * a real financial overview rather than just a list of CRUD tabs.
  */
 export function FinancesSummaryCard() {
-  const { data: accounts } = usePersonalAccounts();
-  const { data: transactions } = usePersonalTransactions();
-
-  const { total, currency, monthIncome, monthExpense } = useMemo(() => {
-    const balances = computeAllAccountBalances(accounts ?? [], transactions ?? []);
-    const total = balances.reduce((sum, b) => sum + b.balance, 0);
-
-    let monthIncome = 0;
-    let monthExpense = 0;
-    for (const tx of filterTransactionsForCurrentMonth(transactions ?? [])) {
-      if (tx.kind === "income") monthIncome += tx.amount;
-      if (tx.kind === "expense") monthExpense += tx.amount;
-    }
-
-    return { total, currency: accounts?.[0]?.currency ?? "PHP", monthIncome, monthExpense };
-  }, [accounts, transactions]);
-
-  if (!accounts || accounts.length === 0) return null;
+  const totals = usePersonalTotals();
+  if (!totals) return null;
+  const { base: currency, missing } = totals;
+  const total = totals.total.total;
+  const monthIncome = totals.current.income;
+  const monthExpense = totals.current.expense;
 
   return (
     <View className="mb-4 overflow-hidden rounded-card border border-neutral-200 bg-primary-light">
       <View className="gap-4 px-5 py-5">
         <View>
-          <Text className="text-xs font-medium text-primary-deep/80">Total balance</Text>
+          <Text className="text-xs font-medium text-primary-deep/80">{missing.length > 0 ? "Total balance · add a rate in Accounts" : "Total balance"}</Text>
           <Text className="mt-1 text-3xl font-extrabold text-primary-deep">{formatMoney(total, currency)}</Text>
         </View>
         <View className="flex-row gap-4">

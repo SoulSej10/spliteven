@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatMoney, initials } from "@/lib/format";
 import { useAuth } from "@/hooks/use-auth";
 import { useGroupNetBalance } from "@/hooks/use-group-balance-preview";
+import { AppIcon } from "@/components/ui/app-icon";
 
 export function GroupCard({ group }: { group: GroupWithMembers }) {
   const { authUser } = useAuth();
@@ -24,7 +25,7 @@ export function GroupCard({ group }: { group: GroupWithMembers }) {
       <Card className="group rounded-2xl border-border/60 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
         <CardContent className="flex items-center gap-4 pt-6">
           <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-light text-2xl">
-            {group.icon || "👥"}
+            <AppIcon value={group.icon} fallback="👥" size={26} />
           </span>
           <div className="min-w-0 flex-1">
             <p className="truncate font-medium">{group.name}</p>

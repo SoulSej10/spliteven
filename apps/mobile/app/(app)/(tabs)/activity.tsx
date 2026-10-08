@@ -76,7 +76,7 @@ export default function ActivityScreen() {
                     </Text>
                   )}
                   <Text className="mt-0.5 text-xs text-neutral-500">
-                    {group?.icon ?? "👥"} {group?.name ?? "Group"} · {formatDateTime(item.at)}
+                    {group?.name ?? "Group"} · {formatDateTime(item.at)}
                   </Text>
                 </View>
               </Card>

@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
-import { Sora, JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { buildThemeCss } from "@/lib/theme-css";
 import { APPEARANCE_BOOT_SCRIPT } from "@/lib/appearance";
 
-// Swapped from Plus Jakarta Sans per feedback ("too standard, give it
-// character but still comprehensive") - Sora's rounded, slightly geometric
-// letterforms are distinctive while staying legible. Mirrors the mobile
-// font swap in apps/mobile/app/_layout.tsx.
-const sora = Sora({
+// Bricolage Grotesque: a characterful grotesque so the app has its own personality
+// instead of a generic UI face. Mirrors the mobile font in apps/mobile/app/_layout.tsx.
+const bricolage = Bricolage_Grotesque({
   variable: "--font-sans",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
@@ -30,7 +28,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${sora.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${bricolage.variable} ${jetbrainsMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>

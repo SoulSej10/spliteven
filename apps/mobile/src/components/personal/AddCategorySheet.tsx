@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { useCreatePersonalCategory, useUpdatePersonalCategory } from "@/hooks/use-personal";
 import { cn } from "@/lib/cn";
+import { AppIcon } from "@/components/ui/AppIcon";
 
 const ICONS = ["🛒", "🍔", "🚗", "🏠", "💡", "🎬", "💊", "📚", "✈️", "💰", "🎁", "📱"];
 
@@ -84,7 +85,7 @@ export function AddCategorySheet({
               icon === i ? "bg-primary-light" : "bg-neutral-100 dark:bg-white/5"
             )}
           >
-            <Text className="text-xl">{i}</Text>
+            <AppIcon value={i} size={22} />
           </Pressable>
         ))}
       </View>

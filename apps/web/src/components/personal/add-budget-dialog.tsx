@@ -68,7 +68,6 @@ export function AddBudgetDialog() {
               <SelectContent>
                 {expenseCategories.map((c) => (
                   <SelectItem key={c.id} value={c.id}>
-                    {c.icon ? `${c.icon} ` : ""}
                     {c.name}
                   </SelectItem>
                 ))}

@@ -43,6 +43,9 @@ export function MonthCalendar({
 
   const cells: (number | null)[] = [...Array(startWeekday).fill(null), ...Array.from({ length: daysInMonth }, (_, i) => i + 1)];
   while (cells.length % 7 !== 0) cells.push(null);
+  // Explicit week rows with flex-1 cells: percentage widths of 100/7 sum to a hair over 100% and wrapped after six columns.
+  const weeks: (number | null)[][] = [];
+  for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
 
   const monthTotal = dailyTotals.reduce((sum, d) => sum + (kind === "expense" ? d.expense : d.income), 0);
 
@@ -73,15 +76,17 @@ export function MonthCalendar({
         ))}
       </View>
 
-      <View className="flex-row flex-wrap">
-        {cells.map((day, i) => {
-          if (day === null) return <View key={`empty-${i}`} style={{ width: `${100 / 7}%` }} className="py-1" />;
+      <View>
+        {weeks.map((week, w) => (
+          <View key={`week-${w}`} className="flex-row">
+        {week.map((day, i) => {
+          if (day === null) return <View key={`empty-${w}-${i}`} className="flex-1 py-1" />;
           const dateKey = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
           const total = byDate.get(dateKey);
           const amount = total ? (kind === "expense" ? total.expense : total.income) : 0;
           const isToday = isCurrentMonth && day === today.getDate();
           return (
-            <View key={dateKey} style={{ width: `${100 / 7}%` }} className="items-center gap-0.5 py-1.5">
+            <View key={dateKey} className="flex-1 items-center gap-0.5 py-1.5">
               <View
                 className={`h-7 w-7 items-center justify-center rounded-full ${isToday ? "bg-primary-light" : ""}`}
               >
@@ -104,6 +109,8 @@ export function MonthCalendar({
             </View>
           );
         })}
+          </View>
+        ))}
       </View>
     </View>
   );

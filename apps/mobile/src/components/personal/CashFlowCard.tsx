@@ -1,9 +1,7 @@
-import { useMemo } from "react";
 import { Text, View } from "react-native";
 import { ArrowDownLeft, ArrowUpRight, TrendDown, TrendUp } from "phosphor-react-native";
-import { computeAllAccountBalances, computeMonthlyCashFlow } from "@evensplit/shared";
 import { formatMoney } from "@/lib/format";
-import { usePersonalAccounts, usePersonalTransactions } from "@/hooks/use-personal";
+import { usePersonalTotals } from "@/hooks/use-personal-totals";
 import { CashFlowBars } from "./CashFlowBars";
 import { palette } from "@/theme/palette";
 
@@ -13,21 +11,10 @@ import { palette } from "@/theme/palette";
  * the user's own personal transactions, not group data.
  */
 export function CashFlowCard() {
-  const { data: accounts } = usePersonalAccounts();
-  const { data: transactions } = usePersonalTransactions();
-
-  const { total, currency, months, current } = useMemo(() => {
-    const balances = computeAllAccountBalances(accounts ?? [], transactions ?? []);
-    const months = computeMonthlyCashFlow(transactions ?? [], 6);
-    return {
-      total: balances.reduce((sum, b) => sum + b.balance, 0),
-      currency: accounts?.[0]?.currency ?? "PHP",
-      months,
-      current: months[months.length - 1],
-    };
-  }, [accounts, transactions]);
-
-  if (!accounts || accounts.length === 0) return null;
+  const totals = usePersonalTotals();
+  if (!totals) return null;
+  const { months, current, base: currency, missing } = totals;
+  const total = totals.total.total;
 
   const positive = current.net >= 0;
   const TrendIcon = positive ? TrendUp : TrendDown;
@@ -37,7 +24,7 @@ export function CashFlowCard() {
       <View className="gap-4 px-5 py-5">
         <View className="flex-row items-start justify-between">
           <View className="flex-1">
-            <Text className="text-xs font-medium text-primary-deep/80">Total balance</Text>
+            <Text className="text-xs font-medium text-primary-deep/80">{missing.length > 0 ? "Total balance · add a rate below" : "Total balance"}</Text>
             <Text className="mt-1 text-3xl font-extrabold text-primary-deep" numberOfLines={1} adjustsFontSizeToFit>
               {formatMoney(total, currency)}
             </Text>

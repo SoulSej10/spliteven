@@ -2,6 +2,7 @@ import { Text, View } from "react-native";
 import Svg, { Rect } from "react-native-svg";
 import { formatMoney } from "@/lib/format";
 import { palette } from "@/theme/palette";
+import { AppIcon } from "@/components/ui/AppIcon";
 
 export interface AccountActivity {
   accountId: string;
@@ -45,9 +46,10 @@ export function AccountBarChart({ accounts }: { accounts: AccountActivity[] }) {
         const incomeWidth = Math.max(3, (a.income / max) * BAR_WIDTH);
         return (
           <View key={a.accountId} className="gap-1.5">
-            <Text className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-              {a.icon ?? "💵"} {a.name}
-            </Text>
+            <View className="flex-row items-center gap-1.5">
+              <AppIcon value={a.icon} fallback="💵" size={16} />
+              <Text className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{a.name}</Text>
+            </View>
             <View className="gap-1">
               <View className="flex-row items-center gap-2">
                 <Svg width={BAR_WIDTH} height={8}>

@@ -26,6 +26,7 @@ import { useUpgradePrompt } from "@/hooks/use-upgrade-prompt";
 import { createGroup } from "@/lib/api/groups";
 import { CURRENCIES } from "@/lib/format";
 import { useQueryClient } from "@tanstack/react-query";
+import { AppIcon } from "@/components/ui/app-icon";
 
 const ICONS = ["👥", "🏠", "✈️", "🍕", "🎉", "💰", "🚗", "🏖️"];
 
@@ -98,7 +99,7 @@ export function CreateGroupDialog({ trigger }: { trigger?: ReactNode } = {}) {
                   icon === i ? "bg-primary-light ring-2 ring-primary" : "bg-muted"
                 }`}
               >
-                {i}
+                <AppIcon value={i} size={22} />
               </button>
             ))}
           </div>

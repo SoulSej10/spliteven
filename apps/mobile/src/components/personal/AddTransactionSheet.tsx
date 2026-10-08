@@ -9,6 +9,7 @@ import { AmountField } from "@/components/ui/AmountField";
 import { usePersonalAccounts, usePersonalCategories, useCreatePersonalTransaction } from "@/hooks/use-personal";
 import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/cn";
+import { AppIcon } from "@/components/ui/AppIcon";
 
 /** Manual entry is never group_advance/group_reimbursement (system-only kinds). */
 type ManualTransactionKind = "income" | "expense" | "transfer";
@@ -168,12 +169,14 @@ export function AddTransactionSheet({
                   categoryId === c.id ? "border-primary bg-primary-light" : "border-neutral-500/20"
                 )}
               >
-                <Text
-                  className={cn("text-sm font-medium", categoryId === c.id ? "text-primary-deep" : "text-neutral-500")}
-                >
-                  {c.icon ? `${c.icon} ` : ""}
-                  {c.name}
-                </Text>
+                <View className="flex-row items-center gap-1.5">
+                  {c.icon ? <AppIcon value={c.icon} size={15} /> : null}
+                  <Text
+                    className={cn("text-sm font-medium", categoryId === c.id ? "text-primary-deep" : "text-neutral-500")}
+                  >
+                    {c.name}
+                  </Text>
+                </View>
               </Pressable>
             ))}
           </ScrollView>

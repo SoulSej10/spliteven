@@ -7,6 +7,7 @@ import { computeCategoryBreakdown, computeCategoryTrail } from "@evensplit/share
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePersonalAccounts, usePersonalCategories, usePersonalTransactions } from "@/hooks/use-personal";
 import { formatDate, formatMoney } from "@/lib/format";
+import { AppIcon } from "@/components/ui/app-icon";
 
 const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
@@ -71,7 +72,7 @@ export default function CategoryTrailPage({
 
       <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-sm">
         <div className="flex items-center gap-3">
-          <span className="text-3xl">{categoryInfo?.icon ?? "🏷️"}</span>
+          <AppIcon value={categoryInfo?.icon} fallback="🏷️" size={32} />
           <div className="min-w-0">
             <h2 className="truncate text-lg font-semibold capitalize">{name}</h2>
             <p className="text-sm text-muted-foreground">

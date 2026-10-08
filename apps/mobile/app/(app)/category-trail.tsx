@@ -6,7 +6,8 @@ import { useColorScheme } from "nativewind";
 import { ArrowLeft, CheckCircle, UsersThree } from "phosphor-react-native";
 import { computeCategoryBreakdown, computeCategoryTrail } from "@evensplit/shared";
 import { Card } from "@/components/ui/Card";
-import { usePersonalAccounts, usePersonalCategories, usePersonalTransactions } from "@/hooks/use-personal";
+import { usePersonalAccounts, usePersonalCategories } from "@/hooks/use-personal";
+import { useBaseTransactions } from "@/hooks/use-personal-totals";
 import { formatDate, formatMoney } from "@/lib/format";
 import { palette } from "@/theme/palette";
 
@@ -29,16 +30,15 @@ export default function CategoryTrailScreen() {
   const { colorScheme } = useColorScheme();
   const iconColor = palette.ink;
 
-  const { data: transactions, isLoading } = usePersonalTransactions();
+  const { base: currency, transactions, isLoading } = useBaseTransactions();
   const { data: accounts } = usePersonalAccounts();
   const { data: categories } = usePersonalCategories();
 
   const kind: "income" | "expense" = kindParam === "income" ? "income" : "expense";
   const category = categoryId && categoryId !== "none" ? categoryId : null;
-  const currency = accounts?.[0]?.currency ?? "PHP";
 
   const monthTransactions = useMemo(
-    () => (transactions ?? []).filter((t) => month && t.occurred_at.slice(0, 7) === month),
+    () => transactions.filter((t) => month && t.occurred_at.slice(0, 7) === month),
     [transactions, month]
   );
 

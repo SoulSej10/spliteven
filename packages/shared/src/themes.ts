@@ -87,9 +87,9 @@ export const THEME_TEMPLATES: Record<ThemeId, ThemeTemplate> = {
       background: "#FAF8F7",
       foreground: "#2A2528",
       card: "#FFFFFF",
-      muted: "#F3F0EF",
+      muted: "#F1EDEB",
       mutedForeground: "#756F72",
-      border: "#ECE8E6",
+      border: "#DCD5D2",
     },
     dark: {
       background: "#14151B",
@@ -97,7 +97,7 @@ export const THEME_TEMPLATES: Record<ThemeId, ThemeTemplate> = {
       card: "#1C1E26",
       muted: "#262932",
       mutedForeground: "#9FA2AE",
-      border: "#2C2F39",
+      border: "#3A3E4B",
     },
   },
   lavender: {
@@ -110,9 +110,9 @@ export const THEME_TEMPLATES: Record<ThemeId, ThemeTemplate> = {
       background: "#FAF8F7",
       foreground: "#2A2528",
       card: "#FFFFFF",
-      muted: "#F3F0EF",
+      muted: "#F1EDEB",
       mutedForeground: "#756F72",
-      border: "#ECE8E6",
+      border: "#DCD5D2",
     },
     dark: {
       background: "#14151B",
@@ -120,7 +120,7 @@ export const THEME_TEMPLATES: Record<ThemeId, ThemeTemplate> = {
       card: "#1C1E26",
       muted: "#262932",
       mutedForeground: "#9FA2AE",
-      border: "#2C2F39",
+      border: "#3A3E4B",
     },
   },
   peach: {
@@ -133,9 +133,9 @@ export const THEME_TEMPLATES: Record<ThemeId, ThemeTemplate> = {
       background: "#FAF8F7",
       foreground: "#2A2528",
       card: "#FFFFFF",
-      muted: "#F3F0EF",
+      muted: "#F1EDEB",
       mutedForeground: "#756F72",
-      border: "#ECE8E6",
+      border: "#DCD5D2",
     },
     dark: {
       background: "#14151B",
@@ -143,7 +143,7 @@ export const THEME_TEMPLATES: Record<ThemeId, ThemeTemplate> = {
       card: "#1C1E26",
       muted: "#262932",
       mutedForeground: "#9FA2AE",
-      border: "#2C2F39",
+      border: "#3A3E4B",
     },
   },
 };

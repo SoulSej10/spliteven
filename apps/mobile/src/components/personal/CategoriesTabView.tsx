@@ -8,6 +8,7 @@ import { ErrorState } from "@/components/ui/ErrorState";
 import { useDeletePersonalCategory, usePersonalCategories } from "@/hooks/use-personal";
 import { AddCategorySheet } from "@/components/personal/AddCategorySheet";
 import { palette } from "@/theme/palette";
+import { AppIcon } from "@/components/ui/AppIcon";
 
 /** The "Add" action lives in finances.tsx's floating action button, not inline here - editing an existing category is inline. */
 export function CategoriesTabView() {
@@ -37,10 +38,10 @@ export function CategoriesTabView() {
         ) : (
           items.map((c) => (
             <Card key={c.id} className="flex-row items-center justify-between py-3">
-              <Text className="text-neutral-900 dark:text-neutral-100">
-                {c.icon ? `${c.icon} ` : ""}
-                {c.name}
-              </Text>
+              <View className="flex-row items-center gap-2">
+                {c.icon ? <AppIcon value={c.icon} size={18} /> : null}
+                <Text className="text-neutral-900 dark:text-neutral-100">{c.name}</Text>
+              </View>
               <View className="flex-row items-center gap-4">
                 <Pressable onPress={() => setEditing(c)} hitSlop={10}>
                   <Pencil color={palette.muted} size={16} />

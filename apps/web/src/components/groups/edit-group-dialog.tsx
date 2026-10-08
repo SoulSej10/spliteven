@@ -20,6 +20,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useUpdateGroup } from "@/hooks/use-group-detail";
 import { CURRENCIES } from "@/lib/format";
+import { AppIcon } from "@/components/ui/app-icon";
 
 const ICONS = ["👥", "🏠", "✈️", "🍕", "🎉", "💰", "🚗", "🏖️"];
 
