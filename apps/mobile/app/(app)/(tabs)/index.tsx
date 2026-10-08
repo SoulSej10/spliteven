@@ -13,29 +13,29 @@ import { Avatar } from "@/components/ui/Avatar";
 import { Card } from "@/components/ui/Card";
 import { GroupCard } from "@/components/groups/GroupCard";
 import { QuickActions } from "@/components/groups/QuickActions";
-import { FinancesSummaryCard } from "@/components/personal/FinancesSummaryCard";
+import { CashFlowCard } from "@/components/personal/CashFlowCard";
+import { RecentTransactions } from "@/components/personal/RecentTransactions";
 import { AddTransactionSheet } from "@/components/personal/AddTransactionSheet";
 import { SettlementReceiptBanner } from "@/components/personal/SettlementReceiptBanner";
 import { SkeletonCardRows } from "@/components/ui/Skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { useSettingsDrawer } from "@/context/settings-drawer";
-import { useAllActivity, useAllExpenses, useAllSettlements, useMyGroups } from "@/hooks/use-groups";
+import { useAllExpenses, useAllSettlements, useMyGroups } from "@/hooks/use-groups";
 import { usePersonalAccounts, usePersonalBudgets, usePersonalCategories, usePersonalTransactions } from "@/hooks/use-personal";
 import { formatMoney } from "@/lib/format";
 import { CreateGroupSheet } from "@/components/groups/CreateGroupSheet";
 import { JoinGroupSheet } from "@/components/groups/JoinGroupSheet";
 import { PageTour, usePageTour } from "@/components/onboarding/PageTour";
 
-const GROUPS_PREVIEW_COUNT = 3;
-const ACTIVITY_PREVIEW_COUNT = 5;
+const GROUPS_PREVIEW_COUNT = 2;
 const UPCOMING_PREVIEW_COUNT = 3;
 
 /**
- * Home: the financial command center. Composes existing, real, data-driven
- * pieces rather than a fully custom layout - every number here comes from
- * data already being fetched elsewhere in the app (groups, expenses,
- * settlements, personal accounts/budgets), just aggregated for a top-level
- * view. Nothing on this screen is a placeholder or mock value.
+ * Home: a cash-flow dashboard. The headline numbers and the main list come
+ * from the user's own personal transactions (balance, this month's net,
+ * six-month income vs expense, recent transactions). Groups are still one
+ * tap away - the New/Join buttons and a short groups section - but they're
+ * secondary here. Every figure is real data, nothing is a placeholder.
  */
 export default function HomeScreen() {
   const { authUser, profile } = useAuth();
@@ -43,7 +43,6 @@ export default function HomeScreen() {
   const { data: groups, isLoading: groupsLoading } = useMyGroups();
   const { data: allExpenses } = useAllExpenses();
   const { data: allSettlements } = useAllSettlements();
-  const { data: allActivity } = useAllActivity();
   const { data: accounts } = usePersonalAccounts();
   const { data: budgets } = usePersonalBudgets();
   const { data: categories } = usePersonalCategories();
@@ -53,9 +52,9 @@ export default function HomeScreen() {
   const [joinSheetOpen, setJoinSheetOpen] = useState(false);
   const [quickAddKind, setQuickAddKind] = useState<"income" | "expense" | "transfer" | null>(null);
 
-  const financesCardRef = useRef<View>(null);
-  const quickActionsRef = useRef<View>(null);
+  const cashFlowRef = useRef<View>(null);
   const quickAddRef = useRef<View>(null);
+  const quickActionsRef = useRef<View>(null);
   const groupsRef = useRef<View>(null);
   const { replaySignal } = usePageTour("dashboard");
 
@@ -92,18 +91,11 @@ export default function HomeScreen() {
       .slice(0, UPCOMING_PREVIEW_COUNT);
   }, [allExpenses]);
 
-  const recentActivity = (allActivity ?? []).slice(0, ACTIVITY_PREVIEW_COUNT);
   const groupById = new Map((groups ?? []).map((g) => [g.id, g]));
 
   const unconfirmedSettlements = (allSettlements ?? []).filter(
     (s) => s.to_user === authUser?.id && s.to_account_id === null
   );
-
-  function memberName(groupId: string, userId: string) {
-    if (userId === authUser?.id) return "You";
-    const group = groupById.get(groupId);
-    return group?.group_members.find((m) => m.user_id === userId)?.users?.display_name ?? "Someone";
-  }
 
   return (
     <SafeAreaView className="flex-1 bg-neutral-100 dark:bg-neutral-900" edges={["top"]}>
@@ -130,8 +122,8 @@ export default function HomeScreen() {
           {profile?.display_name ? `Good to see you, ${profile.display_name.split(" ")[0]}` : "Home"}
         </Text>
 
-        <View ref={financesCardRef} collapsable={false}>
-          <FinancesSummaryCard />
+        <View ref={cashFlowRef} collapsable={false}>
+          <CashFlowCard />
         </View>
 
         <SettlementReceiptBanner
@@ -140,39 +132,7 @@ export default function HomeScreen() {
           groupCurrency={(id) => groupById.get(id)?.currency ?? "PHP"}
         />
 
-        {sharedBalances.length > 0 && (
-          <View className="mb-6 gap-2 rounded-card border border-neutral-500/15 bg-surface p-4 dark:bg-surface-dark">
-            <Text className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-              Shared balances
-            </Text>
-            {sharedBalances.map((s) => (
-              <View key={s.currency} className="flex-row items-center justify-between">
-                <View className="flex-row gap-4">
-                  <View>
-                    <Text className="text-[10px] text-neutral-500">People owe you</Text>
-                    <Text className="text-sm font-bold text-positive">{formatMoney(s.owedToYou, s.currency)}</Text>
-                  </View>
-                  <View>
-                    <Text className="text-[10px] text-neutral-500">You owe</Text>
-                    <Text className="text-sm font-bold text-negative">{formatMoney(s.youOwe, s.currency)}</Text>
-                  </View>
-                </View>
-                <View className="items-end">
-                  <Text className="text-[10px] text-neutral-500">Net</Text>
-                  <Text className={`text-sm font-bold ${s.net >= 0 ? "text-positive" : "text-negative"}`}>
-                    {formatMoney(s.net, s.currency)}
-                  </Text>
-                </View>
-              </View>
-            ))}
-          </View>
-        )}
-
-        <View ref={quickActionsRef} collapsable={false}>
-          <QuickActions onCreateGroup={() => setSheetOpen(true)} onJoinGroup={() => setJoinSheetOpen(true)} />
-        </View>
-
-        <View ref={quickAddRef} collapsable={false} className="mb-6 flex-row gap-3">
+        <View ref={quickAddRef} collapsable={false} className="mb-4 flex-row gap-3">
           <Pressable
             onPress={() => setQuickAddKind("income")}
             className="flex-1 items-center gap-1.5 rounded-card bg-surface py-3 active:opacity-80 dark:bg-surface-dark"
@@ -195,6 +155,12 @@ export default function HomeScreen() {
             <Text className="text-xs font-medium text-neutral-900 dark:text-neutral-100">Transfer</Text>
           </Pressable>
         </View>
+
+        <View ref={quickActionsRef} collapsable={false}>
+          <QuickActions onCreateGroup={() => setSheetOpen(true)} onJoinGroup={() => setJoinSheetOpen(true)} />
+        </View>
+
+        <RecentTransactions />
 
         {budgetHighlight && (
           <Pressable onPress={() => router.navigate("/(app)/(tabs)/finances")}>
@@ -251,46 +217,43 @@ export default function HomeScreen() {
           </Pressable>
         </View>
 
+        {sharedBalances.length > 0 && (
+          <View className="mb-3 gap-2 rounded-card border border-neutral-500/15 bg-surface p-4 dark:bg-surface-dark">
+            <Text className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+              Shared balances
+            </Text>
+            {sharedBalances.map((s) => (
+              <View key={s.currency} className="flex-row items-center justify-between">
+                <View className="flex-row gap-4">
+                  <View>
+                    <Text className="text-[10px] text-neutral-500">People owe you</Text>
+                    <Text className="text-sm font-bold text-positive">{formatMoney(s.owedToYou, s.currency)}</Text>
+                  </View>
+                  <View>
+                    <Text className="text-[10px] text-neutral-500">You owe</Text>
+                    <Text className="text-sm font-bold text-negative">{formatMoney(s.youOwe, s.currency)}</Text>
+                  </View>
+                </View>
+                <View className="items-end">
+                  <Text className="text-[10px] text-neutral-500">Net</Text>
+                  <Text className={`text-sm font-bold ${s.net >= 0 ? "text-positive" : "text-negative"}`}>
+                    {formatMoney(s.net, s.currency)}
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
+
         {groupsLoading && <SkeletonCardRows count={2} />}
 
         {!groupsLoading && preview.length === 0 && (
           <Text className="mb-4 text-sm text-neutral-500">
-            No groups yet — start one with the button above.
+            No groups yet — start one with the New group button above.
           </Text>
         )}
 
         {!groupsLoading && preview.map((g) => <GroupCard key={g.id} group={g} />)}
-
-        {recentActivity.length > 0 && (
-          <View className="mt-6 gap-2">
-            <View className="flex-row items-center justify-between">
-              <Text className="text-base font-bold text-neutral-900 dark:text-neutral-100">Recent activity</Text>
-              <Pressable
-                onPress={() => router.navigate("/(app)/(tabs)/activity")}
-                className="flex-row items-center gap-1 active:opacity-70"
-              >
-                <Text className="text-sm font-semibold text-primary">See all</Text>
-                <ArrowRight color="#2F8F7D" size={14} />
-              </Pressable>
-            </View>
-            {recentActivity.map((item) => (
-              <Card key={`${item.type}-${item.id}`} className="py-2.5">
-                {item.type === "expense_added" ? (
-                  <Text className="text-sm text-neutral-900 dark:text-neutral-100" numberOfLines={1}>
-                    {memberName(item.group_id, item.paid_by)} added{" "}
-                    <Text className="font-semibold">{item.description}</Text> ·{" "}
-                    {formatMoney(item.amount, item.currency)}
-                  </Text>
-                ) : (
-                  <Text className="text-sm text-neutral-900 dark:text-neutral-100" numberOfLines={1}>
-                    {memberName(item.group_id, item.from_user)} paid {memberName(item.group_id, item.to_user)} ·{" "}
-                    {formatMoney(item.amount, groupById.get(item.group_id)?.currency ?? "PHP")}
-                  </Text>
-                )}
-              </Card>
-            ))}
-          </View>
-        )}
       </ScrollView>
 
       <CreateGroupSheet visible={sheetOpen} onClose={() => setSheetOpen(false)} />
@@ -306,14 +269,9 @@ export default function HomeScreen() {
         replaySignal={replaySignal}
         steps={[
           {
-            ref: financesCardRef,
-            title: "Your money at a glance",
-            body: "This card shows your personal balance across all accounts, updated as you log transactions.",
-          },
-          {
-            ref: quickActionsRef,
-            title: "Start or join a group",
-            body: "Create a group for a trip or household, or join one someone already started with an invite code.",
+            ref: cashFlowRef,
+            title: "Your cash flow",
+            body: "Your total balance, how this month is going, and income vs expense over the last six months, all from your own transactions.",
           },
           {
             ref: quickAddRef,
@@ -321,9 +279,14 @@ export default function HomeScreen() {
             body: "Quickly add income, an expense, or a transfer between your own accounts, right from home.",
           },
           {
+            ref: quickActionsRef,
+            title: "Start or join a group",
+            body: "Create a group for a trip or household, or join one someone already started with an invite code.",
+          },
+          {
             ref: groupsRef,
             title: "Your groups",
-            body: "Every group you're in shows up here — tap one to see its expenses and who owes who.",
+            body: "Your shared groups and what you owe or are owed, kept below your personal cash flow.",
           },
         ]}
       />

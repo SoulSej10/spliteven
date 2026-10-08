@@ -16,7 +16,7 @@ import { formatDate } from "@/lib/format";
 import type { PersonalTransaction } from "@evensplit/shared";
 
 /** income/group_reimbursement both mean "cash came in" - positive tint. expense/group_advance both mean "cash left" - negative tint. transfer is neutral. */
-function TransactionIcon({ kind }: { kind: PersonalTransaction["kind"] }) {
+export function TransactionIcon({ kind }: { kind: PersonalTransaction["kind"] }) {
   const isCredit = kind === "income" || kind === "group_reimbursement";
   const isDebit = kind === "expense" || kind === "group_advance";
   const tint = isCredit ? "bg-positive/10" : isDebit ? "bg-negative/10" : "bg-neutral-500/10";
@@ -29,7 +29,7 @@ function TransactionIcon({ kind }: { kind: PersonalTransaction["kind"] }) {
   );
 }
 
-function transactionLabel(tx: PersonalTransaction, category: string | null, accountName: (id: string) => string): string {
+export function transactionLabel(tx: PersonalTransaction, category: string | null, accountName: (id: string) => string): string {
   if (tx.kind === "transfer") return `${accountName(tx.account_id)} → ${accountName(tx.transfer_account_id ?? "")}`;
   if (tx.kind === "group_advance") return "Advanced for others";
   if (tx.kind === "group_reimbursement") return "Reimbursement received";

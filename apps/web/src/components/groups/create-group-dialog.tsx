@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -29,7 +29,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 const ICONS = ["👥", "🏠", "✈️", "🍕", "🎉", "💰", "🚗", "🏖️"];
 
-export function CreateGroupDialog() {
+export function CreateGroupDialog({ trigger }: { trigger?: ReactNode } = {}) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { authUser, profile } = useAuth();
@@ -71,9 +71,11 @@ export function CreateGroupDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="rounded-full">
-          <Plus className="mr-1 h-4 w-4" /> New group
-        </Button>
+        {trigger ?? (
+          <Button className="rounded-full">
+            <Plus className="mr-1 h-4 w-4" /> New group
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="rounded-2xl sm:max-w-md">
         <DialogHeader>

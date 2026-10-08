@@ -348,3 +348,52 @@ export function computeSharedFinanceSummary(
     outstanding: round2(advanced - recovered),
   };
 }
+
+export interface MonthlyCashFlow {
+  /** "YYYY-MM" */
+  key: string;
+  year: number;
+  /** 0-indexed, like Date#getMonth() */
+  month: number;
+  income: number;
+  expense: number;
+  net: number;
+}
+
+/**
+ * Income and expense totals per calendar month for the last `months` months
+ * (ending with the month of `now`, oldest first), including months with no
+ * activity so a chart has a continuous axis. Only real income/expense count:
+ * transfers net to zero and group advances/reimbursements are shared money,
+ * same rule as computeExpenseTrend.
+ */
+export function computeMonthlyCashFlow(
+  transactions: Pick<PersonalTransaction, "occurred_at" | "kind" | "amount">[],
+  months = 6,
+  now: Date = new Date()
+): MonthlyCashFlow[] {
+  const buckets: MonthlyCashFlow[] = [];
+  const byKey = new Map<string, MonthlyCashFlow>();
+  for (let i = months - 1; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const bucket: MonthlyCashFlow = { key, year: d.getFullYear(), month: d.getMonth(), income: 0, expense: 0, net: 0 };
+    buckets.push(bucket);
+    byKey.set(key, bucket);
+  }
+
+  for (const tx of transactions) {
+    if (tx.kind !== "income" && tx.kind !== "expense") continue;
+    const bucket = byKey.get(tx.occurred_at.slice(0, 7));
+    if (!bucket) continue;
+    if (tx.kind === "income") bucket.income += tx.amount;
+    else bucket.expense += tx.amount;
+  }
+
+  for (const b of buckets) {
+    b.income = round2(b.income);
+    b.expense = round2(b.expense);
+    b.net = round2(b.income - b.expense);
+  }
+  return buckets;
+}

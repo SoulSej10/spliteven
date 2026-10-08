@@ -7,6 +7,7 @@ import {
   computeCategoryBreakdown,
   computeDailyTotals,
   computeExpenseTrend,
+  computeMonthlyCashFlow,
   computeSharedFinanceSummary,
   filterTransactionsForCurrentMonth,
   filterTransactionsForMonth,
@@ -342,5 +343,48 @@ describe("computeDailyTotals", () => {
       FOOD
     );
     expect(totals).toEqual([{ date: "2026-08-01", income: 0, expense: 10 }]);
+  });
+});
+
+describe("computeMonthlyCashFlow", () => {
+  const now = new Date(2026, 9, 15); // October 2026
+
+  it("returns the last N months oldest-first, zero-filled", () => {
+    const flow = computeMonthlyCashFlow([], 3, now);
+    expect(flow.map((m) => m.key)).toEqual(["2026-08", "2026-09", "2026-10"]);
+    expect(flow.every((m) => m.income === 0 && m.expense === 0 && m.net === 0)).toBe(true);
+  });
+
+  it("sums income and expense per month and computes net", () => {
+    const flow = computeMonthlyCashFlow(
+      [
+        { occurred_at: "2026-10-02T00:00:00Z", kind: "income", amount: 1000 },
+        { occurred_at: "2026-10-09T00:00:00Z", kind: "expense", amount: 250.5 },
+        { occurred_at: "2026-09-20T00:00:00Z", kind: "expense", amount: 400 },
+      ],
+      2,
+      now
+    );
+    expect(flow[0]).toMatchObject({ key: "2026-09", income: 0, expense: 400, net: -400 });
+    expect(flow[1]).toMatchObject({ key: "2026-10", income: 1000, expense: 250.5, net: 749.5 });
+  });
+
+  it("ignores transfers, group money, and months outside the window", () => {
+    const flow = computeMonthlyCashFlow(
+      [
+        { occurred_at: "2026-10-01T00:00:00Z", kind: "transfer", amount: 500 },
+        { occurred_at: "2026-10-01T00:00:00Z", kind: "group_advance", amount: 500 },
+        { occurred_at: "2026-10-01T00:00:00Z", kind: "group_reimbursement", amount: 500 },
+        { occurred_at: "2026-01-01T00:00:00Z", kind: "income", amount: 999 },
+      ],
+      2,
+      now
+    );
+    expect(flow.map((m) => [m.income, m.expense])).toEqual([[0, 0], [0, 0]]);
+  });
+
+  it("rolls the window across a year boundary", () => {
+    const flow = computeMonthlyCashFlow([], 3, new Date(2026, 0, 10));
+    expect(flow.map((m) => m.key)).toEqual(["2025-11", "2025-12", "2026-01"]);
   });
 });
