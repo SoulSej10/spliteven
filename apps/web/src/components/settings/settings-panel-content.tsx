@@ -18,6 +18,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
+import { AppearancePicker } from "@/components/settings/appearance-picker";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -379,11 +380,14 @@ export function SettingsPanelContent({ onClose }: { onClose?: () => void }) {
       <Card className="rounded-2xl border-border/60 shadow-sm">
         <CardHeader>
           <CardTitle>Appearance</CardTitle>
-          <CardDescription>Choose how SplitEven looks on this device.</CardDescription>
+          <CardDescription>Pick a theme and a color, in light or dark. Saved on this device.</CardDescription>
         </CardHeader>
-        <CardContent className="flex items-center justify-between">
-          <Label htmlFor="dark-mode">Dark mode</Label>
-          <Switch id="dark-mode" checked={theme === "dark"} onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")} />
+        <CardContent className="space-y-6">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="dark-mode">Dark mode</Label>
+            <Switch id="dark-mode" checked={theme === "dark"} onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")} />
+          </div>
+          <AppearancePicker />
         </CardContent>
       </Card>
 

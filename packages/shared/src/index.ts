@@ -5,6 +5,7 @@ export * from "./personalFinance";
 export * from "./calculator";
 export * from "./pwnedPassword";
 export * from "./subscriptions";
+export * from "./themes";
 export * from "./supabaseClient";
 export type { Database, Json } from "./database.types";
 export { Constants } from "./database.types";

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Sora, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
+import { buildThemeCss } from "@/lib/theme-css";
+import { APPEARANCE_BOOT_SCRIPT } from "@/lib/appearance";
 
 // Swapped from Plus Jakarta Sans per feedback ("too standard, give it
 // character but still comprehensive") - Sora's rounded, slightly geometric
@@ -31,6 +33,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${sora.variable} ${jetbrainsMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        {/* Generated from the shared theme data (packages/shared/src/themes.ts) */}
+        <style dangerouslySetInnerHTML={{ __html: buildThemeCss() }} />
+        <script dangerouslySetInnerHTML={{ __html: APPEARANCE_BOOT_SCRIPT }} />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <Providers>{children}</Providers>
       </body>
