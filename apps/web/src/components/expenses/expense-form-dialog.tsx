@@ -382,7 +382,7 @@ export function ExpenseFormDialog({
                         }
                       />
                     ) : isSelected ? (
-                      <span className="font-mono text-xs tabular-nums text-muted-foreground">
+                      <span className="text-xs tabular-nums text-muted-foreground">
                         {share ? formatMoney(share.share_amount, groupCurrency) : "—"}
                       </span>
                     ) : null}

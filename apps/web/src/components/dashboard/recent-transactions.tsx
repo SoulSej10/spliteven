@@ -83,7 +83,7 @@ export function RecentTransactions() {
                   </p>
                 </div>
                 <span
-                  className={`shrink-0 font-mono text-sm font-semibold tabular-nums ${
+                  className={`shrink-0 text-sm font-semibold tabular-nums ${
                     credit ? "text-positive" : debit ? "text-negative" : ""
                   }`}
                 >

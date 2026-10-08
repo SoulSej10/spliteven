@@ -302,7 +302,7 @@ function LandingPageContent() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-mono text-lg font-semibold tabular-nums text-positive">
+                  <p className="text-lg font-semibold tabular-nums text-positive">
                     +₱1,240.00
                   </p>
                   <p className="text-xs text-muted-foreground">you&apos;re owed</p>
@@ -312,11 +312,11 @@ function LandingPageContent() {
               <div className="mt-4 space-y-2 border-t border-border/60 pt-4">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Groceries (Robinsons)</span>
-                  <span className="font-mono tabular-nums">₱860.00</span>
+                  <span className="tabular-nums">₱860.00</span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Wifi, June</span>
-                  <span className="font-mono tabular-nums">₱1,499.00</span>
+                  <span className="tabular-nums">₱1,499.00</span>
                 </div>
               </div>
 
@@ -396,7 +396,7 @@ function LandingPageContent() {
             {steps.map((step, i) => (
               <div key={step.number} className="relative flex flex-col gap-3">
                 <div className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary font-mono text-sm font-semibold text-primary-foreground">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
                     {step.number}
                   </span>
                   {i < steps.length - 1 && (
@@ -427,7 +427,7 @@ function LandingPageContent() {
                   chat spreadsheet, no chasing people down.
                 </p>
               </div>
-              <div className="rounded-lg bg-white/10 p-4 font-mono text-sm">
+              <div className="rounded-lg bg-white/10 p-4 text-sm">
                 <div className="flex justify-between tabular-nums">
                   <span className="text-primary-foreground/70">Mika owes Reg</span>
                   <span>₱620.00</span>
@@ -514,7 +514,7 @@ function LandingPageContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-muted-foreground">Total balance</p>
-                  <p className="mt-1 font-mono text-2xl font-semibold tabular-nums">₱42,180.50</p>
+                  <p className="mt-1 text-2xl font-semibold tabular-nums">₱42,180.50</p>
                 </div>
                 <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-light text-primary-deep">
                   <Wallet className="h-5 w-5" />
@@ -525,7 +525,7 @@ function LandingPageContent() {
                 <div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Groceries budget</span>
-                    <span className="font-mono tabular-nums">₱4,200 / ₱6,000</span>
+                    <span className="tabular-nums">₱4,200 / ₱6,000</span>
                   </div>
                   <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-muted">
                     <div className="h-full w-[70%] rounded-full bg-primary" />
@@ -534,7 +534,7 @@ function LandingPageContent() {
                 <div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Transport budget</span>
-                    <span className="font-mono tabular-nums">₱1,850 / ₱2,500</span>
+                    <span className="tabular-nums">₱1,850 / ₱2,500</span>
                   </div>
                   <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-muted">
                     <div className="h-full w-[74%] rounded-full bg-primary" />
@@ -583,15 +583,15 @@ function LandingPageContent() {
             </div>
             <div className="rounded-lg border border-border/60 bg-card p-6 shadow-sm">
               <p className="text-xs text-muted-foreground">You paid for groceries from GCash</p>
-              <p className="mt-1 font-mono text-2xl font-semibold tabular-nums">₱3,000.00</p>
+              <p className="mt-1 text-2xl font-semibold tabular-nums">₱3,000.00</p>
               <div className="mt-5 space-y-3 border-t border-border/60 pt-4 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Counted as your spending</span>
-                  <span className="font-mono tabular-nums">₱750.00</span>
+                  <span className="tabular-nums">₱750.00</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Tracked as owed to you</span>
-                  <span className="font-mono tabular-nums text-positive">₱2,250.00</span>
+                  <span className="tabular-nums text-positive">₱2,250.00</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">When they pay you back</span>
@@ -649,7 +649,7 @@ function LandingPageContent() {
                     </span>
                   )}
                   <h3 className="text-lg font-semibold">{plan.name}</h3>
-                  <p className="mt-1 font-mono text-2xl font-semibold tabular-nums">{plan.priceLabel}</p>
+                  <p className="mt-1 text-2xl font-semibold tabular-nums">{plan.priceLabel}</p>
                   <ul className="mt-5 flex-1 space-y-2">
                     {plan.features.map((feature) => (
                       <li key={feature} className="flex items-start gap-2 text-sm text-muted-foreground">

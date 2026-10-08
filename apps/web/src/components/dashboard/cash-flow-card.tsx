@@ -42,7 +42,7 @@ export function CashFlowCard() {
         <div className="space-y-5">
           <div>
             <p className="text-xs font-medium opacity-70">Total balance</p>
-            <p className="mt-1 font-mono text-3xl font-semibold tabular-nums">{formatMoney(total, currency)}</p>
+            <p className="mt-1 text-3xl font-semibold tabular-nums">{formatMoney(total, currency)}</p>
             <span className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1 text-xs font-semibold">
               <TrendIcon className="h-3.5 w-3.5" weight="bold" />
               {positive ? "+" : "-"}
@@ -56,7 +56,7 @@ export function CashFlowCard() {
               </span>
               <div className="min-w-0">
                 <p className="text-[11px] opacity-70">Income (mo.)</p>
-                <p className="truncate font-mono text-sm font-semibold tabular-nums">
+                <p className="truncate text-sm font-semibold tabular-nums">
                   {formatMoney(current.income, currency)}
                 </p>
               </div>
@@ -67,7 +67,7 @@ export function CashFlowCard() {
               </span>
               <div className="min-w-0">
                 <p className="text-[11px] opacity-70">Expense (mo.)</p>
-                <p className="truncate font-mono text-sm font-semibold tabular-nums">
+                <p className="truncate text-sm font-semibold tabular-nums">
                   {formatMoney(current.expense, currency)}
                 </p>
               </div>

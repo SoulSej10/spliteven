@@ -60,14 +60,14 @@ export function OverviewTab({
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="rounded-2xl border border-border/60 bg-card p-4 shadow-sm">
           <p className="text-xs text-muted-foreground">Total group spending</p>
-          <p className="mt-1 font-mono text-xl font-semibold tabular-nums">
+          <p className="mt-1 text-xl font-semibold tabular-nums">
             {formatMoney(totalSpending, groupCurrency)}
           </p>
         </div>
         <div className="rounded-2xl border border-border/60 bg-card p-4 shadow-sm">
           <p className="text-xs text-muted-foreground">Your position</p>
           <p
-            className={`mt-1 font-mono text-xl font-semibold tabular-nums ${
+            className={`mt-1 text-xl font-semibold tabular-nums ${
               isPositive ? "text-positive" : isNegative ? "text-negative" : "text-muted-foreground"
             }`}
           >
@@ -89,7 +89,7 @@ export function OverviewTab({
             </span>{" "}
             <span className="font-medium">{name(topSuggestion.to_user)}</span>
           </div>
-          <span className="font-mono text-sm font-semibold tabular-nums text-negative">
+          <span className="text-sm font-semibold tabular-nums text-negative">
             {formatMoney(topSuggestion.amount, groupCurrency)}
           </span>
           <SettleUpDialog
@@ -129,7 +129,7 @@ export function OverviewTab({
                   <p className="truncate text-sm font-medium">{e.description}</p>
                   <p className="text-xs text-muted-foreground">Paid by {name(e.paid_by)}</p>
                 </div>
-                <span className="font-mono text-sm font-semibold tabular-nums">
+                <span className="text-sm font-semibold tabular-nums">
                   {formatMoney(e.amount, e.currency)}
                 </span>
               </div>

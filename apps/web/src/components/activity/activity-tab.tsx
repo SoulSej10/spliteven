@@ -99,7 +99,7 @@ export function ActivityTab({
                 )}
               </TableCell>
 
-              <TableCell className="text-right font-mono font-semibold tabular-nums">
+              <TableCell className="text-right font-semibold tabular-nums">
                 {formatMoney(item.amount, item.type === "expense_added" ? item.currency : groupCurrency)}
               </TableCell>
 

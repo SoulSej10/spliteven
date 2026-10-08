@@ -46,7 +46,7 @@ export function GroupCard({ group }: { group: GroupWithMembers }) {
             ) : (
               <>
                 <p
-                  className={`font-mono text-lg font-semibold tabular-nums ${
+                  className={`text-lg font-semibold tabular-nums ${
                     isPositive ? "text-positive" : isNegative ? "text-negative" : "text-muted-foreground"
                   }`}
                 >

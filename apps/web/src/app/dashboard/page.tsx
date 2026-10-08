@@ -235,13 +235,13 @@ function DashboardContent() {
               <div className="flex gap-6">
                 <div>
                   <p className="text-[11px] text-muted-foreground">People owe you</p>
-                  <p className="font-mono text-sm font-semibold tabular-nums text-positive">
+                  <p className="text-sm font-semibold tabular-nums text-positive">
                     {formatMoney(s.owedToYou, s.currency)}
                   </p>
                 </div>
                 <div>
                   <p className="text-[11px] text-muted-foreground">You owe</p>
-                  <p className="font-mono text-sm font-semibold tabular-nums text-negative">
+                  <p className="text-sm font-semibold tabular-nums text-negative">
                     {formatMoney(s.youOwe, s.currency)}
                   </p>
                 </div>
@@ -249,7 +249,7 @@ function DashboardContent() {
               <div className="text-right">
                 <p className="text-[11px] text-muted-foreground">Net</p>
                 <p
-                  className={`font-mono text-sm font-semibold tabular-nums ${s.net >= 0 ? "text-positive" : "text-negative"}`}
+                  className={`text-sm font-semibold tabular-nums ${s.net >= 0 ? "text-positive" : "text-negative"}`}
                 >
                   {formatMoney(s.net, s.currency)}
                 </p>

@@ -254,11 +254,11 @@ function ExpenseRow({
 
       <TableCell className="text-muted-foreground">{formatDate(expense.expense_date)}</TableCell>
 
-      <TableCell className="text-right font-mono font-semibold tabular-nums">
+      <TableCell className="text-right font-semibold tabular-nums">
         {formatMoney(expense.amount, expense.currency)}
       </TableCell>
 
-      <TableCell className="text-right font-mono text-muted-foreground tabular-nums">
+      <TableCell className="text-right text-muted-foreground tabular-nums">
         {formatMoney(myShare, expense.currency)}
       </TableCell>
 

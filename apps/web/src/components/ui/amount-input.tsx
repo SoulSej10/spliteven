@@ -114,7 +114,7 @@ export function AmountInput({
             value={calc.display}
             onChange={handleTyped}
             aria-invalid={ariaInvalid}
-            className="w-full truncate bg-transparent font-mono text-lg font-semibold tabular-nums outline-none"
+            className="w-full truncate bg-transparent text-lg font-semibold tabular-nums outline-none"
           />
           {calc.pendingOp && <span className="pl-1 text-xs text-muted-foreground">{calc.pendingOp}</span>}
         </div>

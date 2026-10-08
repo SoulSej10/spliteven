@@ -125,7 +125,7 @@ export function TopBar() {
           <span className="flex-1 truncate">Search groups, expenses…</span>
           <kbd
             aria-hidden="true"
-            className="hidden shrink-0 rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground lg:inline"
+            className="hidden shrink-0 rounded border border-border bg-background px-1.5 py-0.5 text-[10px] text-muted-foreground lg:inline"
           >
             Ctrl K
           </kbd>

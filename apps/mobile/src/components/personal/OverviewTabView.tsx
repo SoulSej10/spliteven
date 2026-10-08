@@ -88,7 +88,7 @@ export function OverviewTabView({ onNavigateTab }: { onNavigateTab: (tab: "accou
                 <Text className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{account.name}</Text>
                 <Text className="text-xs capitalize text-neutral-500">{account.type}</Text>
               </View>
-              <Text className="font-mono text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+              <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                 {formatMoney(balance, account.currency)}
               </Text>
             </Card>
@@ -150,7 +150,7 @@ export function OverviewTabView({ onNavigateTab }: { onNavigateTab: (tab: "accou
                 {formatDate(tx.occurred_at)} · {accountName(tx.account_id)}
               </Text>
             </View>
-            <Text className="font-mono text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+            <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {formatMoney(tx.amount, accounts?.find((a) => a.id === tx.account_id)?.currency ?? "PHP")}
             </Text>
           </Card>

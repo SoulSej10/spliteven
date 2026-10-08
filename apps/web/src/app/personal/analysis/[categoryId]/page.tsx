@@ -80,7 +80,7 @@ export default function CategoryTrailPage({
             </p>
           </div>
         </div>
-        <p className="mt-4 font-mono text-3xl font-semibold tabular-nums">{formatMoney(trail.total, currency)}</p>
+        <p className="mt-4 text-3xl font-semibold tabular-nums">{formatMoney(trail.total, currency)}</p>
         <p className="mt-1 text-sm text-muted-foreground">
           {share.toFixed(0)}% of your {kind === "expense" ? "spending" : "income"} this month
         </p>
@@ -91,11 +91,11 @@ export default function CategoryTrailPage({
           </div>
           <div className="rounded-xl bg-muted px-3 py-2">
             <p className="text-xs text-muted-foreground">Average</p>
-            <p className="truncate font-mono text-sm font-semibold tabular-nums">{formatMoney(trail.average, currency)}</p>
+            <p className="truncate text-sm font-semibold tabular-nums">{formatMoney(trail.average, currency)}</p>
           </div>
           <div className="rounded-xl bg-muted px-3 py-2">
             <p className="text-xs text-muted-foreground">Largest</p>
-            <p className="truncate font-mono text-sm font-semibold tabular-nums">
+            <p className="truncate text-sm font-semibold tabular-nums">
               {formatMoney(trail.largest?.amount ?? 0, currency)}
             </p>
           </div>
@@ -127,14 +127,14 @@ export default function CategoryTrailPage({
                         </Link>
                       )}
                     </div>
-                    <p className="shrink-0 font-mono text-sm font-semibold tabular-nums">
+                    <p className="shrink-0 text-sm font-semibold tabular-nums">
                       {kind === "expense" ? "-" : "+"}
                       {formatMoney(entry.amount, currency)}
                     </p>
                   </div>
                   <div className="mt-3 flex items-center justify-between border-t border-border/60 pt-2 text-xs">
                     <span className="text-muted-foreground">Running total</span>
-                    <span className="font-mono font-semibold tabular-nums">{formatMoney(entry.running_total, currency)}</span>
+                    <span className="font-semibold tabular-nums">{formatMoney(entry.running_total, currency)}</span>
                   </div>
                 </div>
               </li>
@@ -148,7 +148,7 @@ export default function CategoryTrailPage({
           <CheckCircle className="h-6 w-6 text-primary-deep" weight="fill" />
           <div>
             <p className="text-xs text-muted-foreground">Total, matching Analysis</p>
-            <p className="font-mono text-lg font-semibold tabular-nums">{formatMoney(trail.total, currency)}</p>
+            <p className="text-lg font-semibold tabular-nums">{formatMoney(trail.total, currency)}</p>
           </div>
         </div>
       )}

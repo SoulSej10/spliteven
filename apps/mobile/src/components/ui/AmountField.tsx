@@ -159,7 +159,7 @@ export function AmountField({
           value={calc.display}
           onChangeText={handleTyped}
           className={cn(
-            "rounded-card bg-neutral-100 px-4 py-3 text-right font-mono text-2xl font-bold tabular-nums text-neutral-900 dark:bg-on-primary/5 dark:text-neutral-100",
+            "rounded-card bg-neutral-100 px-4 py-3 text-right text-2xl font-bold tabular-nums text-neutral-900 dark:bg-on-primary/5 dark:text-neutral-100",
             error && "border border-negative"
           )}
         />

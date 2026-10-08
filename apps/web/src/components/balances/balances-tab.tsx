@@ -138,7 +138,7 @@ export function BalancesTab({
                       </Badge>
                     </TableCell>
                     <TableCell
-                      className={`text-right font-mono font-semibold tabular-nums ${
+                      className={`text-right font-semibold tabular-nums ${
                         isPositive ? "text-positive" : isNegative ? "text-negative" : "text-muted-foreground"
                       }`}
                     >
@@ -232,7 +232,7 @@ export function BalancesTab({
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell className="text-right font-mono font-semibold tabular-nums text-negative">
+                    <TableCell className="text-right font-semibold tabular-nums text-negative">
                       {formatMoney(debt.amount, groupCurrency)}
                     </TableCell>
                     <TableCell>

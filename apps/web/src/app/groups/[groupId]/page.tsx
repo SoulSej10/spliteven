@@ -287,7 +287,7 @@ function GroupDetailContent({ groupId }: { groupId: string }) {
 
           <div className="text-right">
             <p
-              className={`font-mono text-2xl font-semibold tabular-nums ${
+              className={`text-2xl font-semibold tabular-nums ${
                 isPositive ? "text-positive" : isNegative ? "text-negative" : "text-muted-foreground"
               }`}
             >

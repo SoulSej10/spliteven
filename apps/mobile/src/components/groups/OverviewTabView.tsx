@@ -55,7 +55,7 @@ export function OverviewTabView({
     <View className="gap-5">
       <Card className="gap-1 py-4">
         <Text className="text-xs text-neutral-500">Total group spending</Text>
-        <Text className="font-mono text-xl font-bold text-neutral-900 dark:text-neutral-100">
+        <Text className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
           {formatMoney(totalSpending, groupCurrency)}
         </Text>
       </Card>
@@ -96,7 +96,7 @@ export function OverviewTabView({
                 </Text>
                 <Text className="text-xs text-neutral-500">Paid by {name(e.paid_by)}</Text>
               </View>
-              <Text className="font-mono text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+              <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                 {formatMoney(e.amount, e.currency)}
               </Text>
             </Card>

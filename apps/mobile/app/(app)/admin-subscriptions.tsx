@@ -61,7 +61,7 @@ export default function AdminSubscriptionsScreen() {
                 <Text className="font-semibold text-neutral-900 dark:text-neutral-100">
                   {req.users.display_name}
                 </Text>
-                <Text className="font-mono text-sm font-semibold text-primary-deep">
+                <Text className="text-sm font-semibold text-primary-deep">
                   {SUBSCRIPTION_PLANS[req.plan].priceLabel}
                 </Text>
               </View>

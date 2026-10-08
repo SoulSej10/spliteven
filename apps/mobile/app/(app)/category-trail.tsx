@@ -6,6 +6,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useColorScheme } from "nativewind";
 import { ArrowLeft, CheckCircle, UsersThree } from "phosphor-react-native";
 import { computeCategoryBreakdown, computeCategoryTrail } from "@evensplit/shared";
+import { AppIcon } from "@/components/ui/AppIcon";
 import { Card } from "@/components/ui/Card";
 import { usePersonalAccounts, usePersonalCategories } from "@/hooks/use-personal";
 import { useBaseTransactions } from "@/hooks/use-personal-totals";
@@ -71,7 +72,7 @@ export default function CategoryTrailScreen() {
       <ScrollView contentContainerClassName="gap-4 px-5 py-5" showsVerticalScrollIndicator={false}>
         <Card className="gap-3">
           <View className="flex-row items-center gap-3">
-            <Text className="text-2xl">{categoryInfo?.icon ?? "🏷️"}</Text>
+            <AppIcon value={categoryInfo?.icon} fallback="🏷️" size={28} />
             <View className="flex-1">
               <Text className="text-base font-bold capitalize text-neutral-900 dark:text-neutral-100" numberOfLines={1}>
                 {name}

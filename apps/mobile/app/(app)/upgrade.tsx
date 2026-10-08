@@ -112,7 +112,7 @@ export default function UpgradeScreen() {
             >
               <View className="flex-row items-center justify-between">
                 <Text className="text-lg font-bold text-neutral-900 dark:text-neutral-100">{plan.name}</Text>
-                <Text className="font-mono text-base font-semibold text-primary-deep">{plan.priceLabel}</Text>
+                <Text className="text-base font-semibold text-primary-deep">{plan.priceLabel}</Text>
               </View>
               <View className="gap-1.5">
                 {plan.features.map((feature) => (
@@ -172,7 +172,7 @@ export default function UpgradeScreen() {
               <Text className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
                 {method.accountName}
               </Text>
-              <Text className="font-mono text-base text-neutral-900 dark:text-neutral-100">
+              <Text className="text-base text-neutral-900 dark:text-neutral-100">
                 {method.accountNumber}
               </Text>
             </View>

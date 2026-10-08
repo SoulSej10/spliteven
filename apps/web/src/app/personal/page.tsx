@@ -138,7 +138,7 @@ export default function PersonalRecordsPage() {
                     <TableCell className="text-muted-foreground">{formatDate(tx.occurred_at)}</TableCell>
                     <TableCell className="text-muted-foreground">{accountName(tx.account_id)}</TableCell>
                     <TableCell
-                      className={`text-right font-mono font-semibold tabular-nums ${
+                      className={`text-right font-semibold tabular-nums ${
                         isCredit ? "text-positive" : isDebit ? "text-negative" : ""
                       }`}
                     >

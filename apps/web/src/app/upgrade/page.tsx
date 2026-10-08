@@ -104,7 +104,7 @@ function UpgradeContent() {
                 <CardContent className="space-y-3 py-5">
                   <div className="flex items-center justify-between">
                     <p className="text-lg font-bold">{plan.name}</p>
-                    <p className="font-mono text-sm font-semibold text-primary-deep">{plan.priceLabel}</p>
+                    <p className="text-sm font-semibold text-primary-deep">{plan.priceLabel}</p>
                   </div>
                   <ul className="space-y-1.5">
                     {plan.features.map((feature) => (
@@ -160,7 +160,7 @@ function UpgradeContent() {
               <div className="space-y-1 rounded-xl bg-muted p-4">
                 <p className="text-xs text-muted-foreground">Send to</p>
                 <p className="font-semibold">{method.accountName}</p>
-                <p className="font-mono">{method.accountNumber}</p>
+                <p className="">{method.accountNumber}</p>
               </div>
 
               {selectedMethod === "maya" && (

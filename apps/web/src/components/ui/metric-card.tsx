@@ -54,14 +54,14 @@ export function MetricCard({
         <span className="truncate text-xs font-medium text-muted-foreground">{label}</span>
       </div>
 
-      <p className={cn("mt-3 font-mono text-2xl font-bold tabular-nums", VALUE_TONE_CLASSES[tone])}>{value}</p>
+      <p className={cn("mt-3 text-2xl font-bold tabular-nums", VALUE_TONE_CLASSES[tone])}>{value}</p>
 
       {split && (
         <div className="mt-3 grid grid-cols-2 gap-2 border-t border-border/60 pt-2.5">
           {split.map((s) => (
             <div key={s.label}>
               <p className="text-[11px] text-muted-foreground">{s.label}</p>
-              <p className="font-mono text-sm font-semibold tabular-nums">{s.value}</p>
+              <p className="text-sm font-semibold tabular-nums">{s.value}</p>
             </div>
           ))}
         </div>

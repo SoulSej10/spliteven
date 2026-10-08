@@ -87,7 +87,7 @@ export default function PersonalAccountsPage() {
                       </div>
                     </TableCell>
                     <TableCell className="capitalize text-muted-foreground">{account.type}</TableCell>
-                    <TableCell className="text-right font-mono font-semibold tabular-nums">
+                    <TableCell className="text-right font-semibold tabular-nums">
                       {formatMoney(balance, account.currency)}
                     </TableCell>
                     <TableCell className="pl-0">
