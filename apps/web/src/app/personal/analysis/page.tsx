@@ -1,5 +1,6 @@
 "use client";
 
+import { useCategoryColor } from "@/hooks/use-category-color";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { computeCategoryBreakdown, computeDailyTotals } from "@evensplit/shared";
@@ -42,7 +43,6 @@ const VIEW_OPTIONS: { value: ViewType; label: string }[] = [
   { value: "account-analysis", label: "By account" },
 ];
 
-const CHART_COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
 const TOOLTIP_STYLE = {
   backgroundColor: "var(--card)",
   borderColor: "var(--border)",
@@ -69,6 +69,7 @@ function fullMonthSeries(
 }
 
 export default function PersonalAnalysisPage() {
+  const colorOf = useCategoryColor();
   // Converted into the default currency so every figure here matches the dashboard totals.
   const { base: currency, transactions, isLoading } = useBaseTransactions();
   const { data: categories } = usePersonalCategories();
@@ -195,7 +196,7 @@ export default function PersonalAnalysisPage() {
                   <PieChart>
                     <Pie data={breakdown} dataKey="amount" nameKey="category_name" innerRadius={70} outerRadius={120} paddingAngle={2}>
                       {breakdown.map((entry, i) => (
-                        <Cell key={entry.category_id ?? "none"} fill={CHART_COLORS[i % CHART_COLORS.length]} />
+                        <Cell key={entry.category_id ?? "none"} fill={colorOf(i)} />
                       ))}
                     </Pie>
                     <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(value) => formatMoney(Number(value), currency)} />
@@ -212,7 +213,7 @@ export default function PersonalAnalysisPage() {
                   >
                     <div className="flex items-center justify-between text-sm">
                       <span className="flex items-center gap-1.5 capitalize">
-                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }} />
+                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: colorOf(i) }} />
                         {c.category_name}
                       </span>
                       <span className="flex items-center gap-1 font-medium">
@@ -223,7 +224,7 @@ export default function PersonalAnalysisPage() {
                     <div className="h-1.5 overflow-hidden rounded-full bg-background">
                       <div
                         className="h-full rounded-full"
-                        style={{ width: `${Math.min(100, c.percent)}%`, backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }}
+                        style={{ width: `${Math.min(100, c.percent)}%`, backgroundColor: colorOf(i) }}
                       />
                     </div>
                   </Link>

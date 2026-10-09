@@ -1,5 +1,6 @@
 "use client";
 
+import { useCategoryColor } from "@/hooks/use-category-color";
 import { useMemo } from "react";
 import Link from "next/link";
 import { PLAN_FEATURE_COPY, type User } from "@evensplit/shared";
@@ -24,13 +25,6 @@ import { useGroupExpenses } from "@/hooks/use-group-detail";
 import { usePlan } from "@/hooks/use-plan";
 import { formatMoney } from "@/lib/format";
 
-const CHART_COLORS = [
-  "var(--chart-1)",
-  "var(--chart-2)",
-  "var(--chart-3)",
-  "var(--chart-4)",
-  "var(--chart-5)",
-];
 
 const TOOLTIP_STYLE = {
   backgroundColor: "var(--card)",
@@ -49,6 +43,7 @@ export function InsightsTab({
   groupCurrency: string;
   members: { user_id: string; users: User | null }[];
 }) {
+  const colorOf = useCategoryColor();
   const { data: expenses, isLoading, isError, refetch, isRefetching } = useGroupExpenses(groupId);
   const { allows } = usePlan();
 
@@ -183,7 +178,7 @@ export function InsightsTab({
               paddingAngle={2}
             >
               {byCategory.map((entry, i) => (
-                <Cell key={entry.name} fill={CHART_COLORS[i % CHART_COLORS.length]} />
+                <Cell key={entry.name} fill={colorOf(i)} />
               ))}
             </Pie>
             <Tooltip
@@ -197,7 +192,7 @@ export function InsightsTab({
             <span key={c.name} className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <span
                 className="h-2 w-2 rounded-full"
-                style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }}
+                style={{ backgroundColor: colorOf(i) }}
               />
               {c.name}
             </span>

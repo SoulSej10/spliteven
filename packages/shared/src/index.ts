@@ -3,6 +3,7 @@ export * from "./schemas";
 export * from "./balances";
 export * from "./personalFinance";
 export * from "./currency";
+export * from "./chartColors";
 export * from "./appIcons";
 export * from "./appUpdate";
 export * from "./signup";

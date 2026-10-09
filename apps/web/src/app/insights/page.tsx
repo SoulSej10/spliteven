@@ -1,5 +1,6 @@
 "use client";
 
+import { useCategoryColor } from "@/hooks/use-category-color";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Bar, BarChart, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
@@ -42,7 +43,6 @@ const MONTH_NAMES = [
   "July", "August", "September", "October", "November", "December",
 ];
 
-const CHART_COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
 const TOOLTIP_STYLE = {
   backgroundColor: "var(--card)",
   borderColor: "var(--border)",
@@ -62,6 +62,7 @@ function CategoryPieChart({
   currency: string;
   categories: { label: string; amount: number }[];
 }) {
+  const colorOf = useCategoryColor();
   return (
     <div className="rounded-2xl border border-border bg-card p-4">
       <div className="mb-2 flex items-center justify-between">
@@ -79,7 +80,7 @@ function CategoryPieChart({
               outerRadius={105}
             >
               {categories.map((_, i) => (
-                <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
+                <Cell key={i} fill={colorOf(i)} />
               ))}
             </Pie>
             <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(value) => formatMoney(Number(value), currency)} />
@@ -93,7 +94,7 @@ function CategoryPieChart({
             <li key={c.label} className="space-y-1">
               <div className="flex items-center justify-between text-sm">
                 <span className="flex items-center gap-1.5 capitalize">
-                  <span className="h-2 w-2 rounded-full" style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }} />
+                  <span className="h-2 w-2 rounded-full" style={{ backgroundColor: colorOf(i) }} />
                   {c.label}
                 </span>
                 <span className="font-medium">{formatMoney(c.amount, currency)}</span>
@@ -102,7 +103,7 @@ function CategoryPieChart({
                 <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
                   <div
                     className="h-full rounded-full"
-                    style={{ width: `${Math.min(100, percent)}%`, backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }}
+                    style={{ width: `${Math.min(100, percent)}%`, backgroundColor: colorOf(i) }}
                   />
                 </div>
                 <span className="w-10 text-right text-xs text-muted-foreground">{percent.toFixed(0)}%</span>
