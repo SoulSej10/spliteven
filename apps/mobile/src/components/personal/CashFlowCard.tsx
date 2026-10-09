@@ -1,5 +1,8 @@
 import { View } from "react-native";
+import { Pressable } from "react-native";
 import { Text } from "@/components/ui/typography";
+import { Eye, EyeSlash } from "phosphor-react-native";
+import { MASKED, useHideAmounts } from "@/hooks/use-hide-amounts";
 import { ArrowDownLeft, ArrowUpRight, TrendDown, TrendUp } from "phosphor-react-native";
 import { formatMoney } from "@/lib/format";
 import { usePersonalTotals } from "@/hooks/use-personal-totals";
@@ -13,7 +16,9 @@ import { palette } from "@/theme/palette";
  */
 export function CashFlowCard() {
   const totals = usePersonalTotals();
+  const { hidden, toggle } = useHideAmounts();
   if (!totals) return null;
+  const show = (amount: number) => (hidden ? MASKED : formatMoney(amount, currency));
   const { months, current, base: currency, missing } = totals;
   const total = totals.total.total;
 
@@ -26,6 +31,9 @@ export function CashFlowCard() {
         <View>
           <View className="flex-row items-center gap-1.5">
             <Text className="text-[11px] font-medium text-primary-deep/80">Total balance</Text>
+            <Pressable onPress={toggle} hitSlop={10} accessibilityLabel={hidden ? "Show balances" : "Hide balances"}>
+              {hidden ? <EyeSlash size={15} color={palette.primary} /> : <Eye size={15} color={palette.primary} />}
+            </Pressable>
             {missing.length > 0 && (
               <Text className="text-[10px] text-primary-deep/70" numberOfLines={1}>
                 · set rates in Settings
@@ -33,13 +41,13 @@ export function CashFlowCard() {
             )}
           </View>
           <Text className="mt-0.5 text-3xl font-extrabold text-primary-deep" numberOfLines={1} adjustsFontSizeToFit>
-            {formatMoney(total, currency)}
+            {show(total)}
           </Text>
           <View className="mt-2 flex-row items-center gap-1 self-start rounded-pill bg-surface/80 px-2 py-0.5">
             <TrendIcon color={palette.primary} size={11} weight="bold" />
             <Text className="text-[10px] font-bold text-primary-deep" numberOfLines={1}>
               {positive ? "+" : "-"}
-              {formatMoney(Math.abs(current.net), currency)} this month
+              {show(Math.abs(current.net))} this month
             </Text>
           </View>
         </View>
@@ -52,7 +60,7 @@ export function CashFlowCard() {
             <View className="shrink">
               <Text className="text-[10px] text-primary-deep/80">Income (mo.)</Text>
               <Text className="text-sm font-bold text-primary-deep" numberOfLines={1}>
-                {formatMoney(current.income, currency)}
+                {show(current.income)}
               </Text>
             </View>
           </View>
@@ -63,7 +71,7 @@ export function CashFlowCard() {
             <View className="shrink">
               <Text className="text-[10px] text-primary-deep/80">Expense (mo.)</Text>
               <Text className="text-sm font-bold text-primary-deep" numberOfLines={1}>
-                {formatMoney(current.expense, currency)}
+                {show(current.expense)}
               </Text>
             </View>
           </View>
