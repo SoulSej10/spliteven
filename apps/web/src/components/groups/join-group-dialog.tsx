@@ -24,9 +24,18 @@ function extractInviteCode(input: string): string {
 }
 
 /** Join a group by pasting the invite code or link someone shared (otherwise only possible by opening the link itself). */
-export function JoinGroupDialog({ trigger }: { trigger?: ReactNode }) {
+export function JoinGroupDialog({
+  trigger,
+  open: controlledOpen,
+  onOpenChange,
+}: { trigger?: ReactNode | null; open?: boolean; onOpenChange?: (open: boolean) => void }) {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = (next: boolean) => {
+    setInternalOpen(next);
+    onOpenChange?.(next);
+  };
   const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
 
@@ -45,6 +54,7 @@ export function JoinGroupDialog({ trigger }: { trigger?: ReactNode }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      {trigger !== null && (
       <DialogTrigger asChild>
         {trigger ?? (
           <Button variant="outline" className="rounded-full">
@@ -52,6 +62,7 @@ export function JoinGroupDialog({ trigger }: { trigger?: ReactNode }) {
           </Button>
         )}
       </DialogTrigger>
+      )}
       <DialogContent className="rounded-2xl sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Join a group</DialogTitle>

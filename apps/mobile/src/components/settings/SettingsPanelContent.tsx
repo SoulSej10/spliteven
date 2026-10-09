@@ -17,7 +17,6 @@ import {
   SignOut as LogOut,
   Tag,
   Trash as Trash2,
-  UserCircle,
   Wallet,
   X,
 } from "phosphor-react-native";
@@ -159,6 +158,9 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
               <Text className="text-xs text-neutral-500" numberOfLines={1}>
                 {authUser?.email}
               </Text>
+              <Text className="mt-0.5 text-xs font-medium text-primary-deep" numberOfLines={1}>
+                Edit profile · {profile?.default_currency ?? "PHP"}
+              </Text>
             </View>
             <ChevronRight color={palette.muted} size={20} />
           </BannerCard>
@@ -203,12 +205,6 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
         <MenuSet
           title="Account"
           items={[
-            {
-              label: "Profile & currency",
-              hint: `Default currency ${profile?.default_currency ?? "—"}`,
-              icon: UserCircle,
-              onPress: () => go("/(app)/settings/profile"),
-            },
             {
               label: "Security & sign-in",
               hint: "Password, fingerprint",

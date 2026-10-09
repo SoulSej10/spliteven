@@ -1,83 +1,123 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Pressable, View } from "react-native";
-import { CaretRight as ChevronRight } from "phosphor-react-native";
+import * as ImagePicker from "expo-image-picker";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { profileSetupSchema, type ProfileSetupInput } from "@evensplit/shared";
 import { Text } from "@/components/ui/typography";
 import { Avatar } from "@/components/ui/Avatar";
+import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { TextField } from "@/components/ui/TextField";
 import { SettingsScreen } from "@/components/settings/SettingsScreen";
-import { EditProfileSheet } from "@/components/settings/EditProfileSheet";
 import { useAuth } from "@/hooks/use-auth";
 import { CURRENCIES } from "@/lib/format";
-import { upsertProfile } from "@/lib/api/profile";
+import { uploadAvatar, upsertProfile } from "@/lib/api/profile";
 import { cn } from "@/lib/cn";
-import { palette } from "@/theme/palette";
 
-/** Name, photo and default currency. */
+/** Name, photo and default currency, edited right on the page (no second sheet to open). */
 export default function ProfileSettingsScreen() {
   const { authUser, profile, refreshProfile } = useAuth();
   const [saving, setSaving] = useState(false);
-  const [editVisible, setEditVisible] = useState(false);
+  const [avatarUri, setAvatarUri] = useState<string | null>(profile?.avatar_url ?? null);
 
-  async function onChangeCurrency(currency: string) {
-    if (!authUser || !profile || currency === profile.default_currency) return;
+  const { handleSubmit, formState, setValue, watch, reset } = useForm<ProfileSetupInput>({
+    resolver: zodResolver(profileSetupSchema),
+    defaultValues: {
+      display_name: profile?.display_name ?? "",
+      default_currency: profile?.default_currency ?? "PHP",
+    },
+  });
+
+  // Fill the form once the profile has loaded (and again if it changes elsewhere).
+  useEffect(() => {
+    reset({
+      display_name: profile?.display_name ?? "",
+      default_currency: profile?.default_currency ?? "PHP",
+    });
+    setAvatarUri(profile?.avatar_url ?? null);
+  }, [profile, reset]);
+
+  async function pickAvatar() {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+    if (!result.canceled && result.assets[0]) setAvatarUri(result.assets[0].uri);
+  }
+
+  async function onSubmit(values: ProfileSetupInput) {
+    if (!authUser) return;
     setSaving(true);
     try {
-      await upsertProfile(authUser.id, { display_name: profile.display_name, default_currency: currency });
+      let avatarUrl = profile?.avatar_url ?? null;
+      if (avatarUri && avatarUri !== profile?.avatar_url) {
+        avatarUrl = await uploadAvatar(authUser.id, avatarUri, "avatar.jpg");
+      }
+      await upsertProfile(authUser.id, { ...values, avatar_url: avatarUrl });
       await refreshProfile();
+      Alert.alert("Profile saved");
     } catch (err) {
-      Alert.alert("Could not update currency", err instanceof Error ? err.message : "Try again");
+      Alert.alert("Could not update profile", err instanceof Error ? err.message : "Try again");
     } finally {
       setSaving(false);
     }
   }
 
+  const currency = watch("default_currency");
+
   return (
     <SettingsScreen title="Profile & currency">
-      <Pressable onPress={() => setEditVisible(true)}>
-        <Card className="flex-row items-center gap-4">
-          <Avatar name={profile?.display_name} uri={profile?.avatar_url} size={52} logoFallback />
-          <View className="flex-1">
-            <Text className="text-base font-semibold text-neutral-900 dark:text-neutral-100" numberOfLines={1}>
-              {profile?.display_name ?? "—"}
-            </Text>
-            <Text className="text-xs text-neutral-500" numberOfLines={1}>
-              {authUser?.email}
-            </Text>
-          </View>
-          <ChevronRight color={palette.muted} size={20} />
-        </Card>
-      </Pressable>
-
-      <Card>
-        <Text className="mb-1 font-semibold text-neutral-900 dark:text-neutral-100">Default currency</Text>
-        <Text className="mb-3 text-xs text-neutral-500">
-          Totals, budgets and charts are shown in this currency. New accounts start with it too.
+      <Card className="items-center gap-3 py-5">
+        <Pressable onPress={pickAvatar} accessibilityLabel="Change photo">
+          <Avatar name={watch("display_name")} uri={avatarUri} size={88} logoFallback />
+        </Pressable>
+        <Pressable onPress={pickAvatar}>
+          <Text className="font-medium text-primary-deep">Change photo</Text>
+        </Pressable>
+        <Text className="text-xs text-neutral-500" numberOfLines={1}>
+          {authUser?.email}
         </Text>
-        <View className="flex-row flex-wrap gap-2">
-          {CURRENCIES.map((c) => (
-            <Pressable
-              key={c}
-              disabled={saving}
-              onPress={() => onChangeCurrency(c)}
-              className={cn(
-                "rounded-pill border px-3 py-1.5",
-                c === profile?.default_currency ? "border-primary bg-primary-light" : "border-neutral-500/20"
-              )}
-            >
-              <Text
-                className={cn(
-                  "text-xs font-medium",
-                  c === profile?.default_currency ? "text-primary-deep" : "text-neutral-500"
-                )}
-              >
-                {c}
-              </Text>
-            </Pressable>
-          ))}
+      </Card>
+
+      <Card className="gap-4">
+        <TextField
+          label="Display name"
+          onChangeText={(t) => setValue("display_name", t, { shouldValidate: formState.isSubmitted })}
+          value={watch("display_name")}
+          error={formState.errors.display_name?.message}
+        />
+
+        <View className="gap-1.5">
+          <Text className="text-sm font-medium text-neutral-900 dark:text-neutral-100">Default currency</Text>
+          <Text className="text-xs text-neutral-500">
+            Totals, budgets and charts are shown in this currency. New accounts start with it too.
+          </Text>
+          <View className="mt-1 flex-row flex-wrap gap-2">
+            {CURRENCIES.map((c) => {
+              const selected = currency === c;
+              return (
+                <Pressable
+                  key={c}
+                  onPress={() => setValue("default_currency", c)}
+                  className={cn(
+                    "rounded-pill border px-4 py-2",
+                    selected ? "border-primary bg-primary-light" : "border-neutral-500/20"
+                  )}
+                >
+                  <Text className={cn("font-medium", selected ? "text-primary-deep" : "text-neutral-500")}>{c}</Text>
+                </Pressable>
+              );
+            })}
+          </View>
         </View>
       </Card>
 
-      <EditProfileSheet visible={editVisible} onClose={() => setEditVisible(false)} />
+      <Button onPress={handleSubmit(onSubmit)} loading={saving} size="lg">
+        Save changes
+      </Button>
     </SettingsScreen>
   );
 }

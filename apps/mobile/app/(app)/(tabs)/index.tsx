@@ -12,7 +12,8 @@ import {
 import { Avatar } from "@/components/ui/Avatar";
 import { Card } from "@/components/ui/Card";
 import { GroupCard } from "@/components/groups/GroupCard";
-import { QuickActions } from "@/components/groups/QuickActions";
+import { CreateMenuSheet, type CreateChoice } from "@/components/CreateMenuSheet";
+import { useRegisterCreateAction } from "@/context/create-action";
 import { CashFlowCard } from "@/components/personal/CashFlowCard";
 import { RecentTransactions } from "@/components/personal/RecentTransactions";
 import { AddTransactionSheet } from "@/components/personal/AddTransactionSheet";
@@ -53,10 +54,22 @@ export default function HomeScreen() {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [joinSheetOpen, setJoinSheetOpen] = useState(false);
   const [quickAddKind, setQuickAddKind] = useState<"income" | "expense" | "transfer" | null>(null);
+  const [createMenuOpen, setCreateMenuOpen] = useState(false);
+
+  // The middle button of the bottom bar opens one menu for everything you can add from Home.
+  useRegisterCreateAction(() => setCreateMenuOpen(true));
+
+  function onCreatePick(choice: CreateChoice) {
+    setCreateMenuOpen(false);
+    // Let the menu sheet finish closing before the next one opens, so two modals never fight over the screen.
+    setTimeout(() => {
+      if (choice === "group") setSheetOpen(true);
+      else if (choice === "join") setJoinSheetOpen(true);
+      else setQuickAddKind(choice);
+    }, 250);
+  }
 
   const cashFlowRef = useRef<View>(null);
-  const quickAddRef = useRef<View>(null);
-  const quickActionsRef = useRef<View>(null);
   const groupsRef = useRef<View>(null);
   const { replaySignal } = usePageTour("dashboard");
 
@@ -97,28 +110,28 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-neutral-100 dark:bg-neutral-900" edges={["top"]}>
-      <View className="flex-row items-center justify-between px-5 pb-1 pt-3">
-        <Pressable
-          onPress={openSettings}
-          className="flex-row items-center gap-2.5 active:opacity-70"
-          accessibilityLabel="Settings"
+      <View className="flex-row items-center gap-3 px-5 pb-2 pt-3">
+        <Text
+          className="flex-1 text-xl font-extrabold text-neutral-900 dark:text-neutral-100"
+          numberOfLines={1}
+          adjustsFontSizeToFit
         >
-          <Avatar name={profile?.display_name} uri={profile?.avatar_url} size={38} />
-        </Pressable>
+          {profile?.display_name ? `Good to see you, ${profile.display_name.split(" ")[0]}` : "Home"}
+        </Text>
         <Pressable
           onPress={() => router.navigate("/(app)/(tabs)/activity")}
-          hitSlop={12}
+          hitSlop={8}
           className="h-10 w-10 items-center justify-center rounded-full bg-surface active:opacity-70 dark:bg-surface-dark"
           accessibilityLabel="Activity"
         >
           <Bell color={palette.ink} size={18} />
         </Pressable>
+        <Pressable onPress={openSettings} hitSlop={8} className="active:opacity-70" accessibilityLabel="Settings">
+          <Avatar name={profile?.display_name} uri={profile?.avatar_url} size={40} />
+        </Pressable>
       </View>
 
-      <ScrollView contentContainerClassName="px-5 pb-4 pt-3" showsVerticalScrollIndicator={false}>
-        <Text className="mb-5 text-2xl font-extrabold text-neutral-900 dark:text-neutral-100">
-          {profile?.display_name ? `Good to see you, ${profile.display_name.split(" ")[0]}` : "Home"}
-        </Text>
+      <ScrollView contentContainerClassName="px-5 pb-4 pt-1" showsVerticalScrollIndicator={false}>
 
         <View ref={cashFlowRef} collapsable={false}>
           <CashFlowCard />
@@ -130,35 +143,7 @@ export default function HomeScreen() {
           groupCurrency={(id) => groupById.get(id)?.currency ?? "PHP"}
         />
 
-        <View ref={quickAddRef} collapsable={false} className="mb-4 flex-row gap-3">
-          <Pressable
-            onPress={() => setQuickAddKind("income")}
-            className="flex-1 items-center gap-1.5 rounded-card bg-surface py-3 active:opacity-80 dark:bg-surface-dark"
-          >
-            <ArrowDownLeft color={palette.positive} size={18} />
-            <Text className="text-xs font-medium text-neutral-900 dark:text-neutral-100">Income</Text>
-          </Pressable>
-          <Pressable
-            onPress={() => setQuickAddKind("expense")}
-            className="flex-1 items-center gap-1.5 rounded-card bg-surface py-3 active:opacity-80 dark:bg-surface-dark"
-          >
-            <ArrowUpRight color={palette.negative} size={18} />
-            <Text className="text-xs font-medium text-neutral-900 dark:text-neutral-100">Expense</Text>
-          </Pressable>
-          <Pressable
-            onPress={() => setQuickAddKind("transfer")}
-            className="flex-1 items-center gap-1.5 rounded-card bg-surface py-3 active:opacity-80 dark:bg-surface-dark"
-          >
-            <ArrowRightLeft color={palette.muted} size={18} />
-            <Text className="text-xs font-medium text-neutral-900 dark:text-neutral-100">Transfer</Text>
-          </Pressable>
-        </View>
-
-        <View ref={quickActionsRef} collapsable={false}>
-          <QuickActions onCreateGroup={() => setSheetOpen(true)} onJoinGroup={() => setJoinSheetOpen(true)} />
-        </View>
-
-        <RecentTransactions />
+                <RecentTransactions />
 
         {budgetHighlight && (
           <Pressable onPress={() => router.navigate("/(app)/(tabs)/finances")}>
@@ -254,6 +239,7 @@ export default function HomeScreen() {
         {!groupsLoading && preview.map((g) => <GroupCard key={g.id} group={g} />)}
       </ScrollView>
 
+      <CreateMenuSheet visible={createMenuOpen} onClose={() => setCreateMenuOpen(false)} onPick={onCreatePick} />
       <CreateGroupSheet visible={sheetOpen} onClose={() => setSheetOpen(false)} />
       <JoinGroupSheet visible={joinSheetOpen} onClose={() => setJoinSheetOpen(false)} />
       <AddTransactionSheet
@@ -270,16 +256,6 @@ export default function HomeScreen() {
             ref: cashFlowRef,
             title: "Your cash flow",
             body: "Your total balance, how this month is going, and income vs expense over the last six months, all from your own transactions.",
-          },
-          {
-            ref: quickAddRef,
-            title: "Log money in one tap",
-            body: "Quickly add income, an expense, or a transfer between your own accounts, right from home.",
-          },
-          {
-            ref: quickActionsRef,
-            title: "Start or join a group",
-            body: "Create a group for a trip or household, or join one someone already started with an invite code.",
           },
           {
             ref: groupsRef,

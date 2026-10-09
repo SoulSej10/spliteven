@@ -66,7 +66,7 @@ export function AddBudgetDialog({ budget, trigger }: { budget?: PersonalBudget; 
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger ?? (
-          <Button className="rounded-lg" disabled={expenseCategories.length === 0}>
+          <Button className="rounded-lg" disabled={expenseCategories.length === 0} data-create-action={expenseCategories.length === 0 ? undefined : true}>
             <Plus className="mr-1 h-4 w-4" /> Set budget
           </Button>
         )}

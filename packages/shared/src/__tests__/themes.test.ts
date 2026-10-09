@@ -16,20 +16,23 @@ const HEX = /^#[0-9A-F]{6}$/i;
 const SCHEMES = ["light", "dark"] as const;
 
 describe("themes", () => {
-  it("offers 4 templates (3 cute + classic) and 8 accents", () => {
-    expect(THEME_IDS).toHaveLength(4);
-    expect(ACCENT_IDS).toHaveLength(8);
+  it("offers 8 templates and 12 accents", () => {
+    expect(THEME_IDS).toHaveLength(8);
+    expect(ACCENT_IDS).toHaveLength(12);
   });
 
   it("every template's default accent exists", () => {
     for (const id of THEME_IDS) expect(isAccentId(THEME_TEMPLATES[id].defaultAccent)).toBe(true);
   });
 
-  it("makes the cute themes rounder than classic, with distinct roundness", () => {
+  it("gives every theme its own roundness, with classic as the baseline", () => {
     const scales = THEME_IDS.map((id) => THEME_TEMPLATES[id].radiusScale);
     expect(THEME_TEMPLATES.classic.radiusScale).toBe(1);
     expect(new Set(scales).size).toBe(scales.length);
-    for (const id of THEME_IDS) if (id !== "classic") expect(THEME_TEMPLATES[id].radiusScale).toBeGreaterThan(1);
+    for (const id of THEME_IDS) {
+      expect(THEME_TEMPLATES[id].radiusScale).toBeGreaterThanOrEqual(0.5);
+      expect(THEME_TEMPLATES[id].radiusScale).toBeLessThanOrEqual(2);
+    }
   });
 
   it("resolves every theme x accent x scheme to valid hex colors", () => {

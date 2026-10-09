@@ -31,13 +31,22 @@ import { AppIcon } from "@/components/ui/app-icon";
 
 const ICONS = ["👥", "🏠", "✈️", "🍕", "🎉", "💰", "🚗", "🏖️"];
 
-export function CreateGroupDialog({ trigger }: { trigger?: ReactNode } = {}) {
+export function CreateGroupDialog({
+  trigger,
+  open: controlledOpen,
+  onOpenChange,
+}: { trigger?: ReactNode | null; open?: boolean; onOpenChange?: (open: boolean) => void } = {}) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { authUser, profile } = useAuth();
   const { canAddGroup } = usePlan();
   const { showUpgradePrompt, handlePlanLimitError } = useUpgradePrompt();
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = (next: boolean) => {
+    setInternalOpen(next);
+    onOpenChange?.(next);
+  };
   const [submitting, setSubmitting] = useState(false);
   const [icon, setIcon] = useState(ICONS[0]);
 
@@ -72,13 +81,15 @@ export function CreateGroupDialog({ trigger }: { trigger?: ReactNode } = {}) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      {trigger !== null && (
       <DialogTrigger asChild>
         {trigger ?? (
-          <Button className="rounded-full">
+          <Button className="rounded-full" data-create-action>
             <Plus className="mr-1 h-4 w-4" /> New group
           </Button>
         )}
       </DialogTrigger>
+      )}
       <DialogContent className="rounded-2xl sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Create a group</DialogTitle>

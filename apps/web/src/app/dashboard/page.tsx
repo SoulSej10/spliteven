@@ -109,7 +109,7 @@ function DashboardContent() {
 
   return (
     <AppShell>
-      <div className="mb-4 lg:mb-6">
+      <div className="mb-4 max-lg:hidden lg:mb-6">
         <h1 className="text-[1.65rem] font-bold tracking-tight lg:text-2xl lg:font-semibold">
           {profile?.display_name ? `Good to see you, ${profile.display_name.split(" ")[0]}` : "Dashboard"}
         </h1>
@@ -124,7 +124,7 @@ function DashboardContent() {
 
       <CashFlowCard />
 
-      <div className="mb-4 grid grid-cols-3 gap-3">
+      <div className="mb-4 grid grid-cols-3 gap-3 max-lg:hidden">
         <AddTransactionDialog
           initialKind="income"
           trigger={
@@ -151,7 +151,7 @@ function DashboardContent() {
         />
       </div>
 
-      <div className="mb-8 grid gap-3 sm:grid-cols-2">
+      <div className="mb-8 grid gap-3 max-lg:hidden sm:grid-cols-2">
         <CreateGroupDialog
           trigger={
             <button className={groupButtonClass}>

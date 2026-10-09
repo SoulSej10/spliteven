@@ -18,10 +18,10 @@ import { cn } from "@/lib/cn";
 type ButtonTone = "digit" | "op" | "muted" | "primary";
 
 const TONE_CLASSES: Record<ButtonTone, string> = {
-  digit: "bg-neutral-100 dark:bg-on-primary/5",
-  op: "bg-primary-light",
-  muted: "bg-transparent",
-  primary: "bg-primary",
+  digit: "border-neutral-500/35 bg-neutral-100 dark:border-white/25 dark:bg-on-primary/5",
+  op: "border-primary/40 bg-primary-light",
+  muted: "border-neutral-500/30 bg-transparent dark:border-white/20",
+  primary: "border-primary bg-primary",
 };
 
 const TONE_TEXT_CLASSES: Record<ButtonTone, string> = {
@@ -46,7 +46,7 @@ function CalcButton({
     <Pressable
       onPress={onPress}
       className={cn(
-        "h-12 items-center justify-center rounded-card active:opacity-70",
+        "h-12 items-center justify-center rounded-card border active:opacity-70",
         wide ? "flex-[2]" : "flex-1",
         TONE_CLASSES[tone]
       )}

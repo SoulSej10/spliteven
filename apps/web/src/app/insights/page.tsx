@@ -252,8 +252,8 @@ function InsightsContent() {
 
   return (
     <AppShell>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
+      <div className="mb-4 flex items-center justify-between lg:mb-6">
+        <div className="max-lg:hidden">
           <h1 className="text-2xl font-semibold tracking-tight">Insights</h1>
           <p className="hidden text-sm text-muted-foreground sm:block">Where your money is going</p>
         </div>

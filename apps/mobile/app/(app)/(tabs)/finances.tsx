@@ -18,6 +18,7 @@ import { AddAccountSheet } from "@/components/personal/AddAccountSheet";
 import { AddBudgetSheet } from "@/components/personal/AddBudgetSheet";
 import { AddCategorySheet } from "@/components/personal/AddCategorySheet";
 import { useAuth } from "@/hooks/use-auth";
+import { useRegisterCreateAction } from "@/context/create-action";
 import { useSettingsDrawer } from "@/context/settings-drawer";
 import { usePersonalAccounts } from "@/hooks/use-personal";
 import { PageTour, usePageTour } from "@/components/onboarding/PageTour";
@@ -61,7 +62,6 @@ export default function FinancesScreen() {
   const [sheet, setSheet] = useState<Tab | null>(null);
   const summaryRef = useRef<View>(null);
   const tabsRef = useRef<View>(null);
-  const fabRef = useRef<View>(null);
   const { replaySignal } = usePageTour("finances");
 
   // Lets the Settings drawer's "Manage" shortcuts (Accounts/Categories/
@@ -80,6 +80,9 @@ export default function FinancesScreen() {
     }
     setSheet(tab);
   }
+
+  // The middle button of the bottom bar adds whatever the open tab holds (nothing on Overview / Analysis).
+  useRegisterCreateAction(CREATE_LABEL[tab] ? onFabPress : null);
 
   return (
     <SafeAreaView className="flex-1 bg-neutral-100 dark:bg-neutral-900" edges={["top"]}>
@@ -122,21 +125,6 @@ export default function FinancesScreen() {
         {tab === "analysis" && <AnalysisTabView />}
       </ScrollView>
 
-      {CREATE_LABEL[tab] && (
-        <Pressable
-          ref={fabRef}
-          collapsable={false}
-          onPress={onFabPress}
-          accessibilityLabel={CREATE_LABEL[tab]}
-          className="absolute bottom-5 right-5 h-16 w-16 items-center justify-center rounded-full bg-primary active:opacity-90"
-          style={{
-            shadowColor: "#2A2528", shadowOpacity: 0.12, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, elevation: 3,
-          }}
-        >
-          <Plus color={palette.onPrimary} size={28} />
-        </Pressable>
-      )}
-
       <AddTransactionSheet visible={sheet === "records"} onClose={() => setSheet(null)} />
       <AddAccountSheet visible={sheet === "accounts"} onClose={() => setSheet(null)} />
       <AddBudgetSheet visible={sheet === "budgets"} onClose={() => setSheet(null)} />
@@ -157,9 +145,9 @@ export default function FinancesScreen() {
             body: "Swipe through these tabs to log transactions, manage accounts, set budgets, and see spending analysis.",
           },
           {
-            ref: fabRef,
-            title: "Add for the current tab",
-            body: "This button always adds something for whichever tab is open — a transaction, account, budget, or category.",
+            ref: tabsRef,
+            title: "Add with the + button",
+            body: "The round + in the middle of the bottom bar adds something for whichever tab is open: a transaction, account, budget, or category. It rests on tabs with nothing to add.",
           },
         ]}
       />

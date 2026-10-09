@@ -85,7 +85,7 @@ export function AddCategoryDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger ?? (
-          <Button className="rounded-lg font-semibold shadow-sm">
+          <Button className="rounded-lg font-semibold shadow-sm" data-create-action>
             <Plus className="mr-1 h-4 w-4" /> Add category
           </Button>
         )}

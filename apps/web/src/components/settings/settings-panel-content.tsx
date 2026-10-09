@@ -35,6 +35,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useAuth } from "@/hooks/use-auth";
+import { AppearancePicker } from "@/components/settings/appearance-picker";
 import { NotificationSettings } from "@/components/settings/notification-settings";
 import { SettingsMenu } from "@/components/settings/settings-menu";
 import { usePersonalAccounts, usePersonalCategories, usePersonalTransactions } from "@/hooks/use-personal";
@@ -412,13 +413,14 @@ export function SettingsPanelContent({ onClose, section = "menu" }: { onClose?: 
         <Card className="rounded-2xl border-border/60 shadow-sm">
           <CardHeader>
             <CardTitle>Appearance</CardTitle>
-            <CardDescription>Switch between light and dark. The website always uses the SplitEven green.</CardDescription>
+            <CardDescription>Dark mode, theme and color. They apply inside your account; the public pages stay green.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex items-center justify-between">
               <Label htmlFor="dark-mode">Dark mode</Label>
               <Switch id="dark-mode" checked={theme === "dark"} onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")} />
             </div>
+            <AppearancePicker />
           </CardContent>
         </Card>
         </>

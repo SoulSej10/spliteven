@@ -90,7 +90,7 @@
   --chart-3: #009b87;
   --chart-4: #d95f5f;
   --chart-5: #6b7169;
-  --radius: 0.4rem;
+  --radius: calc(0.4rem * var(--radius-scale, 1));
   --sidebar: #ffffff;
   --sidebar-foreground: #0a0a0a;
   --sidebar-primary: #2f8f7d;
@@ -175,7 +175,7 @@
   /* Match the phone app's rounder cards and controls. */
   @media (max-width: 1023px) {
     :root {
-      --radius: 0.65rem;
+      --radius: calc(0.65rem * var(--radius-scale, 1));
     }
     /* 16px+ inputs stop iOS Safari zooming the page when a field is focused. */
     input:not([type="checkbox"]):not([type="radio"]),

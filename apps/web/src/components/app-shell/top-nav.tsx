@@ -5,6 +5,7 @@ import { BreadcrumbLabelProvider } from "@/components/app-shell/breadcrumb-conte
 import { OnboardingTour } from "@/components/onboarding/onboarding-tour";
 import { InstallPrompt } from "@/components/pwa/install-prompt";
 import { ReminderRunner } from "@/components/pwa/reminder-runner";
+import { ThemeApplier } from "@/components/app-shell/theme-applier";
 
 /**
  * The authenticated app's chrome. At lg+ it's the SaaS dashboard shell: a persistent
@@ -31,6 +32,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </div>
       <OnboardingTour />
       <ReminderRunner />
+      <ThemeApplier />
     </BreadcrumbLabelProvider>
   );
 }

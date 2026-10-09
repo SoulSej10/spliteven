@@ -13,8 +13,20 @@
 
 export type ColorScheme = "light" | "dark";
 
-export type ThemeId = "classic" | "sakura" | "lavender" | "peach";
-export type AccentId = "teal" | "rose" | "peach" | "honey" | "mint" | "sky" | "periwinkle" | "orchid";
+export type ThemeId = "classic" | "sakura" | "lavender" | "peach" | "ocean" | "graphite" | "sunset" | "forest";
+export type AccentId =
+  | "teal"
+  | "rose"
+  | "peach"
+  | "honey"
+  | "mint"
+  | "sky"
+  | "periwinkle"
+  | "orchid"
+  | "coral"
+  | "lime"
+  | "slate"
+  | "aqua";
 
 export interface SurfaceTokens {
   background: string;
@@ -146,6 +158,98 @@ export const THEME_TEMPLATES: Record<ThemeId, ThemeTemplate> = {
       border: "#3A3E4B",
     },
   },
+  ocean: {
+    id: "ocean",
+    name: "Ocean",
+    tagline: "Cool, crisp and airy",
+    radiusScale: 1.15,
+    defaultAccent: "sky",
+    light: {
+      background: "#F3F7FA",
+      foreground: "#0B1620",
+      card: "#FFFFFF",
+      muted: "#E7EEF3",
+      mutedForeground: "#5A6B79",
+      border: "#D5E0E8",
+    },
+    dark: {
+      background: "#0E1822",
+      foreground: "#EAF1F7",
+      card: "#152433",
+      muted: "#1C2F42",
+      mutedForeground: "#98AEC2",
+      border: "#2A4259",
+    },
+  },
+  graphite: {
+    id: "graphite",
+    name: "Graphite",
+    tagline: "Neutral and sharp-cornered",
+    radiusScale: 0.7,
+    defaultAccent: "slate",
+    light: {
+      background: "#F4F4F5",
+      foreground: "#111113",
+      card: "#FFFFFF",
+      muted: "#E9E9EB",
+      mutedForeground: "#65656B",
+      border: "#DADADD",
+    },
+    dark: {
+      background: "#121214",
+      foreground: "#F2F2F3",
+      card: "#1B1B1E",
+      muted: "#26262A",
+      mutedForeground: "#A0A0A8",
+      border: "#34343A",
+    },
+  },
+  sunset: {
+    id: "sunset",
+    name: "Sunset",
+    tagline: "Warm cream, glowing coral",
+    radiusScale: 1.35,
+    defaultAccent: "coral",
+    light: {
+      background: "#FBF6F1",
+      foreground: "#2B1E17",
+      card: "#FFFFFF",
+      muted: "#F3EAE2",
+      mutedForeground: "#7A675A",
+      border: "#E4D6CA",
+    },
+    dark: {
+      background: "#1A1412",
+      foreground: "#F5EDE7",
+      card: "#241B18",
+      muted: "#2E2320",
+      mutedForeground: "#B3A196",
+      border: "#43342E",
+    },
+  },
+  forest: {
+    id: "forest",
+    name: "Forest",
+    tagline: "Fresh greens, easy on the eyes",
+    radiusScale: 1.2,
+    defaultAccent: "lime",
+    light: {
+      background: "#F2F6F1",
+      foreground: "#0E1A12",
+      card: "#FFFFFF",
+      muted: "#E5ECE3",
+      mutedForeground: "#5B6C5F",
+      border: "#D3DDD0",
+    },
+    dark: {
+      background: "#0F1A14",
+      foreground: "#EAF2EC",
+      card: "#16261D",
+      muted: "#1D3226",
+      mutedForeground: "#98B0A0",
+      border: "#2B4437",
+    },
+  },
 };
 
 export const ACCENT_SWATCHES: Record<AccentId, AccentSwatch> = {
@@ -199,6 +303,30 @@ export const ACCENT_SWATCHES: Record<AccentId, AccentSwatch> = {
     name: "Orchid",
     light: { primary: "#E1BAF1", onPrimary: "#4C2563", tint: "#F6EBFC", deep: "#78399A" },
     dark: { primary: "#C69EDC", onPrimary: "#26132F", tint: "#41304D", deep: "#E4C6F1" },
+  },
+  coral: {
+    id: "coral",
+    name: "Coral",
+    light: { primary: "#F9B8AF", onPrimary: "#5E241C", tint: "#FEEFEC", deep: "#B04B3B" },
+    dark: { primary: "#E3A096", onPrimary: "#2E1511", tint: "#46302C", deep: "#F3C4BC" },
+  },
+  lime: {
+    id: "lime",
+    name: "Lime",
+    light: { primary: "#CFE8A0", onPrimary: "#31440F", tint: "#F3F9E4", deep: "#4F7A12" },
+    dark: { primary: "#B8D68A", onPrimary: "#1B2A08", tint: "#2E3A1E", deep: "#D6EBB0" },
+  },
+  slate: {
+    id: "slate",
+    name: "Slate",
+    light: { primary: "#C9D3DD", onPrimary: "#243240", tint: "#EEF2F6", deep: "#3E5368" },
+    dark: { primary: "#A9B8C8", onPrimary: "#141C25", tint: "#2C3744", deep: "#CBD6E2" },
+  },
+  aqua: {
+    id: "aqua",
+    name: "Aqua",
+    light: { primary: "#A9E4E4", onPrimary: "#134646", tint: "#E6F7F7", deep: "#1B7272" },
+    dark: { primary: "#86CFCF", onPrimary: "#0C2626", tint: "#20393A", deep: "#B2E6E6" },
   },
 };
 

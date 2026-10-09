@@ -7,6 +7,7 @@ import { Bell, Plus, Users } from "phosphor-react-native";
 import { Avatar } from "@/components/ui/Avatar";
 import { GroupCard } from "@/components/groups/GroupCard";
 import { CreateGroupSheet } from "@/components/groups/CreateGroupSheet";
+import { useRegisterCreateAction } from "@/context/create-action";
 import { JoinGroupSheet } from "@/components/groups/JoinGroupSheet";
 import { QuickActions } from "@/components/groups/QuickActions";
 import { SkeletonCardRows } from "@/components/ui/Skeleton";
@@ -31,8 +32,8 @@ export default function GroupsListScreen() {
   const [joinSheetOpen, setJoinSheetOpen] = useState(false);
   const quickActionsRef = useRef<View>(null);
   const groupsListRef = useRef<View>(null);
-  const fabRef = useRef<View>(null);
   const { replaySignal } = usePageTour("groups");
+  useRegisterCreateAction(() => setSheetOpen(true));
 
   return (
     <SafeAreaView className="flex-1 bg-neutral-100 dark:bg-neutral-900" edges={["top"]}>
@@ -110,18 +111,6 @@ export default function GroupsListScreen() {
         )}
       </ScrollView>
 
-      <Pressable
-        ref={fabRef}
-        collapsable={false}
-        onPress={() => setSheetOpen(true)}
-        className="absolute bottom-5 right-5 h-16 w-16 items-center justify-center rounded-full bg-primary active:opacity-90"
-        style={{
-          shadowColor: "#2A2528", shadowOpacity: 0.12, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, elevation: 3,
-        }}
-      >
-        <Plus color={palette.onPrimary} size={28} />
-      </Pressable>
-
       <CreateGroupSheet visible={sheetOpen} onClose={() => setSheetOpen(false)} />
       <JoinGroupSheet visible={joinSheetOpen} onClose={() => setJoinSheetOpen(false)} />
 
@@ -138,11 +127,6 @@ export default function GroupsListScreen() {
             ref: groupsListRef,
             title: "All your groups",
             body: "Tap any group to see its expenses, members, and who owes who.",
-          },
-          {
-            ref: fabRef,
-            title: "Quick create",
-            body: "This button always starts a new group, no matter where you've scrolled to.",
           },
         ]}
       />

@@ -4,6 +4,8 @@ import { useAppTheme } from "@/theme/ThemeProvider";
 import { ChartBar as BarChart3, House as Home, Users, Wallet } from "phosphor-react-native";
 import { SettingsDrawerProvider } from "@/context/settings-drawer";
 import { SettingsDrawer } from "@/components/settings/SettingsDrawer";
+import { AppTabBar } from "@/components/AppTabBar";
+import { CreateActionProvider } from "@/context/create-action";
 import { useReminderSync } from "@/hooks/use-reminder-sync";
 import { palette } from "@/theme/palette";
 
@@ -29,8 +31,10 @@ export default function TabsLayout() {
 
   return (
     <SettingsDrawerProvider>
+      <CreateActionProvider>
       <Tabs
         key={version}
+        tabBar={(props) => <AppTabBar {...props} />}
         screenOptions={{
           headerShown: false,
           tabBarActiveTintColor: palette.primary,
@@ -81,6 +85,7 @@ export default function TabsLayout() {
         />
         <Tabs.Screen name="activity" options={{ href: null }} />
       </Tabs>
+      </CreateActionProvider>
       <SettingsDrawer />
     </SettingsDrawerProvider>
   );

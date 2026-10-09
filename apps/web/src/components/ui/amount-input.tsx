@@ -17,10 +17,10 @@ import { cn } from "@/lib/utils";
 type ButtonTone = "digit" | "op" | "muted" | "primary";
 
 const TONE_CLASSES: Record<ButtonTone, string> = {
-  digit: "bg-muted/60 hover:bg-muted text-foreground",
-  op: "bg-primary-light text-primary-deep hover:opacity-80",
-  muted: "bg-transparent text-muted-foreground hover:bg-muted",
-  primary: "bg-primary text-primary-foreground hover:opacity-90",
+  digit: "border-foreground/20 bg-muted/60 hover:bg-muted text-foreground",
+  op: "border-primary/40 bg-primary-light text-primary-deep hover:opacity-80",
+  muted: "border-foreground/15 bg-transparent text-muted-foreground hover:bg-muted",
+  primary: "border-primary bg-primary text-primary-foreground hover:opacity-90",
 };
 
 function CalcButton({
@@ -37,7 +37,7 @@ function CalcButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex h-10 items-center justify-center rounded-md text-sm font-medium tabular-nums transition-colors",
+        "flex h-10 items-center justify-center rounded-md border text-sm font-medium tabular-nums transition-colors",
         TONE_CLASSES[tone]
       )}
     >

@@ -110,7 +110,7 @@ export function ExpensesTab({
         </div>
         <ExpenseFormDialog
           trigger={
-            <Button className="rounded-full">
+            <Button className="rounded-full" data-create-action>
               <Plus className="mr-1 h-4 w-4" /> Add expense
             </Button>
           }

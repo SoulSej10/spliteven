@@ -59,7 +59,7 @@ export default function PersonalLayout({ children }: { children: React.ReactNode
   return (
     <AuthGuard>
       <AppShell>
-        <div className="mb-4 lg:mb-6">
+        <div className="mb-4 max-lg:hidden lg:mb-6">
           <h1 className="text-xl font-bold tracking-tight lg:text-2xl lg:font-semibold">Finances</h1>
           <p className="hidden text-sm text-muted-foreground lg:block">Your personal accounts, budgets, and spending, kept separate from group balances.</p>
         </div>

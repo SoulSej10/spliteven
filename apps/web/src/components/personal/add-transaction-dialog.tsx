@@ -40,15 +40,25 @@ export function AddTransactionDialog({
   trigger,
   initialKind = "expense",
   transaction,
+  open: controlledOpen,
+  onOpenChange,
 }: {
+  /** Controlled open state (used by the bottom bar's Create menu); pass `trigger={null}` to render no button. */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   /** Custom trigger element (e.g. a Home quick-action tile). Defaults to the standalone "Add transaction" button. */
-  trigger?: ReactNode;
+  trigger?: ReactNode | null;
   /** Pre-selects a kind when the dialog opens. Manual entry is never group_advance/group_reimbursement (system-only kinds). */
   initialKind?: "income" | "expense" | "transfer";
   /** When set, the dialog edits this transaction instead of adding a new one. */
   transaction?: PersonalTransaction;
 }) {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = (next: boolean) => {
+    setInternalOpen(next);
+    onOpenChange?.(next);
+  };
   const { data: accounts } = usePersonalAccounts();
   const { data: categories } = usePersonalCategories();
   const createTransaction = useCreatePersonalTransaction();
@@ -119,13 +129,15 @@ export function AddTransactionDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      {trigger !== null && (
       <DialogTrigger asChild>
         {trigger ?? (
-          <Button className="rounded-lg">
+          <Button className="rounded-lg" data-create-action>
             <Plus className="mr-1 h-4 w-4" /> Add transaction
           </Button>
         )}
       </DialogTrigger>
+      )}
       <DialogContent className="rounded-2xl sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{editing ? "Edit transaction" : "Add a transaction"}</DialogTitle>

@@ -25,7 +25,7 @@ function GroupsContent() {
 
   return (
     <AppShell>
-      <div className="mb-5 flex items-center justify-between gap-3 lg:mb-8">
+      <div className="mb-5 flex items-center justify-between gap-3 max-lg:hidden lg:mb-8">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">
             {groups?.length ? "Your groups" : "Groups"}

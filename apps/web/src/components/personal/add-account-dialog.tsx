@@ -91,7 +91,7 @@ export function AddAccountDialog({ account, trigger }: { account?: PersonalAccou
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger ?? (
-          <Button className="rounded-lg">
+          <Button className="rounded-lg" data-create-action>
             <Plus className="mr-1 h-4 w-4" /> Add account
           </Button>
         )}
