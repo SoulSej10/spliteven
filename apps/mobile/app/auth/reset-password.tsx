@@ -6,7 +6,7 @@ import { LockKey } from "phosphor-react-native";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { Text } from "@/components/ui/typography";
-import { applyAuthCallbackUrl } from "@/lib/supabase/authDeepLink";
+import { applyAuthCallbackUrl, deepLinkReportsError, recentDeepLink } from "@/lib/supabase/authDeepLink";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import { isPasswordPwned } from "@/lib/pwned-password";
 import { palette } from "@/theme/palette";
@@ -29,34 +29,40 @@ export default function ResetPasswordScreen() {
   const settled = useRef(false);
 
   useEffect(() => {
+    let active = true;
+
     function settle(next: LinkState) {
-      if (settled.current && next !== "ready") return;
-      if (next === "ready") settled.current = true;
+      if (!active || settled.current) return;
+      settled.current = true;
       setState(next);
     }
 
     async function handle(url: string) {
+      if (deepLinkReportsError(url)) {
+        settle("invalid");
+        return;
+      }
       try {
-        const ok = await applyAuthCallbackUrl(url);
-        if (ok) settle("ready");
+        if (await applyAuthCallbackUrl(url)) settle("ready");
       } catch (err) {
         console.error("EvenSplit: reset link failed", err);
       }
     }
 
+    // The link usually arrived before this screen mounted, so read the remembered one first.
+    const remembered = recentDeepLink();
+    if (remembered) void handle(remembered);
     void Linking.getInitialURL().then((url) => {
       if (url) void handle(url);
     });
     const subscription = Linking.addEventListener("url", (event) => void handle(event.url));
 
-    // If the link never carried a usable session (expired, already used, opened by hand), say so.
-    const timeout = setTimeout(async () => {
-      if (settled.current) return;
-      const { data } = await getSupabaseClient().auth.getSession();
-      settle(data.session ? "ready" : "invalid");
-    }, 6000);
+    // No usable link within a few seconds (expired, already used, or opened by hand): say so.
+    // An existing sign-in does not count - the form must only open from the reset link itself.
+    const timeout = setTimeout(() => settle("invalid"), 6000);
 
     return () => {
+      active = false;
       clearTimeout(timeout);
       subscription.remove();
     };

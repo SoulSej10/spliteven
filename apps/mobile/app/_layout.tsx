@@ -6,12 +6,21 @@ import { StatusBar } from "expo-status-bar";
 import { colorScheme } from "nativewind";
 import { I18nManager } from "react-native";
 import { useFonts } from "expo-font";
+import * as Linking from "expo-linking";
 import "../global.css";
 import { Providers } from "@/components/Providers";
 import { loadStoredAppearance, loadStoredColorScheme, type StoredAppearance } from "@/lib/appearance";
 import { AppThemeProvider } from "@/theme/ThemeProvider";
+import { rememberDeepLink } from "@/lib/supabase/authDeepLink";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
+
+// Keep the latest deep link (password-reset and confirmation links carry their tokens in it) so the
+// screen it opens can read it even though that screen mounts after the link event has fired.
+void Linking.getInitialURL().then((url) => {
+  if (url) rememberDeepLink(url);
+});
+Linking.addEventListener("url", (event) => rememberDeepLink(event.url));
 
 // No-ops entirely if EXPO_PUBLIC_SENTRY_DSN isn't set (e.g. local dev, or
 // before a Sentry project exists) - drop a DSN in .env.local (or the EAS

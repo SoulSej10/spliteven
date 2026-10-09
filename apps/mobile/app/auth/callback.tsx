@@ -3,7 +3,7 @@ import { ActivityIndicator, View } from "react-native";
 import { Text } from "@/components/ui/typography";
 import { router } from "expo-router";
 import * as Linking from "expo-linking";
-import { applyAuthCallbackUrl } from "@/lib/supabase/authDeepLink";
+import { applyAuthCallbackUrl, recentDeepLink } from "@/lib/supabase/authDeepLink";
 import { palette } from "@/theme/palette";
 
 /**
@@ -50,6 +50,9 @@ export default function AuthCallbackScreen() {
     // or "url" event ever arrives with a usable token fragment.
     const timeout = setTimeout(() => finish(false), 10000);
 
+    // The link may have arrived before this screen mounted (app already open): read the remembered one too.
+    const remembered = recentDeepLink();
+    if (remembered) void handle(remembered);
     void Linking.getInitialURL().then((url) => {
       if (url) void handle(url);
     });
