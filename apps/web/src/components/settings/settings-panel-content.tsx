@@ -18,7 +18,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
-import { CurrencyRatesCard } from "@/components/personal/currency-rates-card";
+import Link from "next/link";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -291,7 +291,19 @@ export function SettingsPanelContent({ onClose }: { onClose?: () => void }) {
         </CardContent>
       </Card>
 
-      <CurrencyRatesCard />
+      <Card className="rounded-2xl border-border/60 shadow-sm">
+        <CardHeader>
+          <CardTitle>Currency rates</CardTitle>
+          <CardDescription>
+            Convert accounts in other currencies into {profile?.default_currency ?? "your default currency"} with rates you set.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button asChild variant="outline">
+            <Link href="/settings/currency-rates">Manage currency rates</Link>
+          </Button>
+        </CardContent>
+      </Card>
 
       <Card className="rounded-2xl border-border/60 shadow-sm">
         <CardHeader>

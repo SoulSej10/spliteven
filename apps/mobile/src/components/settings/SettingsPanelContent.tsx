@@ -7,7 +7,7 @@ import { useColorScheme } from "nativewind";
 import * as DocumentPicker from "expo-document-picker";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
-import { CaretRight as ChevronRight, Crown, Download, Key as KeyRound, ListChecks, SignOut as LogOut, PiggyBank, ShieldCheck, Tag, Trash as Trash2, Upload, Wallet, X } from "phosphor-react-native";
+import { ArrowsLeftRight, CaretRight as ChevronRight, Crown, Download, Key as KeyRound, ListChecks, SignOut as LogOut, PiggyBank, ShieldCheck, Tag, Trash as Trash2, Upload, Wallet, X } from "phosphor-react-native";
 import { PLANS_ENABLED, SUBSCRIPTION_ADMIN_EMAIL, SUBSCRIPTION_PLANS, type AppUpdateInfo } from "@evensplit/shared";
 import { CURRENCIES } from "@/lib/format";
 import { Avatar } from "@/components/ui/Avatar";
@@ -24,7 +24,6 @@ import { upsertProfile } from "@/lib/api/profile";
 import { saveColorScheme } from "@/lib/appearance";
 import { EditProfileSheet } from "./EditProfileSheet";
 import { UpdateDialog } from "@/components/UpdatePrompt";
-import { CurrencyRatesCard } from "@/components/personal/CurrencyRatesCard";
 import { fetchAvailableUpdate, installedVersion } from "@/lib/app-update";
 import { AppearancePicker } from "./AppearancePicker";
 import {
@@ -376,7 +375,27 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
           </View>
         </Card>
 
-        <CurrencyRatesCard />
+        <Card className="gap-3">
+          <Pressable
+            onPress={() => {
+              onClose();
+              router.push("/(app)/currency-rates");
+            }}
+            className="flex-row items-center justify-between py-1"
+            accessibilityRole="button"
+          >
+            <View className="flex-1 pr-3">
+              <View className="flex-row items-center gap-2.5">
+                <ArrowsLeftRight size={17} color={palette.primary} />
+                <Text className="text-neutral-900 dark:text-neutral-100">Currency rates</Text>
+              </View>
+              <Text className="mt-0.5 text-xs text-neutral-500">
+                Convert accounts in other currencies into {profile?.default_currency ?? "your default currency"}.
+              </Text>
+            </View>
+            <ChevronRight color={palette.muted} size={17} />
+          </Pressable>
+        </Card>
 
         <Card>
           <Text className="mb-3 font-semibold text-neutral-900 dark:text-neutral-100">Manage</Text>
