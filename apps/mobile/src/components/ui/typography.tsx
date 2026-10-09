@@ -9,6 +9,10 @@ import { Text as RNText, TextInput as RNTextInput, type TextInputProps, type Tex
  * the element's weight class (font-medium / semibold / bold / extrabold, or
  * regular when there is none) and applied as an inline style so nothing can
  * override it.
+ *
+ * Font scaling is switched off (allowFontScaling={false}) so the app keeps its own
+ * type sizes whatever the phone's "font size" accessibility setting is; callers
+ * can still pass allowFontScaling to opt a specific element back in.
  */
 const FAMILY = {
   regular: "Bricolage_400Regular",
@@ -42,12 +46,12 @@ export const Text = forwardRef<RNText, TextProps & { className?: string }>(funct
   { className, style, ...props },
   ref
 ) {
-  return <RNText ref={ref} className={className} style={[fontStyle(className), style]} {...props} />;
+  return <RNText ref={ref} className={className} allowFontScaling={false} style={[fontStyle(className), style]} {...props} />;
 });
 
 export const TextInput = forwardRef<RNTextInput, TextInputProps & { className?: string }>(function TextInput(
   { className, style, ...props },
   ref
 ) {
-  return <RNTextInput ref={ref} className={className} style={[fontStyle(className), style]} {...props} />;
+  return <RNTextInput ref={ref} className={className} allowFontScaling={false} style={[fontStyle(className), style]} {...props} />;
 });
