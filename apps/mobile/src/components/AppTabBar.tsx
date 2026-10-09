@@ -29,6 +29,8 @@ interface TabBarProps {
   };
 }
 
+const VISIBLE_TABS = new Set(["index", "groups", "finances", "insights"]);
+
 /**
  * The bottom bar: Home, Groups, a raised Create button in the middle, Finances, Insights.
  * The middle button runs whatever the visible page creates (see context/create-action.tsx) and is
@@ -39,8 +41,8 @@ export function AppTabBar({ state, descriptors, navigation }: TabBarProps) {
   const insets = useSafeAreaInsets();
   const { enabled, run } = useCreateAction();
 
-  // Only the four real destinations (the hidden Activity route has href: null).
-  const routes = state.routes.filter((route) => descriptors[route.key].options.href !== null);
+  // Only the four real destinations; the Activity screen is reached from the bell, not the bar.
+  const routes = state.routes.filter((route) => VISIBLE_TABS.has(route.name));
   const middle = Math.floor(routes.length / 2);
 
   function renderTab(route: (typeof routes)[number]) {
