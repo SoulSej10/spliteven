@@ -114,11 +114,11 @@ function DashboardContent() {
 
   return (
     <AppShell>
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold tracking-tight">
+      <div className="mb-4 lg:mb-6">
+        <h1 className="text-[1.65rem] font-bold tracking-tight lg:text-2xl lg:font-semibold">
           {profile?.display_name ? `Good to see you, ${profile.display_name.split(" ")[0]}` : "Dashboard"}
         </h1>
-        <p className="text-sm text-muted-foreground">Your cash flow first, with your shared groups close by.</p>
+        <p className="hidden text-sm text-muted-foreground lg:block">Your cash flow first, with your shared groups close by.</p>
       </div>
 
       <SettlementReceiptBanner

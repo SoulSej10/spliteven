@@ -29,7 +29,7 @@ import { AutoplayVideo } from "@/components/landing/autoplay-video";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Logo } from "@/components/brand/logo";
-import { APP_DOWNLOAD_PATH } from "@/lib/app-download";
+import { AppDownloadLink } from "@/components/landing/download-link";
 import { PENIKO_NAME, PENIKO_URL } from "@/lib/brand";
 
 const webScreens = [
@@ -216,10 +216,10 @@ function LandingPageContent() {
           </nav>
           <div className="flex items-center gap-2">
             <Button variant="outline" asChild className="rounded-full px-3 sm:px-4">
-              <a href={APP_DOWNLOAD_PATH} download aria-label="Download the app">
+              <AppDownloadLink aria-label="Download the app">
                 <DownloadSimple className="h-4 w-4" />
                 <span className="hidden sm:inline">Get the app</span>
-              </a>
+              </AppDownloadLink>
             </Button>
             <Button variant="ghost" asChild className="hidden sm:inline-flex">
               <Link href="/login">Log in</Link>
@@ -257,9 +257,9 @@ function LandingPageContent() {
                 </Link>
               </Button>
               <Button size="lg" variant="outline" asChild className="rounded-full px-6">
-                <a href={APP_DOWNLOAD_PATH} download>
+                <AppDownloadLink>
                   <DownloadSimple className="mr-1 h-4 w-4" /> Download the app
-                </a>
+                </AppDownloadLink>
               </Button>
               <Link
                 href="#how-it-works"
@@ -695,9 +695,9 @@ function LandingPageContent() {
                 Google Play listing is on its way.
               </p>
               <Button variant="outline" size="sm" asChild className="mt-4 rounded-full">
-                <a href={APP_DOWNLOAD_PATH} download>
+                <AppDownloadLink>
                   <DownloadSimple className="h-4 w-4" /> Download the app
-                </a>
+                </AppDownloadLink>
               </Button>
             </div>
           </div>
@@ -736,9 +736,9 @@ function LandingPageContent() {
                 </Link>
               </Button>
               <Button size="lg" variant="outline" asChild className="rounded-full px-6">
-                <a href={APP_DOWNLOAD_PATH} download>
+                <AppDownloadLink>
                   <DownloadSimple className="mr-1 h-4 w-4" /> Download the app
-                </a>
+                </AppDownloadLink>
               </Button>
             </div>
           </div>
@@ -783,9 +783,9 @@ function LandingPageContent() {
                 Pricing
               </a>
             )}
-            <a href={APP_DOWNLOAD_PATH} download className="hover:text-foreground hover:underline">
+            <AppDownloadLink className="hover:text-foreground hover:underline">
               Download the app
-            </a>
+            </AppDownloadLink>
             <Link href="/privacy-policy" className="hover:text-foreground hover:underline">
               Privacy Policy
             </Link>

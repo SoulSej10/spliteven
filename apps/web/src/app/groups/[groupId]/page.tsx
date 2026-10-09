@@ -149,19 +149,19 @@ function GroupDetailContent({ groupId }: { groupId: string }) {
     <AppShell>
       <BreadcrumbSync label={group.name} />
       <BackLink href="/groups" label="Back to groups" />
-      <div className="mb-6 rounded-2xl border border-border/60 bg-card p-5 shadow-sm">
+      <div className="mb-4 rounded-2xl border border-border/60 bg-card p-4 shadow-sm lg:mb-6 lg:p-5">
         <div className="flex items-start justify-between gap-3">
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 flex-1 items-center gap-3">
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-light text-2xl">
               <AppIcon value={group.icon} fallback="👥" size={26} />
             </span>
-            <div>
-              <h1 className="text-xl font-semibold tracking-tight">{group.name}</h1>
+            <div className="min-w-0">
+              <h1 className="line-clamp-2 break-words text-xl font-semibold leading-tight tracking-tight">{group.name}</h1>
               <p className="text-sm text-muted-foreground">{group.currency} · {members.length} members</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
             <Button
               size="icon"
               variant="outline"
@@ -301,7 +301,7 @@ function GroupDetailContent({ groupId }: { groupId: string }) {
       </div>
 
       <Tabs defaultValue="overview">
-        <TabsList className="mb-4">
+        <TabsList className="mb-4 w-full justify-start group-data-horizontal/tabs:h-10 lg:w-fit [&_button]:px-1.5 [&_button]:text-[12.5px] sm:[&_button]:px-3 sm:[&_button]:text-sm">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="expenses">Expenses</TabsTrigger>
           <TabsTrigger value="balances">Balances</TabsTrigger>

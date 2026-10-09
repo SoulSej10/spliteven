@@ -254,7 +254,7 @@ function InsightsContent() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Insights</h1>
-          <p className="text-sm text-muted-foreground">Where your money is going</p>
+          <p className="hidden text-sm text-muted-foreground sm:block">Where your money is going</p>
         </div>
         {!isLoading && !isError && !locked && (
           <SegmentedTabs

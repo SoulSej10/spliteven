@@ -21,14 +21,14 @@ export function GroupCard({ group }: { group: GroupWithMembers }) {
   const isNegative = balance < -0.005;
 
   return (
-    <Link href={`/groups/${group.id}`}>
+    <Link href={`/groups/${group.id}`} className="block min-w-0">
       <Card className="group rounded-2xl border-border/60 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
-        <CardContent className="flex items-center gap-4 pt-6">
+        <CardContent className="flex items-center gap-3 sm:gap-4">
           <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-light text-2xl">
             <AppIcon value={group.icon} fallback="👥" size={26} />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="truncate font-medium">{group.name}</p>
+            <p className="truncate font-semibold">{group.name}</p>
             <div className="mt-1 flex -space-x-2">
               {group.group_members.slice(0, 5).map((m) => (
                 <Avatar key={m.id} className="h-6 w-6 border-2 border-card">
@@ -46,7 +46,7 @@ export function GroupCard({ group }: { group: GroupWithMembers }) {
             ) : (
               <>
                 <p
-                  className={`text-lg font-semibold tabular-nums ${
+                  className={`text-base font-bold tabular-nums sm:text-lg ${
                     isPositive ? "text-positive" : isNegative ? "text-negative" : "text-muted-foreground"
                   }`}
                 >

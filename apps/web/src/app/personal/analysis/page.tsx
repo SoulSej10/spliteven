@@ -143,7 +143,7 @@ export default function PersonalAnalysisPage() {
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold tracking-tight">Analysis</h1>
-        <div className="flex items-center gap-3">
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:gap-3">
           <div className="flex items-center gap-1 rounded-lg border border-border px-1">
             <button
               type="button"
@@ -152,7 +152,7 @@ export default function PersonalAnalysisPage() {
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
-            <span className="min-w-32 text-center text-sm font-medium">
+            <span className="min-w-28 text-center text-sm font-medium">
               {MONTH_NAMES[calendarDate.getMonth()]} {calendarDate.getFullYear()}
             </span>
             <button
@@ -165,7 +165,7 @@ export default function PersonalAnalysisPage() {
             </button>
           </div>
           <Select value={viewType} onValueChange={(v) => setViewType(v as ViewType)}>
-            <SelectTrigger className="w-44">
+            <SelectTrigger className="w-full sm:w-44">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

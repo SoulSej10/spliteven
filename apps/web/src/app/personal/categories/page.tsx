@@ -90,7 +90,7 @@ export default function PersonalCategoriesPage() {
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-semibold tracking-tight">Categories</h1>
-        <p className="text-sm text-muted-foreground">Group your transactions and set budgets by category.</p>
+        <p className="hidden text-sm text-muted-foreground sm:block">Group your transactions and set budgets by category.</p>
       </div>
 
       {isLoading ? (

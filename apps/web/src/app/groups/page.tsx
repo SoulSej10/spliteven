@@ -3,6 +3,7 @@
 import { AuthGuard } from "@/components/auth/auth-guard";
 import { AppShell } from "@/components/app-shell/top-nav";
 import { CreateGroupDialog } from "@/components/groups/create-group-dialog";
+import { GroupCard } from "@/components/groups/group-card";
 import { GroupTableRow } from "@/components/groups/group-table-row";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -24,7 +25,7 @@ function GroupsContent() {
 
   return (
     <AppShell>
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-5 flex items-center justify-between gap-3 lg:mb-8">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">
             {groups?.length ? "Your groups" : "Groups"}
@@ -72,7 +73,16 @@ function GroupsContent() {
       )}
 
       {!isLoading && !isError && groups && groups.length > 0 && (
-        <div className="rounded-xl border border-border bg-card shadow-sm">
+        <div className="flex flex-col gap-3 md:hidden">
+          {pageItems.map((g) => (
+            <GroupCard key={g.id} group={g} />
+          ))}
+          <TablePagination page={page} pageCount={pageCount} pageSize={pageSize} totalCount={totalCount} onPageChange={setPage} />
+        </div>
+      )}
+
+      {!isLoading && !isError && groups && groups.length > 0 && (
+        <div className="hidden rounded-xl border border-border bg-card shadow-sm md:block">
           <Table>
             <TableHeader>
               <TableRow>

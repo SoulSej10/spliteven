@@ -162,3 +162,53 @@
     font-size: 106.25%;
   }
 }
+
+/* ---- Phone / installed-app behaviour (below lg) ---- */
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    overscroll-behavior-y: none;
+  }
+  /* Match the phone app's rounder cards and controls. */
+  @media (max-width: 1023px) {
+    :root {
+      --radius: 0.65rem;
+    }
+    /* 16px+ inputs stop iOS Safari zooming the page when a field is focused. */
+    input:not([type="checkbox"]):not([type="radio"]),
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+    input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+    select {
+      min-height: 2.75rem;
+    }
+    main h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    button,
+    [role="button"],
+    a {
+      touch-action: manipulation;
+    }
+  }
+  /* Installed to the home screen: no text selection on chrome, content clears the notch. */
+  @media (display-mode: standalone) {
+    body {
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    input,
+    textarea,
+    [contenteditable] {
+      -webkit-user-select: text;
+      user-select: text;
+    }
+  }
+}

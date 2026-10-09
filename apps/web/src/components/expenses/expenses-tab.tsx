@@ -153,7 +153,25 @@ export function ExpensesTab({
       )}
 
       {!isError && filtered.length > 0 && (
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+        <div className="flex flex-col gap-2 md:hidden">
+          {pageItems.map((expense) => (
+            <ExpenseCard
+              key={expense.id}
+              expense={expense}
+              groupId={groupId}
+              groupCurrency={groupCurrency}
+              members={members}
+              currentUserId={currentUserId}
+              payerName={memberName(expense.paid_by)}
+              onDelete={() => onDelete(expense.id)}
+            />
+          ))}
+          <TablePagination page={page} pageCount={pageCount} pageSize={pageSize} totalCount={totalCount} onPageChange={setPage} />
+        </div>
+      )}
+
+      {!isError && filtered.length > 0 && (
+        <div className="hidden overflow-hidden rounded-xl border border-border bg-card shadow-sm md:block">
           <Table>
             <TableHeader>
               <TableRow>
@@ -263,33 +281,89 @@ function ExpenseRow({
       </TableCell>
 
       <TableCell>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="bg-muted text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-              aria-label={`Delete ${expense.description}`}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent className="rounded-2xl">
-            <AlertDialogHeader>
-              <AlertDialogTitle>Delete this expense?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This recalculates balances for everyone in the group. This can&apos;t be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={onDelete} className="bg-destructive text-white">
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <DeleteExpenseButton description={expense.description} onDelete={onDelete} />
       </TableCell>
     </TableRow>
+  );
+}
+
+function DeleteExpenseButton({ description, onDelete }: { description: string; onDelete: () => void }) {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button
+          size="icon"
+          variant="ghost"
+          className="bg-muted text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+          aria-label={`Delete ${description}`}
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent className="rounded-2xl">
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete this expense?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This recalculates balances for everyone in the group. This can&apos;t be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={onDelete} className="bg-destructive text-white">
+            Delete
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+/** Phone layout of one expense, like a row in the phone app's expense list. */
+function ExpenseCard({
+  expense,
+  groupId,
+  groupCurrency,
+  members,
+  currentUserId,
+  payerName,
+  onDelete,
+}: {
+  expense: ExpenseWithShares;
+  groupId: string;
+  groupCurrency: string;
+  members: { user_id: string; users: User | null }[];
+  currentUserId: string;
+  payerName: string;
+  onDelete: () => void;
+}) {
+  const myShare = expense.expense_shares.find((s) => s.user_id === currentUserId)?.share_amount ?? 0;
+
+  return (
+    <div className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3.5 shadow-sm">
+      <div className="min-w-0 flex-1">
+        <ExpenseFormDialog
+          trigger={
+            <button className="flex w-full min-w-0 items-center gap-1.5 text-left text-sm font-semibold">
+              <span className="truncate">{expense.description}</span>
+              {expense.is_recurring && <Repeat className="h-3.5 w-3.5 shrink-0 text-primary-deep" />}
+            </button>
+          }
+          groupId={groupId}
+          groupCurrency={groupCurrency}
+          members={members}
+          currentUserId={currentUserId}
+          existingExpense={expense}
+        />
+        <p className="text-xs leading-snug text-muted-foreground">
+          Paid by {payerName} · {formatDate(expense.expense_date)}
+          {expense.category ? ` · ${expense.category}` : ""}
+        </p>
+      </div>
+      <div className="shrink-0 text-right">
+        <p className="text-sm font-bold tabular-nums">{formatMoney(expense.amount, expense.currency)}</p>
+        <p className="text-[11px] text-muted-foreground tabular-nums">Your share {formatMoney(myShare, expense.currency)}</p>
+      </div>
+      <DeleteExpenseButton description={expense.description} onDelete={onDelete} />
+    </div>
   );
 }

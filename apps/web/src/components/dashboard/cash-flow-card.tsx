@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowDownLeft, ArrowUpRight, TrendDown, TrendUp } from "@phosphor-icons/react";
+import { ArrowDownLeft, ArrowUpRight, Eye, EyeSlash, TrendDown, TrendUp } from "@phosphor-icons/react";
+import { MASKED, useHideAmounts } from "@/hooks/use-hide-amounts";
 import { usePersonalTotals } from "@/hooks/use-personal-totals";
 import { formatMoney } from "@/lib/format";
 
@@ -14,6 +15,7 @@ const BAR_AREA_HEIGHT = 96;
  */
 export function CashFlowCard() {
   const totals = usePersonalTotals();
+  const { hidden, toggle } = useHideAmounts();
   if (!totals) return null;
   const { months, current, base: currency, missing } = totals;
   const total = totals.total.total;
@@ -21,41 +23,53 @@ export function CashFlowCard() {
 
   const positive = current.net >= 0;
   const TrendIcon = positive ? TrendUp : TrendDown;
+  const show = (amount: number) => (hidden ? MASKED : formatMoney(amount, currency));
   const barHeight = (value: number) => (value > 0 ? Math.max(4, (value / max) * BAR_AREA_HEIGHT) : 2);
 
   return (
-    <div className="mb-6 overflow-hidden rounded-2xl border bg-primary-light text-primary-deep">
-      <div className="grid gap-6 p-6 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+    <div className="mb-4 overflow-hidden rounded-2xl border bg-primary-light text-primary-deep lg:mb-6">
+      <div className="grid gap-4 p-5 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-6 lg:p-6">
         <div className="space-y-5">
           <div>
-            <p className="text-xs font-medium opacity-70">{missing.length > 0 ? "Total balance · set rates in Settings" : "Total balance"}</p>
-            <p className="mt-1 text-3xl font-semibold tabular-nums">{formatMoney(total, currency)}</p>
-            <span className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1 text-xs font-semibold">
-              <TrendIcon className="h-3.5 w-3.5" weight="bold" />
+            <div className="flex items-center gap-1.5">
+              <p className="text-[11px] font-medium opacity-70">Total balance</p>
+              <button
+                type="button"
+                onClick={toggle}
+                aria-label={hidden ? "Show balances" : "Hide balances"}
+                className="flex h-6 w-6 items-center justify-center rounded-full active:bg-primary-deep/10"
+              >
+                {hidden ? <EyeSlash className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+              {missing.length > 0 && <p className="truncate text-[10px] opacity-70">· set rates in Settings</p>}
+            </div>
+            <p className="mt-0.5 truncate text-3xl font-extrabold tabular-nums">{show(total)}</p>
+            <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-card/80 px-2.5 py-0.5 text-[10px] font-bold">
+              <TrendIcon className="h-3 w-3" weight="bold" />
               {positive ? "+" : "-"}
-              {formatMoney(Math.abs(current.net), currency)} this month
+              {show(Math.abs(current.net))} this month
             </span>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div className="flex items-center gap-2.5 rounded-xl bg-card/60 px-3 py-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-card/80">
+            <div className="flex min-w-0 items-center gap-2 rounded-xl bg-card/60 px-2.5 py-2.5">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-card/80">
                 <ArrowDownLeft className="h-4 w-4" />
               </span>
               <div className="min-w-0">
                 <p className="text-[11px] opacity-70">Income (mo.)</p>
-                <p className="truncate text-sm font-semibold tabular-nums">
-                  {formatMoney(current.income, currency)}
+                <p className="truncate text-[13px] font-bold tabular-nums">
+                  {show(current.income)}
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2.5 rounded-xl bg-card/60 px-3 py-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-card/80">
+            <div className="flex min-w-0 items-center gap-2 rounded-xl bg-card/60 px-2.5 py-2.5">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-card/80">
                 <ArrowUpRight className="h-4 w-4" />
               </span>
               <div className="min-w-0">
                 <p className="text-[11px] opacity-70">Expense (mo.)</p>
-                <p className="truncate text-sm font-semibold tabular-nums">
-                  {formatMoney(current.expense, currency)}
+                <p className="truncate text-[13px] font-bold tabular-nums">
+                  {show(current.expense)}
                 </p>
               </div>
             </div>

@@ -57,9 +57,9 @@ export default function PersonalRecordsPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3 lg:mb-6">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Transactions</h1>
+          <h1 className="text-xl font-bold tracking-tight lg:text-2xl lg:font-semibold">Transactions</h1>
           <p className="text-sm text-muted-foreground">
             {isLoading ? "Loading…" : `${transactions?.length ?? 0} transaction${transactions?.length === 1 ? "" : "s"}`}
           </p>
@@ -97,7 +97,43 @@ export default function PersonalRecordsPage() {
       )}
 
       {!isLoading && (accounts?.length ?? 0) > 0 && (transactions?.length ?? 0) > 0 && (
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+        <div className="flex flex-col gap-2 md:hidden">
+          {pageItems.map((tx) => {
+            const account = accounts?.find((a) => a.id === tx.account_id);
+            const isCredit = tx.kind === "income" || tx.kind === "group_reimbursement";
+            const isDebit = tx.kind === "expense" || tx.kind === "group_advance";
+            return (
+              <div key={tx.id} className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-sm">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-muted">
+                  <TransactionIcon kind={tx.kind} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold">{transactionLabel(tx, categoryLabel(tx.category_id), accountName)}</p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {formatDate(tx.occurred_at)} · {accountName(tx.account_id)}
+                  </p>
+                  {tx.note && <p className="truncate text-xs text-muted-foreground">{tx.note}</p>}
+                </div>
+                <p className={`shrink-0 text-sm font-bold tabular-nums ${isCredit ? "text-positive" : isDebit ? "text-negative" : ""}`}>
+                  {isCredit ? "+" : isDebit ? "-" : ""}
+                  {formatMoney(tx.amount, account?.currency ?? "USD")}
+                </p>
+                <button
+                  onClick={() => onDelete(tx.id)}
+                  className="-mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted-foreground active:bg-muted active:text-destructive"
+                  aria-label="Delete transaction"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            );
+          })}
+          <TablePagination page={page} pageCount={pageCount} pageSize={pageSize} totalCount={totalCount} onPageChange={setPage} />
+        </div>
+      )}
+
+      {!isLoading && (accounts?.length ?? 0) > 0 && (transactions?.length ?? 0) > 0 && (
+        <div className="hidden overflow-hidden rounded-xl border border-border bg-card shadow-sm md:block">
           <Table>
             <TableHeader>
               <TableRow>

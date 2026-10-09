@@ -72,7 +72,7 @@ export default function PersonalBudgetsPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Budgets</h1>
-          <p className="text-sm text-muted-foreground">This month&apos;s spending against your limits.</p>
+          <p className="hidden text-sm text-muted-foreground sm:block">This month&apos;s spending against your limits.</p>
         </div>
         <AddBudgetDialog />
       </div>

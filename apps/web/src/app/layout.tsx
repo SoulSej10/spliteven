@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
@@ -17,9 +17,23 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  applicationName: "SplitEven",
+  appleWebApp: { capable: true, title: "SplitEven", statusBarStyle: "default" },
+  formatDetection: { telephone: false },
+  icons: { apple: "/icons/apple-touch-icon.png" },
   title: "SplitEven - Split expenses, stay even",
   description:
     "Track shared expenses with roommates, trips, and groups, and manage your own accounts, budgets, and spending alongside them. See who owes whom in real time, settle up in a tap, and stay on top of your money either way.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f4f5f3" },
+    { media: "(prefers-color-scheme: dark)", color: "#16211b" },
+  ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
