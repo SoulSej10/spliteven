@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { BottomActionBar } from "@/components/ui/BottomActionBar";
 import { getSupabaseClient } from "@/lib/supabase/client";
+import { signInWithGoogle } from "@/lib/google-signin";
 import { useBiometricSignIn } from "@/hooks/use-biometric-signin";
 import {
   canOfferBiometricLogin,
@@ -41,7 +42,19 @@ async function offerBiometricLogin(email: string, password: string) {
 
 export default function LoginScreen() {
   const [submitting, setSubmitting] = useState(false);
+  const [googleBusy, setGoogleBusy] = useState(false);
   const biometric = useBiometricSignIn();
+
+  async function onGoogle() {
+    setGoogleBusy(true);
+    try {
+      const result = await signInWithGoogle();
+      if (result === "success") router.replace("/");
+      else if (result !== "cancelled") Alert.alert("Google sign-in", result.error);
+    } finally {
+      setGoogleBusy(false);
+    }
+  }
   const { handleSubmit, formState, setValue, watch } = useForm<LogInInput>({
     resolver: zodResolver(logInSchema),
     defaultValues: { email: "", password: "" },
@@ -111,6 +124,9 @@ export default function LoginScreen() {
       <BottomActionBar className="flex-col gap-3">
         <Button onPress={handleSubmit(onSubmit)} loading={submitting} size="lg">
           Log in
+        </Button>
+        <Button variant="outline" onPress={() => void onGoogle()} loading={googleBusy} size="lg">
+          Continue with Google
         </Button>
         {biometric.available && (
           <Button variant="outline" onPress={() => void biometric.signIn()} loading={biometric.busy} size="lg">

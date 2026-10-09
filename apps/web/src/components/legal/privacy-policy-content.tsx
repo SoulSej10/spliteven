@@ -17,7 +17,7 @@ function Section({ title, children }: { title: string; children: string }) {
 export function PrivacyPolicyContent() {
   return (
     <div className="space-y-6">
-      <p className="text-xs text-muted-foreground">Last updated: 2026</p>
+      <p className="text-xs text-muted-foreground">Last updated: October 2026</p>
 
       <Section title="Introduction">
         This policy explains what information SplitEven collects, why, and what control you have over it.
@@ -32,6 +32,10 @@ export function PrivacyPolicyContent() {
         use the app: the groups you create or join, the expenses and settlements you log in those groups,
         and your personal accounts, transactions, budgets, and categories. Anything you type into a note,
         description, or category name is stored as you typed it.
+      </Section>
+
+      <Section title="Sign in with Google">
+        {"If you choose \"Continue with Google\", SplitEven receives only your Google email address, name and profile picture from Google, and nothing else from your Google account. It is used solely to create and sign you in to your SplitEven account, is handled like any other account data described in this policy, and SplitEven's use of information received from Google APIs adheres to the Google API Services User Data Policy, including its Limited Use requirements. You can stop using Google sign-in any time by deleting your account."}
       </Section>
 
       <Section title="Information collected automatically">
