@@ -26,8 +26,9 @@ import { EditProfileSheet } from "./EditProfileSheet";
 import { UpdateDialog } from "@/components/UpdatePrompt";
 import { fetchAvailableUpdate, installedVersion } from "@/lib/app-update";
 import { AppearancePicker } from "./AppearancePicker";
-import { BiometricToggle } from "./BiometricToggle";
+import { BiometricLoginToggle, BiometricToggle } from "./BiometricToggle";
 import { setBiometricEnabled } from "@/lib/biometrics";
+import { disableBiometricLogin } from "@/lib/biometric-login";
 import {
   usePersonalAccounts,
   usePersonalCategories,
@@ -150,6 +151,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
       const supabase = getSupabaseClient();
       const { error } = await supabase.auth.updateUser({ password: newPassword });
       if (error) throw error;
+      await disableBiometricLogin(); // the saved password is now out of date
       setNewPassword("");
       setConfirmPassword("");
       setShowPasswordForm(false);
@@ -501,6 +503,7 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
         </Card>
 
         <BiometricToggle />
+        <BiometricLoginToggle />
 
         <Card>
           <Text className="mb-3 font-semibold text-neutral-900 dark:text-neutral-100">Appearance</Text>

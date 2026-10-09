@@ -55,9 +55,11 @@ function CategoryDonut({
 }) {
   return (
     <Card className="gap-4">
-      <View className="flex-row items-center justify-between">
-        <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">{title}</Text>
-        <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+      <View className="flex-row items-center justify-between gap-3">
+        <Text className="flex-1 text-sm font-semibold text-neutral-900 dark:text-neutral-100" numberOfLines={1}>
+          {title}
+        </Text>
+        <Text className="shrink-0 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
           {formatMoney(total, currency)}
         </Text>
       </View>

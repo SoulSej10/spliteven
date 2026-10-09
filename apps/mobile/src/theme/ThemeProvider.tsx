@@ -1,9 +1,10 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
-import { View } from "react-native";
+import { View, useWindowDimensions } from "react-native";
 import { useColorScheme } from "nativewind";
 import { THEME_TEMPLATES, resolveTheme, type AccentId, type ThemeId } from "@evensplit/shared";
 import { saveAppearance, type StoredAppearance } from "@/lib/appearance";
 import { applyPalette } from "./palette";
+import { buildResponsiveVars } from "./responsive";
 import { buildThemeVars } from "./vars";
 
 interface ThemeContextValue {
@@ -30,6 +31,8 @@ export function AppThemeProvider({ initial, children }: { initial: StoredAppeara
 
   const resolved = useMemo(() => resolveTheme(themeId, accentId, scheme), [themeId, accentId, scheme]);
   const themeVars = useMemo(() => buildThemeVars(resolved), [resolved]);
+  const { width } = useWindowDimensions();
+  const responsiveVars = useMemo(() => buildResponsiveVars(width), [width]);
 
   // Before any child renders, so everything reading `palette` sees this theme.
   applyPalette(resolved);
@@ -60,7 +63,7 @@ export function AppThemeProvider({ initial, children }: { initial: StoredAppeara
 
   return (
     <ThemeContext.Provider value={value}>
-      <View style={[{ flex: 1 }, themeVars]}>{children}</View>
+      <View style={[{ flex: 1 }, themeVars, responsiveVars]}>{children}</View>
     </ThemeContext.Provider>
   );
 }

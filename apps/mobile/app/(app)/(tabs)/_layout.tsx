@@ -35,11 +35,13 @@ export default function TabsLayout() {
           tabBarInactiveTintColor: palette.muted,
           tabBarShowLabel: true,
           tabBarAllowFontScaling: false,
-          tabBarLabelStyle: { fontSize: 10, fontFamily: "Bricolage_600SemiBold" },
+          tabBarLabelStyle: { fontSize: 10, lineHeight: 13, marginTop: 1, fontFamily: "Bricolage_600SemiBold" },
           tabBarStyle: {
-            height: 56 + insets.bottom,
-            paddingTop: 8,
-            paddingBottom: insets.bottom || 8,
+            // Some phones report no bottom inset, which left the labels hard against the screen edge:
+            // keep a minimum gap and size the bar from it so nothing is clipped.
+            height: 48 + Math.max(insets.bottom, 12),
+            paddingTop: 6,
+            paddingBottom: Math.max(insets.bottom, 12),
             backgroundColor: palette.card,
             borderTopWidth: 1,
             borderTopColor: palette.border,

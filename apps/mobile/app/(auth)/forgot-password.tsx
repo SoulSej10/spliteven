@@ -11,10 +11,12 @@ import { passwordResetRequestSchema, type PasswordResetRequestInput } from "@eve
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { getSupabaseClient } from "@/lib/supabase/client";
+import { useBiometricSignIn } from "@/hooks/use-biometric-signin";
 import { palette } from "@/theme/palette";
 
 export default function ForgotPasswordScreen() {
   const [sent, setSent] = useState(false);
+  const biometric = useBiometricSignIn();
   const { colorScheme } = useColorScheme();
   const iconColor = palette.ink;
   const { handleSubmit, formState, setValue, watch } = useForm<PasswordResetRequestInput>({
@@ -67,6 +69,14 @@ export default function ForgotPasswordScreen() {
           <Button onPress={handleSubmit(onSubmit)} size="lg">
             Send reset link
           </Button>
+          {biometric.available && (
+            <>
+              <Text className="text-center text-xs text-neutral-500">or</Text>
+              <Button variant="outline" size="lg" onPress={() => void biometric.signIn("reset")} loading={biometric.busy}>
+                Reset with fingerprint (no email)
+              </Button>
+            </>
+          )}
         </View>
       ) : (
         <Button onPress={() => router.replace("/(auth)/login")} size="lg">

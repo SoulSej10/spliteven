@@ -53,21 +53,17 @@ module.exports = {
         bold: ["Bricolage_700Bold"],
         extrabold: ["Bricolage_800ExtraBold"],
       },
-      // Text was reading too small across the app, so the whole scale was
-      // bumped ~12.5% over Tailwind's RN defaults - that turned out to be
-      // too much ("overdid it"), so this dials it back to roughly half
-      // that bump (~6%) instead of reverting all the way to the
-      // unreadably-small defaults. Mirrors the equivalent, also-halved
-      // root font-size bump on web.
+      // Type sizes are variables set from the real window width (src/theme/responsive.ts), so
+      // text scales a little with the screen instead of being one fixed size on every phone.
       fontSize: {
-        xs: ["13px", { lineHeight: "17px" }],
-        sm: ["15px", { lineHeight: "20px" }],
-        base: ["17px", { lineHeight: "25px" }],
-        lg: ["19px", { lineHeight: "27px" }],
-        xl: ["21px", { lineHeight: "28px" }],
-        "2xl": ["26px", { lineHeight: "31px" }],
-        "3xl": ["32px", { lineHeight: "36px" }],
-        "4xl": ["38px", { lineHeight: "42px" }],
+        xs: ["var(--fs-xs)", { lineHeight: "var(--lh-xs)" }],
+        sm: ["var(--fs-sm)", { lineHeight: "var(--lh-sm)" }],
+        base: ["var(--fs-base)", { lineHeight: "var(--lh-base)" }],
+        lg: ["var(--fs-lg)", { lineHeight: "var(--lh-lg)" }],
+        xl: ["var(--fs-xl)", { lineHeight: "var(--lh-xl)" }],
+        "2xl": ["var(--fs-2xl)", { lineHeight: "var(--lh-2xl)" }],
+        "3xl": ["var(--fs-3xl)", { lineHeight: "var(--lh-3xl)" }],
+        "4xl": ["var(--fs-4xl)", { lineHeight: "var(--lh-4xl)" }],
       },
       // The whole radius scale follows the theme template (Classic is the
       // tightest, Sakura Milk the bubbliest); `rounded-full` (circles,

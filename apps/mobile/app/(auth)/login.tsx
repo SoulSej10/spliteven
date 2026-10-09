@@ -9,9 +9,39 @@ import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { BottomActionBar } from "@/components/ui/BottomActionBar";
 import { getSupabaseClient } from "@/lib/supabase/client";
+import { useBiometricSignIn } from "@/hooks/use-biometric-signin";
+import {
+  canOfferBiometricLogin,
+  declineBiometricLogin,
+  enableBiometricLogin,
+  getBiometricLoginState,
+} from "@/lib/biometric-login";
+
+/** After a password sign-in, offers to use the fingerprint next time (once, unless they change their mind in Settings). */
+async function offerBiometricLogin(email: string, password: string) {
+  if ((await getBiometricLoginState()) !== "off") return;
+  if (!(await canOfferBiometricLogin())) return;
+  const turnOn = await new Promise<boolean>((resolve) =>
+    Alert.alert(
+      "Sign in with your fingerprint?",
+      "Next time, use your fingerprint or face instead of typing your password. Your password is kept encrypted on this phone, and you can turn this off in Settings.",
+      [
+        { text: "Not now", style: "cancel", onPress: () => resolve(false) },
+        { text: "Turn on", onPress: () => resolve(true) },
+      ],
+      { cancelable: false }
+    )
+  );
+  if (!turnOn) {
+    await declineBiometricLogin();
+    return;
+  }
+  await enableBiometricLogin(email, password);
+}
 
 export default function LoginScreen() {
   const [submitting, setSubmitting] = useState(false);
+  const biometric = useBiometricSignIn();
   const { handleSubmit, formState, setValue, watch } = useForm<LogInInput>({
     resolver: zodResolver(logInSchema),
     defaultValues: { email: "", password: "" },
@@ -23,6 +53,7 @@ export default function LoginScreen() {
       const supabase = getSupabaseClient();
       const { error } = await supabase.auth.signInWithPassword(values);
       if (error) throw error;
+      await offerBiometricLogin(values.email, values.password);
       router.replace("/");
     } catch (err) {
       Alert.alert("Could not sign in", err instanceof Error ? err.message : "Try again");
@@ -81,6 +112,11 @@ export default function LoginScreen() {
         <Button onPress={handleSubmit(onSubmit)} loading={submitting} size="lg">
           Log in
         </Button>
+        {biometric.available && (
+          <Button variant="outline" onPress={() => void biometric.signIn()} loading={biometric.busy} size="lg">
+            Sign in with fingerprint
+          </Button>
+        )}
       </BottomActionBar>
     </KeyboardAvoidingView>
   );

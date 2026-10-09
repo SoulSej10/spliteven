@@ -23,16 +23,21 @@ export function CashFlowCard() {
   return (
     <View className="mb-4 overflow-hidden rounded-card border border-neutral-200 bg-primary-light">
       <View className="gap-4 px-5 py-5">
-        <View className="flex-row items-start justify-between">
-          <View className="flex-1">
-            <Text className="text-xs font-medium text-primary-deep/80">{missing.length > 0 ? "Total balance · set rates in Settings" : "Total balance"}</Text>
-            <Text className="mt-1 text-3xl font-extrabold text-primary-deep" numberOfLines={1} adjustsFontSizeToFit>
-              {formatMoney(total, currency)}
-            </Text>
+        <View>
+          <View className="flex-row items-center gap-1.5">
+            <Text className="text-[11px] font-medium text-primary-deep/80">Total balance</Text>
+            {missing.length > 0 && (
+              <Text className="text-[10px] text-primary-deep/70" numberOfLines={1}>
+                · set rates in Settings
+              </Text>
+            )}
           </View>
-          <View className="flex-row items-center gap-1.5 rounded-pill bg-surface/80 px-3 py-1.5">
-            <TrendIcon color={palette.primary} size={14} weight="bold" />
-            <Text className="text-xs font-bold text-primary-deep">
+          <Text className="mt-0.5 text-3xl font-extrabold text-primary-deep" numberOfLines={1} adjustsFontSizeToFit>
+            {formatMoney(total, currency)}
+          </Text>
+          <View className="mt-2 flex-row items-center gap-1 self-start rounded-pill bg-surface/80 px-2 py-0.5">
+            <TrendIcon color={palette.primary} size={11} weight="bold" />
+            <Text className="text-[10px] font-bold text-primary-deep" numberOfLines={1}>
               {positive ? "+" : "-"}
               {formatMoney(Math.abs(current.net), currency)} this month
             </Text>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import * as Linking from "expo-linking";
 import { LockKey } from "phosphor-react-native";
 import { Button } from "@/components/ui/Button";
@@ -9,6 +9,7 @@ import { Text } from "@/components/ui/typography";
 import { applyAuthCallbackUrl, deepLinkReportsError, recentDeepLink } from "@/lib/supabase/authDeepLink";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import { isPasswordPwned } from "@/lib/pwned-password";
+import { disableBiometricLogin, enableBiometricLogin } from "@/lib/biometric-login";
 import { palette } from "@/theme/palette";
 import { describeWeakPassword } from "@evensplit/shared";
 
@@ -21,7 +22,10 @@ type LinkState = "checking" | "ready" | "invalid";
  * link it says so and offers to send a new one, instead of an unmatched-route page.
  */
 export default function ResetPasswordScreen() {
-  const [state, setState] = useState<LinkState>("checking");
+  // Opened from "Reset with fingerprint": the scan already signed them in, so no email link is involved.
+  const { via } = useLocalSearchParams<{ via?: string }>();
+  const viaBiometric = via === "biometric";
+  const [state, setState] = useState<LinkState>(viaBiometric ? "ready" : "checking");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -49,6 +53,8 @@ export default function ResetPasswordScreen() {
       }
     }
 
+    if (viaBiometric) return;
+
     // The link usually arrived before this screen mounted, so read the remembered one first.
     const remembered = recentDeepLink();
     if (remembered) void handle(remembered);
@@ -66,7 +72,7 @@ export default function ResetPasswordScreen() {
       clearTimeout(timeout);
       subscription.remove();
     };
-  }, []);
+  }, [viaBiometric]);
 
   async function onSubmit() {
     if (password.length < 8) {
@@ -94,6 +100,15 @@ export default function ResetPasswordScreen() {
 
       const { error: updateError } = await getSupabaseClient().auth.updateUser({ password });
       if (updateError) throw updateError;
+      if (viaBiometric) {
+        // Re-save the new password behind the fingerprint so the next scan works with it.
+        const { data } = await getSupabaseClient().auth.getUser();
+        const email = data.user?.email;
+        if (email) await enableBiometricLogin(email, password);
+        else await disableBiometricLogin();
+      } else {
+        await disableBiometricLogin(); // the saved password is now out of date
+      }
       Alert.alert("Password updated", "You're signed in with your new password.", [
         { text: "Continue", onPress: () => router.replace("/") },
       ]);
@@ -116,6 +131,7 @@ export default function ResetPasswordScreen() {
             <LockKey color={palette.primary} size={24} />
           </View>
           <Text className="text-xl font-bold text-neutral-900 dark:text-neutral-100">Choose a new password</Text>
+          {viaBiometric && <Text className="text-sm text-neutral-500">Verified with your fingerprint</Text>}
         </View>
 
         {state === "checking" && (
