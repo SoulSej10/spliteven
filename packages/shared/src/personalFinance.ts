@@ -1,5 +1,5 @@
 import { localDateKey, localMonthKey } from "./dateKeys";
-import type { PersonalAccount, PersonalBudget, PersonalCategory, PersonalTransaction, UUID } from "./types";
+import type { BudgetPeriod, PersonalAccount, PersonalBudget, PersonalCategory, PersonalTransaction, UUID } from "./types";
 
 /**
  * Pure, dependency-free derived-data helpers for the personal budgeting
@@ -161,9 +161,34 @@ export function filterTransactionsForMonth<T extends Pick<PersonalTransaction, "
   return transactions.filter((tx) => localMonthKey(tx.occurred_at) === monthKey);
 }
 
+/** The calendar months (YYYY-MM keys) a budget period covers around `now`: this month, this quarter, or this year. */
+export function budgetPeriodMonthKeys(period: BudgetPeriod, now: Date = new Date()): string[] {
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const first = period === "yearly" ? 0 : period === "quarterly" ? Math.floor(month / 3) * 3 : month;
+  const count = period === "yearly" ? 12 : period === "quarterly" ? 3 : 1;
+  return Array.from({ length: count }, (_, i) => `${year}-${String(first + i + 1).padStart(2, "0")}`);
+}
+
+/** Human label for a period ("month", "quarter", "year"), for sentences like "spent this quarter". */
+export function budgetPeriodNoun(period: BudgetPeriod): string {
+  return period === "yearly" ? "year" : period === "quarterly" ? "quarter" : "month";
+}
+
+/** Transactions that fall inside the budget period around `now`, by local calendar date. */
+export function filterTransactionsForBudgetPeriod<T extends Pick<PersonalTransaction, "occurred_at">>(
+  transactions: T[],
+  period: BudgetPeriod,
+  now: Date = new Date()
+): T[] {
+  const keys = new Set(budgetPeriodMonthKeys(period, now));
+  return transactions.filter((tx) => keys.has(localMonthKey(tx.occurred_at)));
+}
+
 export interface BudgetProgress {
   category_id: UUID;
   category_name: string;
+  period: BudgetPeriod;
   limit: number;
   spent: number;
   percent: number;
@@ -171,26 +196,38 @@ export interface BudgetProgress {
 }
 
 /**
- * Progress toward each budget's monthly limit, given the current month's
- * expense transactions (the caller filters transactions to the period).
+ * Progress toward each budget's limit for ITS period (a month, a quarter, or a year around `now`).
+ * Pass all of the user's expense transactions: each budget only counts those inside its own period,
+ * so a yearly budget still sees January's spending in October.
  * `percent` is not clamped to 100 so callers can visually flag overspend.
  */
 export function computeBudgetProgress(
-  budgets: PersonalBudget[],
+  budgets: (Pick<PersonalBudget, "category_id" | "monthly_limit"> & Partial<PersonalBudget>)[],
   categories: Pick<PersonalCategory, "id" | "name">[],
-  monthTransactions: Pick<PersonalTransaction, "category_id" | "kind" | "amount">[]
+  transactions: (Pick<PersonalTransaction, "kind" | "amount" | "occurred_at"> & { category_id?: UUID | null })[],
+  now: Date = new Date()
 ): BudgetProgress[] {
-  const spentByCategory = new Map<UUID, number>();
-  for (const tx of monthTransactions) {
-    if (tx.kind !== "expense" || !tx.category_id) continue;
-    spentByCategory.set(tx.category_id, (spentByCategory.get(tx.category_id) ?? 0) + tx.amount);
+  const spentByPeriod = new Map<BudgetPeriod, Map<UUID, number>>();
+  function spentFor(period: BudgetPeriod): Map<UUID, number> {
+    let spent = spentByPeriod.get(period);
+    if (!spent) {
+      spent = new Map<UUID, number>();
+      for (const tx of filterTransactionsForBudgetPeriod(transactions, period, now)) {
+        if (tx.kind !== "expense" || !tx.category_id) continue;
+        spent.set(tx.category_id, (spent.get(tx.category_id) ?? 0) + tx.amount);
+      }
+      spentByPeriod.set(period, spent);
+    }
+    return spent;
   }
 
   return budgets.map((budget) => {
-    const spent = round2(spentByCategory.get(budget.category_id) ?? 0);
+    const period: BudgetPeriod = budget.period ?? "monthly";
+    const spent = round2(spentFor(period).get(budget.category_id) ?? 0);
     return {
       category_id: budget.category_id,
       category_name: categories.find((c) => c.id === budget.category_id)?.name ?? "Uncategorized",
+      period,
       limit: budget.monthly_limit,
       spent,
       percent: budget.monthly_limit > 0 ? round2((spent / budget.monthly_limit) * 100) : 0,

@@ -231,10 +231,15 @@ export interface PersonalTransaction {
   linked_group_id: UUID | null;
 }
 
+/** How long one budget covers. The limit resets at the start of each period. */
+export type BudgetPeriod = "monthly" | "quarterly" | "yearly";
+
 export interface PersonalBudget {
   id: UUID;
   user_id: UUID;
   category_id: UUID;
+  /** The limit for ONE period (the column keeps its old name); see `period`. */
   monthly_limit: number;
+  period: BudgetPeriod;
   created_at: ISODateTimeString;
 }

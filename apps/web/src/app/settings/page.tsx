@@ -8,9 +8,9 @@ function SettingsContent() {
   return (
     <AppShell>
       <div className="mx-auto max-w-2xl">
-        <div className="mb-6 hidden lg:block">
+        <div className="mb-5 hidden lg:block">
           <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
-          <p className="text-sm text-muted-foreground">Manage your profile, appearance, and account security.</p>
+          <p className="hidden text-sm text-muted-foreground sm:block">Everything about your account, in one place.</p>
         </div>
         <SettingsPanelContent />
       </div>

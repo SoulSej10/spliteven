@@ -1,5 +1,6 @@
 "use client";
 
+import { IconPicker } from "@/components/ui/icon-picker";
 import { useEffect, useState, type ReactNode } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -61,23 +62,10 @@ export function EditGroupDialog({ group, trigger }: { group: Group; trigger: Rea
           <DialogDescription>Rename it, swap the icon, or change its currency.</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="flex flex-wrap gap-2">
-            {ICONS.map((i) => (
-              <button
-                type="button"
-                key={i}
-                onClick={() => {
-                  setIcon(i);
-                  setValue("icon", i);
-                }}
-                className={`flex h-10 w-10 items-center justify-center rounded-xl text-xl transition-colors ${
-                  icon === i ? "bg-primary-light ring-2 ring-primary" : "bg-muted"
-                }`}
-              >
-                {i}
-              </button>
-            ))}
-          </div>
+          <IconPicker kind="group" value={icon} onChange={(i) => {
+          setIcon(i);
+          setValue("icon", i);
+        }} />
 
           <div className="space-y-1.5">
             <Label htmlFor="edit-group-name">Group name</Label>

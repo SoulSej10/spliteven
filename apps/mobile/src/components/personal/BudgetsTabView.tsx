@@ -1,8 +1,8 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Alert, Pressable, View } from "react-native";
 import { Text } from "@/components/ui/typography";
-import { computeBudgetProgress, computeBudgetSuggestions, filterTransactionsForCurrentMonth } from "@evensplit/shared";
-import { PiggyBank, Sparkle, Trash as Trash2 } from "phosphor-react-native";
+import { budgetPeriodNoun, computeBudgetProgress, computeBudgetSuggestions, type PersonalBudget } from "@evensplit/shared";
+import { PencilSimple as Pencil, PiggyBank, Sparkle, Trash as Trash2 } from "phosphor-react-native";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { SkeletonCardRows } from "@/components/ui/Skeleton";
@@ -18,6 +18,7 @@ import {
 import { formatMoney } from "@/lib/format";
 import { palette } from "@/theme/palette";
 import { useBaseTransactions } from "@/hooks/use-personal-totals";
+import { AddBudgetSheet } from "@/components/personal/AddBudgetSheet";
 
 /** The "Set budget" action lives in finances.tsx's floating action button, not inline here. */
 export function BudgetsTabView() {
@@ -29,12 +30,10 @@ export function BudgetsTabView() {
   const deleteBudget = useDeletePersonalBudget();
   const upsertBudget = useUpsertPersonalBudget();
 
-  const thisMonthTransactions = useMemo(
-    () => filterTransactionsForCurrentMonth(transactions),
-    [transactions]
-  );
+  const [editing, setEditing] = useState<PersonalBudget | null>(null);
 
-  const progress = computeBudgetProgress(budgets ?? [], categories ?? [], thisMonthTransactions);
+  // Each budget counts only the spending inside its own period (month, quarter or year).
+  const progress = computeBudgetProgress(budgets ?? [], categories ?? [], transactions);
 
   const suggestions = useMemo(
     () => computeBudgetSuggestions(categories ?? [], budgets ?? [], transactions),
@@ -50,7 +49,7 @@ export function BudgetsTabView() {
 
   function onAddSuggestion(categoryId: string, limit: number) {
     upsertBudget.mutate(
-      { category_id: categoryId, monthly_limit: limit },
+      { category_id: categoryId, monthly_limit: limit, period: "monthly" },
       { onError: (err) => Alert.alert("Could not add budget", err instanceof Error ? err.message : "Try again") }
     );
   }
@@ -94,7 +93,7 @@ export function BudgetsTabView() {
           <View className="h-14 w-14 items-center justify-center rounded-full bg-primary-light">
             <PiggyBank color={palette.primary} size={22} />
           </View>
-          <Text className="text-sm text-neutral-500">Set a monthly limit for a category to track it here.</Text>
+          <Text className="text-sm text-neutral-500">Set a limit for a category to track it here.</Text>
         </View>
       )}
 
@@ -109,12 +108,20 @@ export function BudgetsTabView() {
         return (
           <Card key={budget.id} className="gap-2 py-3">
             <View className="flex-row items-center justify-between">
-              <Text className="font-medium text-neutral-900 dark:text-neutral-100">{p.category_name}</Text>
-              <View className="flex-row items-center gap-2">
+              <View className="flex-1 pr-2">
+                <Text className="font-medium text-neutral-900 dark:text-neutral-100" numberOfLines={1}>
+                  {p.category_name}
+                </Text>
+                <Text className="text-[11px] capitalize text-neutral-500">{p.period} budget</Text>
+              </View>
+              <View className="flex-row items-center gap-3">
                 <Text className={`text-xs ${amountColorClass}`}>
                   {formatMoney(p.spent, currency)} / {formatMoney(p.limit, currency)}
                 </Text>
-                <Pressable onPress={() => onDelete(budget.id)} hitSlop={10}>
+                <Pressable onPress={() => setEditing(budget)} hitSlop={10} accessibilityLabel="Edit budget">
+                  <Pencil color={palette.muted} size={15} />
+                </Pressable>
+                <Pressable onPress={() => onDelete(budget.id)} hitSlop={10} accessibilityLabel="Remove budget">
                   <Trash2 color={palette.negative} size={14} />
                 </Pressable>
               </View>
@@ -123,7 +130,7 @@ export function BudgetsTabView() {
               <View className={`h-full ${barColorClass}`} style={{ width: `${barWidth}%` }} />
             </View>
             {overBudget && (
-              <Text className="text-xs text-negative">{formatMoney(Math.abs(p.remaining), currency)} over budget</Text>
+              <Text className="text-xs text-negative">{formatMoney(Math.abs(p.remaining), currency)} over budget this {budgetPeriodNoun(p.period)}</Text>
             )}
             {approaching && (
               <Text className="text-xs text-accent-deep">Approaching limit — {formatMoney(p.remaining, currency)} left</Text>
@@ -131,6 +138,8 @@ export function BudgetsTabView() {
           </Card>
         );
       })}
+
+      <AddBudgetSheet visible={editing !== null} onClose={() => setEditing(null)} budget={editing ?? undefined} />
     </View>
   );
 }

@@ -35,6 +35,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useAuth } from "@/hooks/use-auth";
+import { NotificationSettings } from "@/components/settings/notification-settings";
+import { SettingsMenu } from "@/components/settings/settings-menu";
 import { usePersonalAccounts, usePersonalCategories, usePersonalTransactions } from "@/hooks/use-personal";
 import { upsertProfile, uploadAvatar } from "@/lib/api/profile";
 import { importPersonalLedgerRows } from "@/lib/api/personal";
@@ -45,7 +47,9 @@ import { CURRENCIES } from "@/lib/format";
 import { PLANS_ENABLED, SUBSCRIPTION_ADMIN_EMAIL, SUBSCRIPTION_PLANS } from "@evensplit/shared";
 
 /** Shared between the /settings page and the left-sliding Sheet opened from the avatar menu. */
-export function SettingsPanelContent({ onClose }: { onClose?: () => void }) {
+export type SettingsSection = "menu" | "profile" | "security" | "data" | "appearance" | "notifications" | "about";
+
+export function SettingsPanelContent({ onClose, section = "menu" }: { onClose?: () => void; section?: SettingsSection }) {
   const router = useRouter();
   const { authUser, profile, refreshProfile, signOut } = useAuth();
   const { theme, setTheme } = useTheme();
@@ -203,330 +207,259 @@ export function SettingsPanelContent({ onClose }: { onClose?: () => void }) {
 
   return (
     <div className="space-y-6">
-      {PLANS_ENABLED && (
-      <button type="button" onClick={() => goTo("/upgrade")} className="block w-full text-left">
-        <Card className="rounded-2xl border-2 border-accent bg-accent/10 shadow-sm transition hover:bg-accent/15">
-          <CardContent className="flex items-center gap-3 py-4">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/20">
-              <Crown className="h-5 w-5 text-accent" weight="fill" />
-            </span>
-            <div className="flex-1">
-              <p className="font-semibold">
-                {profile?.subscription_tier && profile.subscription_tier !== "free"
-                  ? `${SUBSCRIPTION_PLANS[profile.subscription_tier].name} plan`
-                  : "Upgrade to Pro"}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {profile?.subscription_tier && profile.subscription_tier !== "free"
-                  ? "Manage your subscription"
-                  : `Unlimited groups, insights, and more from ${SUBSCRIPTION_PLANS.pro.priceLabel}`}
-              </p>
-            </div>
-            <ChevronRight className="h-4 w-4 text-accent" />
-          </CardContent>
-        </Card>
-      </button>
-      )}
-
-      {authUser?.email === SUBSCRIPTION_ADMIN_EMAIL && (
-        <button type="button" onClick={() => goTo("/admin/subscriptions")} className="block w-full text-left">
-          <Card className="rounded-2xl border-border/60 shadow-sm transition hover:bg-muted">
-            <CardContent className="flex items-center justify-between py-4">
-              <p className="font-semibold">Subscription requests</p>
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+      {section === "menu" && (
+        <>
+        {PLANS_ENABLED && (
+        <button type="button" onClick={() => goTo("/upgrade")} className="block w-full text-left">
+          <Card className="rounded-2xl border-2 border-accent bg-accent/10 shadow-sm transition hover:bg-accent/15">
+            <CardContent className="flex items-center gap-3 py-4">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/20">
+                <Crown className="h-5 w-5 text-accent" weight="fill" />
+              </span>
+              <div className="flex-1">
+                <p className="font-semibold">
+                  {profile?.subscription_tier && profile.subscription_tier !== "free"
+                    ? `${SUBSCRIPTION_PLANS[profile.subscription_tier].name} plan`
+                    : "Upgrade to Pro"}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {profile?.subscription_tier && profile.subscription_tier !== "free"
+                    ? "Manage your subscription"
+                    : `Unlimited groups, insights, and more from ${SUBSCRIPTION_PLANS.pro.priceLabel}`}
+                </p>
+              </div>
+              <ChevronRight className="h-4 w-4 text-accent" />
             </CardContent>
           </Card>
         </button>
+        )}
+        {authUser?.email === SUBSCRIPTION_ADMIN_EMAIL && (
+          <button type="button" onClick={() => goTo("/admin/subscriptions")} className="block w-full text-left">
+            <Card className="rounded-2xl border-border/60 shadow-sm transition hover:bg-muted">
+              <CardContent className="flex items-center justify-between py-4">
+                <p className="font-semibold">Subscription requests</p>
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </CardContent>
+            </Card>
+          </button>
+        )}
+          <SettingsMenu goTo={goTo} />
+        <Card className="rounded-2xl border-destructive/30 shadow-sm">
+          <CardHeader>
+            <CardTitle>Account</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-3">
+            <Button
+              variant="outline"
+              onClick={async () => {
+                await signOut();
+                onClose?.();
+                router.replace("/login");
+              }}
+            >
+              <LogOut className="mr-2 h-4 w-4" /> Sign out
+            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive">
+                  <Trash2 className="mr-2 h-4 w-4" /> Delete account
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="rounded-2xl">
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete your account?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This removes your profile and group memberships. This can&apos;t be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={onDeleteAccount} className="bg-destructive text-white">
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </CardContent>
+        </Card>
+        </>
       )}
-
-      <Card className="rounded-2xl border-border/60 shadow-sm">
-        <CardHeader>
-          <CardTitle>Profile</CardTitle>
-          <CardDescription>Your name, photo, and default currency.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="flex items-center gap-4">
-              <Avatar className="h-16 w-16">
-                <AvatarImage src={avatarPreview ?? undefined} />
-                <AvatarFallback className="bg-primary-light text-lg text-primary-deep">
-                  {/* eslint-disable-next-line @next/next/no-img-element -- small local asset, not worth next/image's overhead here */}
-                  <img src="/logo-mark.png" alt="" className="h-full w-full object-cover" />
-                </AvatarFallback>
-              </Avatar>
-              <label className="cursor-pointer text-sm text-primary-deep hover:underline">
-                Change photo
-                <input type="file" accept="image/*" className="hidden" onChange={onAvatarChange} />
-              </label>
-            </div>
-
-            <div className="space-y-1.5">
-              <Label htmlFor="display_name">Display name</Label>
-              <Input id="display_name" {...register("display_name")} />
-              {formState.errors.display_name && (
-                <p className="text-xs text-destructive">{formState.errors.display_name.message}</p>
-              )}
-            </div>
-
-            <div className="space-y-1.5">
-              <Label>Default currency</Label>
-              <Select value={watch("default_currency")} onValueChange={(v) => setValue("default_currency", v, { shouldValidate: true })}>
-                <SelectTrigger className="w-40">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {CURRENCIES.map((c) => (
-                    <SelectItem key={c} value={c}>
-                      {c}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <Button type="submit" disabled={submitting}>
-              Save changes
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-
-      <Card className="rounded-2xl border-border/60 shadow-sm">
-        <CardHeader>
-          <CardTitle>Currency rates</CardTitle>
-          <CardDescription>
-            Convert accounts in other currencies into {profile?.default_currency ?? "your default currency"} with rates you set.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button asChild variant="outline">
-            <Link href="/settings/currency-rates">Manage currency rates</Link>
-          </Button>
-        </CardContent>
-      </Card>
-
-      <Card className="rounded-2xl border-border/60 shadow-sm">
-        <CardHeader>
-          <CardTitle>Security</CardTitle>
-          <CardDescription>Change the password you use to sign in.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handlePasswordSubmit(onSubmitPassword)} className="space-y-4">
-            <div className="space-y-1.5">
-              <Label htmlFor="new_password">New password</Label>
-              <PasswordInput id="new_password" autoComplete="new-password" {...registerPassword("password")} />
-              {passwordFormState.errors.password && (
-                <p className="text-xs text-destructive">{passwordFormState.errors.password.message}</p>
-              )}
-            </div>
-            <Button type="submit" variant="outline" disabled={changingPassword}>
-              <KeyRound className="mr-2 h-4 w-4" /> Update password
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-
-      <Card className="rounded-2xl border-border/60 shadow-sm">
-        <CardHeader>
-          <CardTitle>Manage</CardTitle>
-          <CardDescription>Jump straight to your accounts, categories, or budgets.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-1">
-          <button
-            type="button"
-            onClick={() => goTo("/personal/accounts")}
-            className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-sm hover:bg-muted"
-          >
-            <span className="flex items-center gap-2.5">
-              <Wallet className="h-4 w-4 text-primary-deep" /> Accounts
-            </span>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-          </button>
-          <button
-            type="button"
-            onClick={() => goTo("/personal/categories")}
-            className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-sm hover:bg-muted"
-          >
-            <span className="flex items-center gap-2.5">
-              <Tag className="h-4 w-4 text-primary-deep" /> Categories
-            </span>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-          </button>
-          <button
-            type="button"
-            onClick={() => goTo("/personal/budgets")}
-            className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-sm hover:bg-muted"
-          >
-            <span className="flex items-center gap-2.5">
-              <PiggyBank className="h-4 w-4 text-primary-deep" /> Budgets
-            </span>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-          </button>
-          <button
-            type="button"
-            onClick={() => goTo("/personal/overview")}
-            className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-sm hover:bg-muted"
-          >
-            <span className="flex items-center gap-2.5">
-              <ListChecks className="h-4 w-4 text-primary-deep" /> Transactions
-            </span>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-          </button>
-        </CardContent>
-      </Card>
-
-      <Card className="rounded-2xl border-border/60 shadow-sm">
-        <CardHeader>
-          <CardTitle>Data</CardTitle>
-          <CardDescription>Back up or restore your personal ledger as a CSV file.</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-wrap gap-3">
-          <Button variant="outline" onClick={onExport} disabled={exporting}>
-            <Download className="mr-2 h-4 w-4" /> Export data
-          </Button>
-          <Button variant="outline" onClick={onPickImportFile}>
-            <Upload className="mr-2 h-4 w-4" /> Import data
-          </Button>
-          <input ref={importInputRef} type="file" accept=".csv,text/csv" className="hidden" onChange={onImportFileSelected} />
-        </CardContent>
-      </Card>
-
-      <Card className="rounded-2xl border-border/60 shadow-sm">
-        <CardHeader>
-          <CardTitle>Appearance</CardTitle>
-          <CardDescription>Switch between light and dark. The website always uses the SplitEven green.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="dark-mode">Dark mode</Label>
-            <Switch id="dark-mode" checked={theme === "dark"} onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")} />
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="rounded-2xl border-border/60 shadow-sm">
-        <CardHeader>
-          <CardTitle>Notifications</CardTitle>
-          <CardDescription>Local preference only for now — push notifications are a stretch goal.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="notif-expenses">New expenses</Label>
-            <Switch
-              id="notif-expenses"
-              checked={notifPrefs.expenses}
-              onCheckedChange={(checked) => setNotifPrefs((p) => ({ ...p, expenses: checked }))}
-            />
-          </div>
-          <div className="flex items-center justify-between">
-            <Label htmlFor="notif-settlements">Settlements</Label>
-            <Switch
-              id="notif-settlements"
-              checked={notifPrefs.settlements}
-              onCheckedChange={(checked) => setNotifPrefs((p) => ({ ...p, settlements: checked }))}
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="rounded-2xl border-border/60 shadow-sm">
-        <CardContent className="divide-y divide-border/60 p-0">
-          <button
-            type="button"
-            onClick={() => goTo("/privacy-policy")}
-            className="flex w-full items-center justify-between rounded-2xl px-4 py-3 text-sm hover:bg-muted"
-          >
-            <span className="flex items-center gap-2.5">
-              <ShieldCheck className="h-4 w-4 text-primary-deep" /> Privacy policy
-            </span>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-          </button>
-          <button
-            type="button"
-            onClick={() => goTo("/terms-of-service")}
-            className="flex w-full items-center justify-between px-4 py-3 text-sm hover:bg-muted"
-          >
-            <span className="flex items-center gap-2.5">
-              <ShieldCheck className="h-4 w-4 text-primary-deep" /> Terms of service
-            </span>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-          </button>
-        </CardContent>
-      </Card>
-
-      <Card className="rounded-2xl border-border/60 shadow-sm">
-        <CardContent className="flex flex-col items-center gap-1 py-6 text-center">
-          <p className="text-sm font-semibold">SplitEven</p>
-          <p className="text-xs text-muted-foreground">Version 1.0.0</p>
-          <p className="mt-2 text-xs text-muted-foreground">Developed solo by Jess Anthony Tahil</p>
-          <p className="text-xs text-muted-foreground">A Peniko product</p>
-        </CardContent>
-      </Card>
-
-      <Card className="rounded-2xl border-destructive/30 shadow-sm">
-        <CardHeader>
-          <CardTitle>Account</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-wrap gap-3">
-          <Button
-            variant="outline"
-            onClick={async () => {
-              await signOut();
-              onClose?.();
-              router.replace("/login");
-            }}
-          >
-            <LogOut className="mr-2 h-4 w-4" /> Sign out
-          </Button>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive">
-                <Trash2 className="mr-2 h-4 w-4" /> Delete account
+      {section === "profile" && (
+        <>
+        <Card className="rounded-2xl border-border/60 shadow-sm">
+          <CardHeader>
+            <CardTitle>Profile</CardTitle>
+            <CardDescription>Your name, photo, and default currency.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div className="flex items-center gap-4">
+                <Avatar className="h-16 w-16">
+                  <AvatarImage src={avatarPreview ?? undefined} />
+                  <AvatarFallback className="bg-primary-light text-lg text-primary-deep">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- small local asset, not worth next/image's overhead here */}
+                    <img src="/logo-mark.png" alt="" className="h-full w-full object-cover" />
+                  </AvatarFallback>
+                </Avatar>
+                <label className="cursor-pointer text-sm text-primary-deep hover:underline">
+                  Change photo
+                  <input type="file" accept="image/*" className="hidden" onChange={onAvatarChange} />
+                </label>
+              </div>
+  
+              <div className="space-y-1.5">
+                <Label htmlFor="display_name">Display name</Label>
+                <Input id="display_name" {...register("display_name")} />
+                {formState.errors.display_name && (
+                  <p className="text-xs text-destructive">{formState.errors.display_name.message}</p>
+                )}
+              </div>
+  
+              <div className="space-y-1.5">
+                <Label>Default currency</Label>
+                <Select value={watch("default_currency")} onValueChange={(v) => setValue("default_currency", v, { shouldValidate: true })}>
+                  <SelectTrigger className="w-40">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CURRENCIES.map((c) => (
+                      <SelectItem key={c} value={c}>
+                        {c}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+  
+              <Button type="submit" disabled={submitting}>
+                Save changes
               </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent className="rounded-2xl">
-              <AlertDialogHeader>
-                <AlertDialogTitle>Delete your account?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This removes your profile and group memberships. This can&apos;t be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={onDeleteAccount} className="bg-destructive text-white">
-                  Delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </CardContent>
-      </Card>
-
-      <AlertDialog open={!!pendingImport} onOpenChange={(open) => !open && setPendingImport(null)}>
-        <AlertDialogContent className="rounded-2xl">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Import this file?</AlertDialogTitle>
-            <AlertDialogDescription className="space-y-1">
-              <span className="block">
-                {importSummary?.rowCount ?? 0} transaction{importSummary?.rowCount === 1 ? "" : "s"} found.
+            </form>
+          </CardContent>
+        </Card>
+        </>
+      )}
+      {section === "security" && (
+        <>
+        <Card className="rounded-2xl border-border/60 shadow-sm">
+          <CardHeader>
+            <CardTitle>Security</CardTitle>
+            <CardDescription>Change the password you use to sign in.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handlePasswordSubmit(onSubmitPassword)} className="space-y-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="new_password">New password</Label>
+                <PasswordInput id="new_password" autoComplete="new-password" {...registerPassword("password")} />
+                {passwordFormState.errors.password && (
+                  <p className="text-xs text-destructive">{passwordFormState.errors.password.message}</p>
+                )}
+              </div>
+              <Button type="submit" variant="outline" disabled={changingPassword}>
+                <KeyRound className="mr-2 h-4 w-4" /> Update password
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+        </>
+      )}
+      {section === "data" && (
+        <>
+        <Card className="rounded-2xl border-border/60 shadow-sm">
+          <CardHeader>
+            <CardTitle>Data</CardTitle>
+            <CardDescription>Back up or restore your personal ledger as a CSV file.</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-3">
+            <Button variant="outline" onClick={onExport} disabled={exporting}>
+              <Download className="mr-2 h-4 w-4" /> Export data
+            </Button>
+            <Button variant="outline" onClick={onPickImportFile}>
+              <Upload className="mr-2 h-4 w-4" /> Import data
+            </Button>
+            <input ref={importInputRef} type="file" accept=".csv,text/csv" className="hidden" onChange={onImportFileSelected} />
+          </CardContent>
+        </Card>
+        <AlertDialog open={!!pendingImport} onOpenChange={(open) => !open && setPendingImport(null)}>
+          <AlertDialogContent className="rounded-2xl">
+            <AlertDialogHeader>
+              <AlertDialogTitle>Import this file?</AlertDialogTitle>
+              <AlertDialogDescription className="space-y-1">
+                <span className="block">
+                  {importSummary?.rowCount ?? 0} transaction{importSummary?.rowCount === 1 ? "" : "s"} found.
+                </span>
+                {importSummary && importSummary.newAccounts.length > 0 && (
+                  <span className="block">New accounts: {importSummary.newAccounts.join(", ")}</span>
+                )}
+                {importSummary && importSummary.newCategories.length > 0 && (
+                  <span className="block">New categories: {importSummary.newCategories.join(", ")}</span>
+                )}
+                {pendingImport && pendingImport.errors.length > 0 && (
+                  <span className="block">{pendingImport.errors.length} row(s) will be skipped.</span>
+                )}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={onConfirmImport}>Import</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+        </>
+      )}
+      {section === "appearance" && (
+        <>
+        <Card className="rounded-2xl border-border/60 shadow-sm">
+          <CardHeader>
+            <CardTitle>Appearance</CardTitle>
+            <CardDescription>Switch between light and dark. The website always uses the SplitEven green.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="dark-mode">Dark mode</Label>
+              <Switch id="dark-mode" checked={theme === "dark"} onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")} />
+            </div>
+          </CardContent>
+        </Card>
+        </>
+      )}
+      {section === "about" && (
+        <>
+        <Card className="rounded-2xl border-border/60 shadow-sm">
+          <CardContent className="divide-y divide-border/60 p-0">
+            <button
+              type="button"
+              onClick={() => goTo("/privacy-policy")}
+              className="flex w-full items-center justify-between rounded-2xl px-4 py-3 text-sm hover:bg-muted"
+            >
+              <span className="flex items-center gap-2.5">
+                <ShieldCheck className="h-4 w-4 text-primary-deep" /> Privacy policy
               </span>
-              {importSummary && importSummary.newAccounts.length > 0 && (
-                <span className="block">New accounts: {importSummary.newAccounts.join(", ")}</span>
-              )}
-              {importSummary && importSummary.newCategories.length > 0 && (
-                <span className="block">New categories: {importSummary.newCategories.join(", ")}</span>
-              )}
-              {pendingImport && pendingImport.errors.length > 0 && (
-                <span className="block">{pendingImport.errors.length} row(s) will be skipped.</span>
-              )}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={onConfirmImport}>Import</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            </button>
+            <button
+              type="button"
+              onClick={() => goTo("/terms-of-service")}
+              className="flex w-full items-center justify-between px-4 py-3 text-sm hover:bg-muted"
+            >
+              <span className="flex items-center gap-2.5">
+                <ShieldCheck className="h-4 w-4 text-primary-deep" /> Terms of service
+              </span>
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            </button>
+          </CardContent>
+        </Card>
+        <Card className="rounded-2xl border-border/60 shadow-sm">
+          <CardContent className="flex flex-col items-center gap-1 py-6 text-center">
+            <p className="text-sm font-semibold">SplitEven</p>
+            <p className="text-xs text-muted-foreground">Version 1.0.0</p>
+            <p className="mt-2 text-xs text-muted-foreground">Developed solo by Jess Anthony Tahil</p>
+            <p className="text-xs text-muted-foreground">A Peniko product</p>
+          </CardContent>
+        </Card>
+        </>
+      )}
+      {section === "notifications" && <NotificationSettings />}
     </div>
   );
 }

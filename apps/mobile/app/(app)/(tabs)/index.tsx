@@ -7,7 +7,6 @@ import { ArrowDownLeft, ArrowRight, ArrowsLeftRight as ArrowRightLeft, ArrowUpRi
 import {
   computeBudgetProgress,
   computeSharedBalancesSummary,
-  filterTransactionsForCurrentMonth,
   type GroupBalanceInput,
 } from "@evensplit/shared";
 import { Avatar } from "@/components/ui/Avatar";
@@ -78,11 +77,7 @@ export default function HomeScreen() {
 
   const budgetHighlight = useMemo(() => {
     if (!budgets || budgets.length === 0) return null;
-    const progress = computeBudgetProgress(
-      budgets,
-      categories ?? [],
-      filterTransactionsForCurrentMonth(baseTransactions)
-    );
+    const progress = computeBudgetProgress(budgets, categories ?? [], baseTransactions);
     if (progress.length === 0) return null;
     return progress.reduce((max, p) => (p.percent > max.percent ? p : max), progress[0]);
   }, [budgets, categories, baseTransactions]);

@@ -4,6 +4,7 @@ import { MobileHeader, MobileTabBar } from "@/components/app-shell/mobile-nav";
 import { BreadcrumbLabelProvider } from "@/components/app-shell/breadcrumb-context";
 import { OnboardingTour } from "@/components/onboarding/onboarding-tour";
 import { InstallPrompt } from "@/components/pwa/install-prompt";
+import { ReminderRunner } from "@/components/pwa/reminder-runner";
 
 /**
  * The authenticated app's chrome. At lg+ it's the SaaS dashboard shell: a persistent
@@ -29,6 +30,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <MobileTabBar />
       </div>
       <OnboardingTour />
+      <ReminderRunner />
     </BreadcrumbLabelProvider>
   );
 }

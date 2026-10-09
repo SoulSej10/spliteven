@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { IconPicker } from "@/components/ui/IconPicker";
 import { Alert, Pressable, View } from "react-native";
 import { Text } from "@/components/ui/typography";
 import {
@@ -76,20 +77,7 @@ export function AddCategorySheet({
         </Button>
       }
     >
-      <View className="flex-row flex-wrap gap-2">
-        {ICONS.map((i) => (
-          <Pressable
-            key={i}
-            onPress={() => setIcon(i)}
-            className={cn(
-              "h-11 w-11 items-center justify-center rounded-card",
-              icon === i ? "bg-primary-light" : "bg-neutral-100 dark:bg-white/5"
-            )}
-          >
-            <AppIcon value={i} size={22} />
-          </Pressable>
-        ))}
-      </View>
+      <IconPicker kind="category" value={icon} onChange={setIcon} />
 
       <TextField label="Name" placeholder="Groceries" value={name} onChangeText={setName} />
 

@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Plus } from "@phosphor-icons/react";
+import { budgetPeriodNoun, type BudgetPeriod, type PersonalBudget } from "@evensplit/shared";
 import { createPersonalBudgetSchema, type CreatePersonalBudgetInput } from "@evensplit/shared";
 import { Button } from "@/components/ui/button";
 import { AmountInput } from "@/components/ui/amount-input";
@@ -21,7 +22,14 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePersonalCategories, useUpsertPersonalBudget } from "@/hooks/use-personal";
 
-export function AddBudgetDialog() {
+const PERIODS: { value: BudgetPeriod; label: string }[] = [
+  { value: "monthly", label: "Monthly" },
+  { value: "quarterly", label: "Quarterly" },
+  { value: "yearly", label: "Yearly" },
+];
+
+export function AddBudgetDialog({ budget, trigger }: { budget?: PersonalBudget; trigger?: ReactNode } = {}) {
+  const editing = !!budget;
   const [open, setOpen] = useState(false);
   const { data: categories } = usePersonalCategories();
   const upsertBudget = useUpsertPersonalBudget();
@@ -29,8 +37,19 @@ export function AddBudgetDialog() {
 
   const { handleSubmit, reset, watch, setValue, formState } = useForm<CreatePersonalBudgetInput>({
     resolver: zodResolver(createPersonalBudgetSchema),
-    defaultValues: { category_id: "", monthly_limit: 0 },
+    defaultValues: { category_id: "", monthly_limit: 0, period: "monthly" },
   });
+  const period = watch("period") ?? "monthly";
+
+  useEffect(() => {
+    if (!open) return;
+    if (budget) {
+      reset({ category_id: budget.category_id, monthly_limit: budget.monthly_limit, period: budget.period ?? "monthly" });
+    } else {
+      reset({ category_id: "", monthly_limit: 0, period: "monthly" });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, budget]);
 
   async function onSubmit(values: CreatePersonalBudgetInput) {
     try {
@@ -46,20 +65,23 @@ export function AddBudgetDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="rounded-lg" disabled={expenseCategories.length === 0}>
-          <Plus className="mr-1 h-4 w-4" /> Set budget
-        </Button>
+        {trigger ?? (
+          <Button className="rounded-lg" disabled={expenseCategories.length === 0}>
+            <Plus className="mr-1 h-4 w-4" /> Set budget
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="rounded-2xl sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Set a monthly budget</DialogTitle>
-          <DialogDescription>A spending limit for one category, per month.</DialogDescription>
+          <DialogTitle>{editing ? "Edit budget" : "Set a budget"}</DialogTitle>
+          <DialogDescription>A spending limit for one category, per month, quarter or year.</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-1.5">
             <Label>Category</Label>
             <Select
               value={watch("category_id")}
+              disabled={editing}
               onValueChange={(v) => setValue("category_id", v, { shouldValidate: true })}
             >
               <SelectTrigger>
@@ -76,7 +98,25 @@ export function AddBudgetDialog() {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="monthly-limit">Monthly limit</Label>
+            <Label>Repeats</Label>
+            <div className="grid grid-cols-3 gap-2">
+              {PERIODS.map((p) => (
+                <button
+                  key={p.value}
+                  type="button"
+                  onClick={() => setValue("period", p.value, { shouldValidate: true })}
+                  className={`rounded-full border py-2 text-sm font-semibold transition-colors ${
+                    period === p.value ? "border-primary bg-primary-light text-primary-deep" : "border-border text-muted-foreground"
+                  }`}
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="monthly-limit">{`Limit per ${budgetPeriodNoun(period)}`}</Label>
             <AmountInput
               id="monthly-limit"
               value={watch("monthly_limit")}
@@ -90,7 +130,7 @@ export function AddBudgetDialog() {
 
           <DialogFooter>
             <Button type="submit" className="w-full" disabled={upsertBudget.isPending}>
-              Save budget
+              {editing ? "Save changes" : "Save budget"}
             </Button>
           </DialogFooter>
         </form>

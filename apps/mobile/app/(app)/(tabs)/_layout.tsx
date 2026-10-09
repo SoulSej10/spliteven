@@ -4,6 +4,7 @@ import { useAppTheme } from "@/theme/ThemeProvider";
 import { ChartBar as BarChart3, House as Home, Users, Wallet } from "phosphor-react-native";
 import { SettingsDrawerProvider } from "@/context/settings-drawer";
 import { SettingsDrawer } from "@/components/settings/SettingsDrawer";
+import { useReminderSync } from "@/hooks/use-reminder-sync";
 import { palette } from "@/theme/palette";
 
 /**
@@ -24,6 +25,7 @@ import { palette } from "@/theme/palette";
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
   const { version } = useAppTheme();
+  useReminderSync();
 
   return (
     <SettingsDrawerProvider>

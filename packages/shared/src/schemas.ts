@@ -212,8 +212,11 @@ export const createPersonalTransactionSchema = z
   });
 export type CreatePersonalTransactionInput = z.infer<typeof createPersonalTransactionSchema>;
 
+export const budgetPeriodSchema = z.enum(["monthly", "quarterly", "yearly"]);
+
 export const createPersonalBudgetSchema = z.object({
   category_id: uuidSchema,
   monthly_limit: z.number().positive("Budget limit must be greater than 0"),
+  period: budgetPeriodSchema.default("monthly"),
 });
 export type CreatePersonalBudgetInput = z.infer<typeof createPersonalBudgetSchema>;

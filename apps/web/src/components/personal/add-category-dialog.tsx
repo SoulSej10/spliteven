@@ -1,5 +1,6 @@
 "use client";
 
+import { IconPicker } from "@/components/ui/icon-picker";
 import { useEffect, useState, type ReactNode } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -95,20 +96,7 @@ export function AddCategoryDialog({
           <DialogDescription>Used to group your transactions and set budgets.</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="flex flex-wrap gap-2">
-            {ICONS.map((i) => (
-              <button
-                type="button"
-                key={i}
-                onClick={() => setIcon(i)}
-                className={`flex h-10 w-10 items-center justify-center rounded-xl text-xl transition-colors ${
-                  icon === i ? "bg-primary-light ring-2 ring-primary" : "bg-muted"
-                }`}
-              >
-                {i}
-              </button>
-            ))}
-          </div>
+          <IconPicker kind="category" value={icon} onChange={setIcon} />
 
           <div className="space-y-1.5">
             <Label htmlFor="category-name">Name</Label>

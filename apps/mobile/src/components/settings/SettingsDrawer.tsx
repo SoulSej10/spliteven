@@ -1,74 +1,69 @@
-import { useEffect, useState } from "react";
-import { Dimensions, Modal, Pressable, View } from "react-native";
+import { useEffect } from "react";
+import { BackHandler, Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Animated, { Easing, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useSettingsDrawer } from "@/context/settings-drawer";
 import { SettingsPanelContent } from "./SettingsPanelContent";
 
-const WINDOW = Dimensions.get("window");
-const PANEL_WIDTH = Math.round(WINDOW.width * 0.8);
-const OPEN_DURATION = 220;
-const CLOSE_DURATION = 200;
+const OPEN_DURATION = 230;
+const CLOSE_DURATION = 190;
 
 /**
- * Left-sliding panel covering ~80% of the screen width, dismissed by
- * tapping the dimmed backdrop. An explicit `height: WINDOW.height` on both
- * the panel and the backdrop (rather than `position: absolute` with
- * `top: 0, bottom: 0`) — the absolute version measured its height against
- * the Modal's own content area, which on Android can come up short of the
- * true screen height, letting the panel's last row (Sign out/Delete
- * account) render past the panel's real bottom edge, overlapping the
- * floating tab bar behind it instead of stopping cleanly above it.
+ * Left-sliding Settings panel over the tabs, dismissed by tapping the dimmed backdrop or the
+ * Android back button.
  *
- * The slide is driven manually with a shared value + withTiming (not
- * Reanimated's entering/exiting props) because this component is mounted
- * once in (tabs)/_layout.tsx and only ever has its `visible` prop toggled -
- * RN's <Modal visible> doesn't remount its children, so entering/exiting
- * (which only fire on a real mount/unmount) only played the very first
- * time the drawer opened and silently no-op'd on every open after that.
+ * It used to be a React Native <Modal> mounted on open: that spins up a whole new native window
+ * and renders the full panel in the same frame the animation starts, which made the first
+ * frames of the slide stutter. Now the panel is always mounted as a plain absolutely-positioned
+ * layer (the menu inside is cheap) and opening only moves it with a native-driven transform, so
+ * there is nothing to build while it slides.
  */
 export function SettingsDrawer() {
   const { visible, close } = useSettingsDrawer();
-  const [mounted, setMounted] = useState(visible);
-  const translateX = useSharedValue(-PANEL_WIDTH);
-  const backdropOpacity = useSharedValue(0);
+  const { width, height } = useWindowDimensions();
+  const panelWidth = Math.min(Math.round(width * 0.82), 380);
+  const progress = useSharedValue(0);
 
   useEffect(() => {
-    if (visible) {
-      setMounted(true);
-      translateX.value = withTiming(0, { duration: OPEN_DURATION, easing: Easing.out(Easing.cubic) });
-      backdropOpacity.value = withTiming(1, { duration: OPEN_DURATION });
-    } else if (mounted) {
-      translateX.value = withTiming(-PANEL_WIDTH, { duration: CLOSE_DURATION, easing: Easing.in(Easing.cubic) });
-      backdropOpacity.value = withTiming(0, { duration: CLOSE_DURATION }, (finished) => {
-        if (finished) runOnJS(setMounted)(false);
-      });
-    }
+    progress.value = withTiming(visible ? 1 : 0, {
+      duration: visible ? OPEN_DURATION : CLOSE_DURATION,
+      easing: visible ? Easing.out(Easing.cubic) : Easing.in(Easing.cubic),
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps -- shared values are stable refs, not reactive deps
   }, [visible]);
 
-  const panelStyle = useAnimatedStyle(() => ({ transform: [{ translateX: translateX.value }] }));
-  const backdropStyle = useAnimatedStyle(() => ({ opacity: backdropOpacity.value }));
+  useEffect(() => {
+    if (!visible) return;
+    const sub = BackHandler.addEventListener("hardwareBackPress", () => {
+      close();
+      return true;
+    });
+    return () => sub.remove();
+  }, [visible, close]);
 
-  if (!mounted) return null;
+  const panelStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: (progress.value - 1) * panelWidth }],
+  }));
+  const backdropStyle = useAnimatedStyle(() => ({ opacity: progress.value }));
 
   return (
-    <Modal visible transparent animationType="none" onRequestClose={close}>
-      <View style={{ flexDirection: "row", width: WINDOW.width, height: WINDOW.height }}>
-        <Animated.View
-          className="bg-surface dark:bg-surface-dark"
-          style={[{ width: PANEL_WIDTH, height: WINDOW.height }, panelStyle]}
-        >
-          <SafeAreaView className="flex-1" edges={["top", "bottom"]}>
-            <View className="flex-1">
-              <SettingsPanelContent onClose={close} />
-            </View>
-          </SafeAreaView>
-        </Animated.View>
-        <Animated.View style={[{ flex: 1, height: WINDOW.height }, backdropStyle]}>
-          <Pressable className="flex-1 bg-black/40" onPress={close} accessibilityLabel="Close settings" />
-        </Animated.View>
-      </View>
-    </Modal>
+    <View
+      pointerEvents={visible ? "auto" : "none"}
+      style={[StyleSheet.absoluteFill, { zIndex: 50, elevation: 50 }]}
+      accessibilityElementsHidden={!visible}
+      importantForAccessibility={visible ? "auto" : "no-hide-descendants"}
+    >
+      <Animated.View style={[StyleSheet.absoluteFill, backdropStyle]}>
+        <Pressable className="flex-1 bg-black/40" onPress={close} accessibilityLabel="Close settings" />
+      </Animated.View>
+      <Animated.View
+        className="bg-surface dark:bg-surface-dark"
+        style={[{ position: "absolute", left: 0, top: 0, bottom: 0, width: panelWidth, height }, panelStyle]}
+      >
+        <SafeAreaView className="flex-1" edges={["top", "bottom"]}>
+          <SettingsPanelContent onClose={close} />
+        </SafeAreaView>
+      </Animated.View>
+    </View>
   );
 }

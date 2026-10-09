@@ -32,6 +32,13 @@ function isTopLevel(pathname: string) {
 }
 
 const NESTED_TITLES: [string, string][] = [
+  ["/settings/profile", "Profile & currency"],
+  ["/settings/security", "Security"],
+  ["/settings/data", "Export & import"],
+  ["/settings/appearance", "Appearance"],
+  ["/settings/notifications", "Notifications"],
+  ["/settings/about", "About"],
+  ["/settings/currency-rates", "Currency rates"],
   ["/settings", "Settings"],
   ["/personal/analysis", "Category trail"],
   ["/upgrade", "Upgrade"],

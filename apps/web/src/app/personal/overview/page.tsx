@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   computeAllAccountBalances,
   computeBudgetProgress,
-  filterTransactionsForCurrentMonth,
 } from "@evensplit/shared";
 import { ArrowDownLeft, ArrowsLeftRight as ArrowLeftRight, ArrowUpRight, PiggyBank } from "@phosphor-icons/react";
 import { Card } from "@/components/ui/card";
@@ -47,11 +46,7 @@ export default function PersonalOverviewPage() {
 
   const budgetHighlight = useMemo(() => {
     if (!budgets || budgets.length === 0) return null;
-    const progress = computeBudgetProgress(
-      budgets,
-      categories ?? [],
-      filterTransactionsForCurrentMonth(baseTransactions)
-    );
+    const progress = computeBudgetProgress(budgets, categories ?? [], baseTransactions);
     if (progress.length === 0) return null;
     return progress.reduce((max, p) => (p.percent > max.percent ? p : max), progress[0]);
   }, [budgets, categories, baseTransactions]);

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   computeAccountBalance,
   computeAllAccountBalances,
+  budgetPeriodMonthKeys,
   computeBudgetProgress,
   computeBudgetSuggestions,
   computeCategoryBreakdown,
@@ -151,33 +152,74 @@ describe("computeBudgetProgress", () => {
 
   it("computes spent, percent, and remaining against the limit", () => {
     const progress = computeBudgetProgress(
-      [{ id: "b1", user_id: "u1", category_id: FOOD, monthly_limit: 200, created_at: "" }],
+      [{ id: "b1", user_id: "u1", category_id: FOOD, monthly_limit: 200, period: "monthly", created_at: "" }],
       categories,
       [
-        { category_id: FOOD, kind: "expense", amount: 50 },
-        { category_id: FOOD, kind: "expense", amount: 30 },
-        { category_id: FOOD, kind: "income", amount: 1000 },
-      ]
+        { category_id: FOOD, kind: "expense", amount: 50, occurred_at: "2026-10-05T12:00:00" },
+        { category_id: FOOD, kind: "expense", amount: 30, occurred_at: "2026-10-20T12:00:00" },
+        { category_id: FOOD, kind: "income", amount: 1000, occurred_at: "2026-10-06T12:00:00" },
+      ],
+      new Date(2026, 9, 25)
     );
     expect(progress).toEqual([
-      { category_id: FOOD, category_name: "Food", limit: 200, spent: 80, percent: 40, remaining: 120 },
+      { category_id: FOOD, category_name: "Food", period: "monthly", limit: 200, spent: 80, percent: 40, remaining: 120 },
     ]);
   });
 
   it("allows percent to exceed 100 when overspent", () => {
     const progress = computeBudgetProgress(
-      [{ id: "b1", user_id: "u1", category_id: FOOD, monthly_limit: 50, created_at: "" }],
+      [{ id: "b1", user_id: "u1", category_id: FOOD, monthly_limit: 50, period: "monthly", created_at: "" }],
       categories,
-      [{ category_id: FOOD, kind: "expense", amount: 75 }]
+      [{ category_id: FOOD, kind: "expense", amount: 75, occurred_at: "2026-10-05T12:00:00" }],
+      new Date(2026, 9, 25)
     );
     expect(progress[0]).toEqual({
       category_id: FOOD,
       category_name: "Food",
+      period: "monthly",
       limit: 50,
       spent: 75,
       percent: 150,
       remaining: -25,
     });
+  });
+});
+
+describe("budget periods", () => {
+  const categories = [{ id: FOOD, name: "Food" }];
+  const now = new Date(2026, 10, 15); // 15 Nov 2026 -> Q4 (Oct-Dec)
+  const txs = [
+    { category_id: FOOD, kind: "expense" as const, amount: 100, occurred_at: "2026-01-10T12:00:00" },
+    { category_id: FOOD, kind: "expense" as const, amount: 200, occurred_at: "2026-10-03T12:00:00" },
+    { category_id: FOOD, kind: "expense" as const, amount: 300, occurred_at: "2026-11-09T12:00:00" },
+    { category_id: FOOD, kind: "expense" as const, amount: 400, occurred_at: "2025-11-09T12:00:00" },
+  ];
+
+  it("lists the months each period covers", () => {
+    expect(budgetPeriodMonthKeys("monthly", now)).toEqual(["2026-11"]);
+    expect(budgetPeriodMonthKeys("quarterly", now)).toEqual(["2026-10", "2026-11", "2026-12"]);
+    expect(budgetPeriodMonthKeys("yearly", now)).toHaveLength(12);
+  });
+
+  it("counts only spending inside each budget's own period", () => {
+    const [m, q, y] = (["monthly", "quarterly", "yearly"] as const).map(
+      (period) =>
+        computeBudgetProgress(
+          [{ category_id: FOOD, monthly_limit: 1000, period }],
+          categories,
+          txs,
+          now
+        )[0]
+    );
+    expect(m.spent).toBe(300);
+    expect(q.spent).toBe(500);
+    expect(y.spent).toBe(600);
+  });
+
+  it("treats a budget without a period as monthly", () => {
+    const [p] = computeBudgetProgress([{ category_id: FOOD, monthly_limit: 1000 }], categories, txs, now);
+    expect(p.period).toBe("monthly");
+    expect(p.spent).toBe(300);
   });
 });
 

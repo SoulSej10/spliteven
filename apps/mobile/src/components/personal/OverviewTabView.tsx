@@ -5,7 +5,6 @@ import { router } from "expo-router";
 import {
   computeAllAccountBalances,
   computeBudgetProgress,
-  filterTransactionsForCurrentMonth,
 } from "@evensplit/shared";
 import { ArrowDownLeft, ArrowsLeftRight as ArrowLeftRight, ArrowUpRight, PiggyBank } from "phosphor-react-native";
 import { Card } from "@/components/ui/Card";
@@ -53,11 +52,7 @@ export function OverviewTabView({ onNavigateTab }: { onNavigateTab: (tab: "accou
 
   const budgetHighlight = useMemo(() => {
     if (!budgets || budgets.length === 0) return null;
-    const progress = computeBudgetProgress(
-      budgets,
-      categories ?? [],
-      filterTransactionsForCurrentMonth(baseTransactions)
-    );
+    const progress = computeBudgetProgress(budgets, categories ?? [], baseTransactions);
     if (progress.length === 0) return null;
     return progress.reduce((max, p) => (p.percent > max.percent ? p : max), progress[0]);
   }, [budgets, categories, baseTransactions]);

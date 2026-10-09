@@ -1,5 +1,6 @@
 "use client";
 
+import { IconPicker } from "@/components/ui/icon-picker";
 import { useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -86,23 +87,10 @@ export function CreateGroupDialog({ trigger }: { trigger?: ReactNode } = {}) {
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="flex flex-wrap gap-2">
-            {ICONS.map((i) => (
-              <button
-                type="button"
-                key={i}
-                onClick={() => {
-                  setIcon(i);
-                  setValue("icon", i);
-                }}
-                className={`flex h-10 w-10 items-center justify-center rounded-xl text-xl transition-colors ${
-                  icon === i ? "bg-primary-light ring-2 ring-primary" : "bg-muted"
-                }`}
-              >
-                <AppIcon value={i} size={22} />
-              </button>
-            ))}
-          </div>
+          <IconPicker kind="group" value={icon} onChange={(i) => {
+          setIcon(i);
+          setValue("icon", i);
+        }} />
 
           <div className="space-y-1.5">
             <Label htmlFor="name">Group name</Label>

@@ -212,3 +212,13 @@
     }
   }
 }
+
+/* Phone: table containers drop their outer card frame, because each row is its own card there. */
+@media (max-width: 767px) {
+  div:has(> [data-slot="table-container"]) {
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+}

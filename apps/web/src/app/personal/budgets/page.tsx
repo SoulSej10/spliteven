@@ -2,8 +2,8 @@
 
 import { useMemo } from "react";
 import { toast } from "sonner";
-import { computeBudgetProgress, computeBudgetSuggestions, filterTransactionsForCurrentMonth } from "@evensplit/shared";
-import { PiggyBank, WarningCircle as AlertCircle, CheckCircle, ArrowUpRight, Sparkle, Trash as Trash2 } from "@phosphor-icons/react";
+import { budgetPeriodNoun, computeBudgetProgress, computeBudgetSuggestions } from "@evensplit/shared";
+import { PiggyBank, WarningCircle as AlertCircle, CheckCircle, ArrowUpRight, PencilSimple as Pencil, Sparkle, Trash as Trash2 } from "@phosphor-icons/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -30,12 +30,8 @@ export default function PersonalBudgetsPage() {
   const deleteBudget = useDeletePersonalBudget();
   const upsertBudget = useUpsertPersonalBudget();
 
-  const thisMonthTransactions = useMemo(
-    () => filterTransactionsForCurrentMonth(transactions),
-    [transactions]
-  );
-
-  const progress = computeBudgetProgress(budgets ?? [], categories ?? [], thisMonthTransactions);
+  // Each budget counts only the spending inside its own period (month, quarter or year).
+  const progress = computeBudgetProgress(budgets ?? [], categories ?? [], transactions);
 
   const suggestions = useMemo(
     () => computeBudgetSuggestions(categories ?? [], budgets ?? [], transactions),
@@ -44,7 +40,7 @@ export default function PersonalBudgetsPage() {
 
   async function onAddSuggestion(categoryId: string, limit: number) {
     try {
-      await upsertBudget.mutateAsync({ category_id: categoryId, monthly_limit: limit });
+      await upsertBudget.mutateAsync({ category_id: categoryId, monthly_limit: limit, period: "monthly" });
       toast.success("Budget added");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not add budget");
@@ -72,7 +68,7 @@ export default function PersonalBudgetsPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Budgets</h1>
-          <p className="hidden text-sm text-muted-foreground sm:block">This month&apos;s spending against your limits.</p>
+          <p className="hidden text-sm text-muted-foreground sm:block">Spending against your monthly, quarterly and yearly limits.</p>
         </div>
         <AddBudgetDialog />
       </div>
@@ -147,8 +143,11 @@ export default function PersonalBudgetsPage() {
           return (
             <Card key={budget.id} className="p-4">
               <div className="mb-2 flex items-center justify-between">
-                <p className="font-medium">{p.category_name}</p>
-                <div className="flex items-center gap-2">
+                <div className="min-w-0">
+                  <p className="truncate font-medium">{p.category_name}</p>
+                  <p className="text-[11px] capitalize text-muted-foreground">{p.period} budget</p>
+                </div>
+                <div className="flex shrink-0 items-center gap-2">
                   <p
                     className={`text-sm tabular-nums ${
                       overBudget ? "text-destructive" : approaching ? "text-accent" : "text-muted-foreground"
@@ -156,6 +155,17 @@ export default function PersonalBudgetsPage() {
                   >
                     {formatMoney(p.spent, currency)} / {formatMoney(p.limit, currency)}
                   </p>
+                  <AddBudgetDialog
+                    budget={budget}
+                    trigger={
+                      <button
+                        className="flex h-7 w-7 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-primary-light hover:text-primary-deep"
+                        aria-label="Edit budget"
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                      </button>
+                    }
+                  />
                   <button
                     onClick={() => onDelete(budget.id)}
                     className="flex h-7 w-7 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
@@ -171,7 +181,7 @@ export default function PersonalBudgetsPage() {
               />
               {overBudget && (
                 <p className="mt-1 text-xs text-destructive">
-                  {formatMoney(Math.abs(p.remaining), currency)} over budget
+                  {formatMoney(Math.abs(p.remaining), currency)} over budget this {budgetPeriodNoun(p.period)}
                 </p>
               )}
               {approaching && (
