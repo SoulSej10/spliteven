@@ -51,3 +51,21 @@ export function useFxRates(): { rates: FxRates; loaded: boolean } {
   const isLoaded = useSyncExternalStore(subscribe, () => loaded);
   return { rates: current, loaded: isLoaded };
 }
+
+// A currency the user was sent to Settings to give a rate for (e.g. from the Add account
+// sheet), so the rates card can open straight to it. Cleared once the card has used it.
+let pendingCurrency: string | null = null;
+
+export function requestRateFor(currency: string) {
+  pendingCurrency = currency;
+  emit();
+}
+
+export function clearPendingRate() {
+  pendingCurrency = null;
+  emit();
+}
+
+export function usePendingRateCurrency(): string | null {
+  return useSyncExternalStore(subscribe, () => pendingCurrency);
+}

@@ -312,7 +312,7 @@ export default function InsightsScreen() {
                 <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                   {MONTH_NAMES[calendarDate.getMonth()]}
                 </Text>
-                <Text className="text-sm text-neutral-700 dark:text-neutral-300">
+                <Text className="text-sm text-neutral-700 dark:text-neutral-100">
                   You spent {formatMoney(personalMonthTotal, personalCurrency)} personally.
                 </Text>
               </Card>
@@ -364,12 +364,12 @@ export default function InsightsScreen() {
                   {MONTH_NAMES[calendarDate.getMonth()]}
                 </Text>
                 {sharedParticipationByCurrency.map(([currency, amount]) => (
-                  <Text key={currency} className="text-sm text-neutral-700 dark:text-neutral-300">
+                  <Text key={currency} className="text-sm text-neutral-700 dark:text-neutral-100">
                     You were part of {formatMoney(amount, currency)} in shared group spending.
                   </Text>
                 ))}
                 {(sharedSummary.advanced > 0.005 || sharedSummary.recovered > 0.005) && (
-                  <Text className="text-sm text-neutral-700 dark:text-neutral-300">
+                  <Text className="text-sm text-neutral-700 dark:text-neutral-100">
                     You've advanced {formatMoney(sharedSummary.advanced, personalCurrency)} for others and recovered{" "}
                     {formatMoney(sharedSummary.recovered, personalCurrency)}
                     {sharedSummary.outstanding > 0.005

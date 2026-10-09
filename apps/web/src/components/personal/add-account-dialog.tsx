@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Plus } from "@phosphor-icons/react";
 import { createPersonalAccountSchema, type CreatePersonalAccountInput, type PersonalAccount } from "@evensplit/shared";
@@ -23,6 +24,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from "@/hooks/use-auth";
 import { useCreatePersonalAccount, useUpdatePersonalAccount } from "@/hooks/use-personal";
 import { CURRENCIES } from "@/lib/format";
+import { requestRateFor, useFxRates } from "@/lib/fx-rates";
 import { AppIcon } from "@/components/ui/app-icon";
 
 const ACCOUNT_TYPES = [

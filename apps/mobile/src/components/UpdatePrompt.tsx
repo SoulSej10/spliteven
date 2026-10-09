@@ -34,7 +34,7 @@ export function UpdateDialog({
           </Text>
           {info.notes ? (
             <ScrollView className="mt-3 max-h-40" showsVerticalScrollIndicator={false}>
-              <Text className="text-sm leading-5 text-neutral-700 dark:text-neutral-300">{info.notes}</Text>
+              <Text className="text-sm leading-5 text-neutral-700 dark:text-neutral-100">{info.notes}</Text>
             </ScrollView>
           ) : null}
           <Text className="mt-3 text-xs text-neutral-500">

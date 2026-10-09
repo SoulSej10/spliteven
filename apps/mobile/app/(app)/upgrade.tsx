@@ -118,7 +118,7 @@ export default function UpgradeScreen() {
                 {plan.features.map((feature) => (
                   <View key={feature} className="flex-row items-center gap-2">
                     <Check size={14} color={palette.primary} />
-                    <Text className="flex-1 text-sm text-neutral-700 dark:text-neutral-300">{feature}</Text>
+                    <Text className="flex-1 text-sm text-neutral-700 dark:text-neutral-100">{feature}</Text>
                   </View>
                 ))}
               </View>

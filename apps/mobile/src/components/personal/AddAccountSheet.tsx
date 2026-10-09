@@ -11,6 +11,8 @@ import { useCreatePersonalAccount, useUpdatePersonalAccount } from "@/hooks/use-
 import { CURRENCIES } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import { AppIcon } from "@/components/ui/AppIcon";
+import { useSettingsDrawer } from "@/context/settings-drawer";
+import { requestRateFor, useFxRates } from "@/lib/fx-rates";
 
 const ACCOUNT_TYPES: { value: PersonalAccountType; label: string }[] = [
   { value: "cash", label: "Cash" },
