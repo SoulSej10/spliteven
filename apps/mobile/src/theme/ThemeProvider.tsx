@@ -1,8 +1,9 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { View, useWindowDimensions } from "react-native";
-import { useColorScheme } from "nativewind";
-import { THEME_TEMPLATES, resolveTheme, type AccentId, type ThemeId } from "@evensplit/shared";
-import { saveAppearance, type StoredAppearance } from "@/lib/appearance";
+import { colorScheme as nativeWindScheme, useColorScheme } from "nativewind";
+import { DEFAULT_ACCENT_ID, DEFAULT_THEME_ID, THEME_TEMPLATES, resolveTheme, type AccentId, type ThemeId } from "@evensplit/shared";
+import { useAuth } from "@/hooks/use-auth";
+import { loadStoredColorScheme, saveAppearance, type StoredAppearance } from "@/lib/appearance";
 import { applyPalette } from "./palette";
 import { buildResponsiveVars } from "./responsive";
 import { buildThemeVars } from "./vars";
@@ -29,7 +30,33 @@ export function AppThemeProvider({ initial, children }: { initial: StoredAppeara
   const [themeId, setThemeIdState] = useState<ThemeId>(initial.themeId);
   const [accentId, setAccentIdState] = useState<AccentId>(initial.accentId);
 
-  const resolved = useMemo(() => resolveTheme(themeId, accentId, scheme), [themeId, accentId, scheme]);
+  // The chosen look belongs to the signed-in app. Signed out (login, sign-up, reset), the app always
+  // shows the default light green, and the saved choice comes back at the next sign-in.
+  const { session, loading } = useAuth();
+  const personalised = loading || !!session;
+
+  useEffect(() => {
+    if (loading) return;
+    if (!session) {
+      nativeWindScheme.set("light");
+      return;
+    }
+    let active = true;
+    void loadStoredColorScheme().then((stored) => {
+      if (active) nativeWindScheme.set(stored);
+    });
+    return () => {
+      active = false;
+    };
+  }, [session, loading]);
+
+  const shownThemeId = personalised ? themeId : DEFAULT_THEME_ID;
+  const shownAccentId = personalised ? accentId : DEFAULT_ACCENT_ID;
+  const shownScheme = personalised ? scheme : "light";
+  const resolved = useMemo(
+    () => resolveTheme(shownThemeId, shownAccentId, shownScheme),
+    [shownThemeId, shownAccentId, shownScheme]
+  );
   const themeVars = useMemo(() => buildThemeVars(resolved), [resolved]);
   const { width } = useWindowDimensions();
   const responsiveVars = useMemo(() => buildResponsiveVars(width), [width]);
@@ -57,8 +84,8 @@ export function AppThemeProvider({ initial, children }: { initial: StoredAppeara
   );
 
   const value = useMemo<ThemeContextValue>(
-    () => ({ themeId, accentId, version: `${themeId}:${accentId}:${scheme}`, setThemeId, setAccentId }),
-    [themeId, accentId, scheme, setThemeId, setAccentId]
+    () => ({ themeId, accentId, version: `${shownThemeId}:${shownAccentId}:${shownScheme}`, setThemeId, setAccentId }),
+    [themeId, accentId, shownThemeId, shownAccentId, shownScheme, setThemeId, setAccentId]
   );
 
   return (

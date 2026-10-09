@@ -103,7 +103,7 @@ export default function LoginPage() {
             <CardDescription>Sign in or create an account to continue</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button type="button" variant="outline" className="mb-4 w-full" disabled={submitting} onClick={onGoogle}>
+            <Button type="button" variant="outline" className="mb-4 h-11 w-full rounded-full border-[#dadce0] bg-white text-[13px] font-semibold uppercase tracking-wider text-[#3c4043] hover:bg-[#f1f3f4] hover:text-[#3c4043]" disabled={submitting} onClick={onGoogle}>
               <svg viewBox="0 0 24 24" className="mr-2 h-4 w-4" aria-hidden="true">
                 <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.5-.2-2.3H12v4.5h6.5a5.6 5.6 0 0 1-2.4 3.7v3h3.9c2.3-2.1 3.5-5.2 3.5-8.9z" />
                 <path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.9-3c-1.1.7-2.5 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5H1.3v3.1A12 12 0 0 0 12 24z" />

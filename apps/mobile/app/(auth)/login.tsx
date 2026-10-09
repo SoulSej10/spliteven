@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { BottomActionBar } from "@/components/ui/BottomActionBar";
 import { getSupabaseClient } from "@/lib/supabase/client";
+import { GoogleButton } from "@/components/ui/GoogleButton";
 import { signInWithGoogle } from "@/lib/google-signin";
 import { useBiometricSignIn } from "@/hooks/use-biometric-signin";
 import {
@@ -131,9 +132,7 @@ export default function LoginScreen() {
         <Button onPress={handleSubmit(onSubmit)} loading={submitting} size="lg">
           Log in
         </Button>
-        <Button variant="outline" onPress={() => void onGoogle()} loading={googleBusy} size="lg">
-          Continue with Google
-        </Button>
+        <GoogleButton onPress={() => void onGoogle()} loading={googleBusy} />
         {biometric.available && (
           <Button variant="outline" onPress={() => void biometric.signIn()} loading={biometric.busy} size="lg">
             Sign in with fingerprint
