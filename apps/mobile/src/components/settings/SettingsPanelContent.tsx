@@ -26,6 +26,8 @@ import { EditProfileSheet } from "./EditProfileSheet";
 import { UpdateDialog } from "@/components/UpdatePrompt";
 import { fetchAvailableUpdate, installedVersion } from "@/lib/app-update";
 import { AppearancePicker } from "./AppearancePicker";
+import { BiometricToggle } from "./BiometricToggle";
+import { setBiometricEnabled } from "@/lib/biometrics";
 import {
   usePersonalAccounts,
   usePersonalCategories,
@@ -230,6 +232,8 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
 
   async function onSignOut() {
     onClose();
+    // A different person may sign in next on this phone: biometric unlock is switched off until they turn it on.
+    await setBiometricEnabled(false);
     await signOut();
     router.replace("/(auth)/login");
   }
@@ -495,6 +499,8 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
             <ChevronRight color={palette.muted} size={17} />
           </Pressable>
         </Card>
+
+        <BiometricToggle />
 
         <Card>
           <Text className="mb-3 font-semibold text-neutral-900 dark:text-neutral-100">Appearance</Text>

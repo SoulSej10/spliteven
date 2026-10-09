@@ -10,6 +10,7 @@ import { applyAuthCallbackUrl } from "@/lib/supabase/authDeepLink";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import { isPasswordPwned } from "@/lib/pwned-password";
 import { palette } from "@/theme/palette";
+import { describeWeakPassword } from "@evensplit/shared";
 
 type LinkState = "checking" | "ready" | "invalid";
 
@@ -91,7 +92,8 @@ export default function ResetPasswordScreen() {
         { text: "Continue", onPress: () => router.replace("/") },
       ]);
     } catch (err) {
-      Alert.alert("Could not update password", err instanceof Error ? err.message : "Try again");
+      const message = err instanceof Error ? err.message : "Try again";
+      Alert.alert("Could not update password", describeWeakPassword(message) ?? message);
     } finally {
       setSubmitting(false);
     }

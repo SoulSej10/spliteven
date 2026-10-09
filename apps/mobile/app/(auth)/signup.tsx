@@ -7,7 +7,7 @@ import { useColorScheme } from "nativewind";
 import { ArrowLeft } from "phosphor-react-native";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { signUpSchema, signupHitExistingAccount, type SignUpInput } from "@evensplit/shared";
+import { signUpSchema, signupHitExistingAccount, type SignUpInput, describeWeakPassword } from "@evensplit/shared";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { BottomActionBar } from "@/components/ui/BottomActionBar";
@@ -89,7 +89,8 @@ export default function SignUpScreen() {
       }
       router.replace("/(auth)/profile-setup");
     } catch (err) {
-      Alert.alert("Could not sign up", err instanceof Error ? err.message : "Try again");
+      const message = err instanceof Error ? err.message : "Try again";
+      Alert.alert("Could not sign up", describeWeakPassword(message) ?? message);
     } finally {
       setSubmitting(false);
     }

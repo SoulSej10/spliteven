@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { logInSchema, signUpSchema, signupHitExistingAccount, type LogInInput, type SignUpInput } from "@evensplit/shared";
+import { logInSchema, signUpSchema, signupHitExistingAccount, type LogInInput, type SignUpInput, describeWeakPassword } from "@evensplit/shared";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
@@ -69,7 +69,8 @@ export default function LoginPage() {
       toast.success("Account created. Check your email to confirm, then finish your profile.");
       router.push("/onboarding");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not sign up");
+      const message = err instanceof Error ? err.message : "Could not sign up";
+      toast.error(describeWeakPassword(message) ?? message);
     } finally {
       setSubmitting(false);
     }

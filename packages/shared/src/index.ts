@@ -6,6 +6,7 @@ export * from "./currency";
 export * from "./appIcons";
 export * from "./appUpdate";
 export * from "./signup";
+export * from "./passwordPolicy";
 export * from "./dateKeys";
 export * from "./calculator";
 export * from "./pwnedPassword";

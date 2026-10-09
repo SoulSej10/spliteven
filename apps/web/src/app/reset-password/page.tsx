@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { passwordResetSchema, type PasswordResetInput } from "@evensplit/shared";
+import { passwordResetSchema, type PasswordResetInput, describeWeakPassword } from "@evensplit/shared";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
@@ -43,7 +43,8 @@ export default function ResetPasswordPage() {
       toast.success("Password updated. Please log in again.");
       router.push("/login");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not reset password");
+      const message = err instanceof Error ? err.message : "Could not reset password";
+      toast.error(describeWeakPassword(message) ?? message);
     } finally {
       setSubmitting(false);
     }
