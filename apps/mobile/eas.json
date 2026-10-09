@@ -46,6 +46,18 @@
         "SENTRY_DISABLE_AUTO_UPLOAD": "true"
       },
       "channel": "production"
+    },
+    "emulator": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "APP_ENV": "preview",
+        "SENTRY_DISABLE_AUTO_UPLOAD": "true",
+        "SPLITEVEN_ABIS": "x86_64"
+      },
+      "channel": "preview"
     }
   },
   "submit": {

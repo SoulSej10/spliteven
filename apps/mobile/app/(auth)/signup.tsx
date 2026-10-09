@@ -16,6 +16,8 @@ import { AcceptTermsGate } from "@/components/legal/AcceptTermsGate";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import { isPasswordPwned } from "@/lib/pwned-password";
 import { hasAcceptedPrivacyPolicy, setPrivacyPolicyAccepted } from "@/lib/device-flags";
+import { CURRENCIES } from "@/lib/format";
+import { cn } from "@/lib/cn";
 import { palette } from "@/theme/palette";
 
 export default function SignUpScreen() {
@@ -34,6 +36,11 @@ export default function SignUpScreen() {
       active = false;
     };
   }, []);
+  // Collected here because the account (and its starter Cash account) is created with these values;
+  // otherwise everyone silently ended up on USD with a name taken from their email.
+  const [displayName, setDisplayName] = useState("");
+  const [currency, setCurrency] = useState<string>("PHP");
+  const [nameError, setNameError] = useState<string | null>(null);
   const { colorScheme } = useColorScheme();
   const iconColor = palette.ink;
   const { handleSubmit, formState, setValue, watch } = useForm<SignUpInput>({
@@ -42,6 +49,12 @@ export default function SignUpScreen() {
   });
 
   async function onSubmit(values: SignUpInput) {
+    const name = displayName.trim();
+    if (!name) {
+      setNameError("Tell us what to call you");
+      return;
+    }
+    setNameError(null);
     setSubmitting(true);
     try {
       try {
@@ -61,7 +74,10 @@ export default function SignUpScreen() {
       const { data, error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
-        options: { emailRedirectTo: Linking.createURL("auth/callback") },
+        options: {
+          emailRedirectTo: Linking.createURL("auth/callback"),
+          data: { display_name: name, default_currency: currency },
+        },
       });
       if (error) throw error;
       if (signupHitExistingAccount(data.user)) {
@@ -145,6 +161,17 @@ export default function SignUpScreen() {
 
         <View className="gap-4">
           <TextField
+            label="Your name"
+            autoCapitalize="words"
+            autoComplete="name"
+            onChangeText={(t) => {
+              setDisplayName(t);
+              if (nameError) setNameError(null);
+            }}
+            value={displayName}
+            error={nameError ?? undefined}
+          />
+          <TextField
             label="Email"
             keyboardType="email-address"
             autoCapitalize="none"
@@ -152,6 +179,24 @@ export default function SignUpScreen() {
             value={watch("email")}
             error={formState.errors.email?.message}
           />
+          <View className="gap-1.5">
+            <Text className="text-sm font-medium text-neutral-900 dark:text-neutral-100">Your currency</Text>
+            <View className="flex-row flex-wrap gap-2">
+              {CURRENCIES.map((c) => (
+                <Pressable
+                  key={c}
+                  onPress={() => setCurrency(c)}
+                  className={cn(
+                    "rounded-pill border px-3 py-1.5",
+                    currency === c ? "border-primary bg-primary-light" : "border-neutral-500/20"
+                  )}
+                >
+                  <Text className={cn("text-sm font-medium", currency === c ? "text-primary-deep" : "text-neutral-500")}>{c}</Text>
+                </Pressable>
+              ))}
+            </View>
+            <Text className="text-xs text-neutral-500">Used for your accounts and totals. You can change it later in Settings.</Text>
+          </View>
           <TextField
             label="Password"
             secureTextEntry

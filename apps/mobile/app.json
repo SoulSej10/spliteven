@@ -4,7 +4,7 @@
     "slug": "evensplit",
     "owner": "jessanthonytahil10",
     "scheme": "evensplit",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -66,12 +66,14 @@
         {
           "android": {
             "enableMinifyInReleaseBuilds": true,
-            "enableShrinkResourcesInReleaseBuilds": true
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "useLegacyPackaging": true
           }
         }
       ],
       "@sentry/react-native",
-      "./plugins/withAndroidResizableActivity"
+      "./plugins/withAndroidResizableActivity",
+      "./plugins/withReleaseAbis"
     ],
     "experiments": {
       "typedRoutes": false
