@@ -159,17 +159,21 @@ export default function ResetPasswordScreen() {
           <View className="gap-4">
             <TextField
               label="New password"
+              autoComplete="new-password"
+              textContentType="newPassword"
+              importantForAutofill="yes"
               secureTextEntry
               autoCapitalize="none"
-              autoComplete="new-password"
               value={password}
               onChangeText={setPassword}
             />
             <TextField
               label="Confirm new password"
+              autoComplete="new-password"
+              textContentType="newPassword"
+              importantForAutofill="yes"
               secureTextEntry
               autoCapitalize="none"
-              autoComplete="new-password"
               value={confirm}
               onChangeText={setConfirm}
               error={error ?? undefined}

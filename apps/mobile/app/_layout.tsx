@@ -4,14 +4,19 @@ import * as Sentry from "@sentry/react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { colorScheme } from "nativewind";
-import { I18nManager } from "react-native";
+import { Alert, I18nManager } from "react-native";
 import { useFonts } from "expo-font";
 import * as Linking from "expo-linking";
 import "../global.css";
+import { DialogHost } from "@/components/DialogHost";
+import { themedAlert } from "@/lib/dialog";
 import { Providers } from "@/components/Providers";
 import { loadStoredAppearance, loadStoredColorScheme, type StoredAppearance } from "@/lib/appearance";
 import { AppThemeProvider } from "@/theme/ThemeProvider";
 import { rememberDeepLink } from "@/lib/supabase/authDeepLink";
+
+// Every Alert.alert() in the app now renders as the on-brand DialogHost card.
+Alert.alert = themedAlert;
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -90,6 +95,7 @@ function RootLayout() {
           <Stack.Screen name="(app)" />
           <Stack.Screen name="invite/[code]" options={{ presentation: "modal", headerShown: true, title: "Join group" }} />
         </Stack>
+        <DialogHost />
       </AppThemeProvider>
     </Providers>
   );

@@ -93,6 +93,9 @@ export default function LoginScreen() {
         <View className="gap-4">
           <TextField
             label="Email"
+            autoComplete="username"
+            textContentType="username"
+            importantForAutofill="yes"
             keyboardType="email-address"
             autoCapitalize="none"
             onChangeText={(t) => setValue("email", t)}
@@ -101,6 +104,9 @@ export default function LoginScreen() {
           />
           <TextField
             label="Password"
+            autoComplete="current-password"
+            textContentType="password"
+            importantForAutofill="yes"
             secureTextEntry
             onChangeText={(t) => setValue("password", t)}
             value={watch("password")}

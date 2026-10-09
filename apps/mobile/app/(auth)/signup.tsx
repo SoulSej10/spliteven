@@ -173,6 +173,9 @@ export default function SignUpScreen() {
           />
           <TextField
             label="Email"
+            autoComplete="username"
+            textContentType="username"
+            importantForAutofill="yes"
             keyboardType="email-address"
             autoCapitalize="none"
             onChangeText={(t) => setValue("email", t)}
@@ -199,6 +202,9 @@ export default function SignUpScreen() {
           </View>
           <TextField
             label="Password"
+            autoComplete="new-password"
+            textContentType="newPassword"
+            importantForAutofill="yes"
             secureTextEntry
             onChangeText={(t) => setValue("password", t)}
             value={watch("password")}
@@ -206,6 +212,9 @@ export default function SignUpScreen() {
           />
           <TextField
             label="Confirm password"
+            autoComplete="new-password"
+            textContentType="newPassword"
+            importantForAutofill="yes"
             secureTextEntry
             onChangeText={(t) => setValue("confirmPassword", t)}
             value={watch("confirmPassword")}
