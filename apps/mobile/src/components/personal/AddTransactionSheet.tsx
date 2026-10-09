@@ -2,12 +2,17 @@ import { useEffect, useState } from "react";
 import { Alert, Pressable, ScrollView, View } from "react-native";
 import { Text } from "@/components/ui/typography";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { createPersonalTransactionSchema } from "@evensplit/shared";
+import { createPersonalTransactionSchema, type PersonalTransaction } from "@evensplit/shared";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { AmountField } from "@/components/ui/AmountField";
-import { usePersonalAccounts, usePersonalCategories, useCreatePersonalTransaction } from "@/hooks/use-personal";
+import {
+  usePersonalAccounts,
+  usePersonalCategories,
+  useCreatePersonalTransaction,
+  useUpdatePersonalTransaction,
+} from "@/hooks/use-personal";
 import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import { AppIcon } from "@/components/ui/AppIcon";
@@ -25,27 +30,45 @@ export function AddTransactionSheet({
   visible,
   onClose,
   initialKind = "expense",
+  transaction,
 }: {
   visible: boolean;
   onClose: () => void;
   /** Pre-selects a kind (e.g. opening straight into "Add income" from a Home quick action). */
   initialKind?: ManualTransactionKind;
+  /** When set, the sheet edits this transaction instead of adding a new one. */
+  transaction?: PersonalTransaction;
 }) {
   const { data: accounts } = usePersonalAccounts();
   const { data: categories } = usePersonalCategories();
   const createTransaction = useCreatePersonalTransaction();
+  const updateTransaction = useUpdatePersonalTransaction();
+  const editing = !!transaction;
 
   const [kind, setKind] = useState<ManualTransactionKind>(initialKind);
 
-  useEffect(() => {
-    if (visible) setKind(initialKind);
-  }, [visible, initialKind]);
   const [accountId, setAccountId] = useState<string | null>(null);
   const [transferAccountId, setTransferAccountId] = useState<string | null>(null);
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
   const [date, setDate] = useState(new Date());
+
+  useEffect(() => {
+    if (!visible) return;
+    if (transaction) {
+      // Edit mode: start from the saved values every time the sheet opens.
+      setKind(transaction.kind === "income" || transaction.kind === "transfer" ? transaction.kind : "expense");
+      setAccountId(transaction.account_id);
+      setTransferAccountId(transaction.transfer_account_id);
+      setCategoryId(transaction.category_id);
+      setAmount(String(transaction.amount));
+      setNote(transaction.note ?? "");
+      setDate(new Date(transaction.occurred_at));
+    } else {
+      setKind(initialKind);
+    }
+  }, [visible, initialKind, transaction]);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -67,14 +90,19 @@ export function AddTransactionSheet({
     }
     setSubmitting(true);
     try {
-      await createTransaction.mutateAsync(parsed.data);
-      onClose();
-      setAmount("");
-      setNote("");
-      setCategoryId(null);
-      setTransferAccountId(null);
+      if (transaction) {
+        await updateTransaction.mutateAsync({ transactionId: transaction.id, input: parsed.data });
+        onClose();
+      } else {
+        await createTransaction.mutateAsync(parsed.data);
+        onClose();
+        setAmount("");
+        setNote("");
+        setCategoryId(null);
+        setTransferAccountId(null);
+      }
     } catch (err) {
-      Alert.alert("Could not add transaction", err instanceof Error ? err.message : "Try again");
+      Alert.alert(editing ? "Could not update transaction" : "Could not add transaction", err instanceof Error ? err.message : "Try again");
     } finally {
       setSubmitting(false);
     }
@@ -84,10 +112,10 @@ export function AddTransactionSheet({
     <BottomSheet
       visible={visible}
       onClose={onClose}
-      title="Add a transaction"
+      title={editing ? "Edit transaction" : "Add a transaction"}
       footer={
         <Button onPress={onSubmit} loading={submitting} size="lg">
-          Save
+          {editing ? "Save changes" : "Save"}
         </Button>
       }
     >

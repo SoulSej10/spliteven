@@ -18,6 +18,7 @@ import type { PersonalTransaction } from "@evensplit/shared";
 import { palette } from "@/theme/palette";
 import { localMonthKey } from "@evensplit/shared";
 import { TransactionAmount } from "@/components/personal/TransactionAmount";
+import { AddTransactionSheet } from "@/components/personal/AddTransactionSheet";
 
 /** income/group_reimbursement both mean "cash came in" - positive tint. expense/group_advance both mean "cash left" - negative tint. transfer is neutral. */
 export function TransactionIcon({ kind }: { kind: PersonalTransaction["kind"] }) {
@@ -40,6 +41,15 @@ export function transactionLabel(tx: PersonalTransaction, category: string | nul
   return category ?? (tx.kind === "income" ? "Income" : "Expense");
 }
 
+/** Rows created by a group expense or settlement are edited from the group, not here. */
+function isEditable(tx: PersonalTransaction) {
+  return (
+    !tx.linked_expense_id &&
+    !tx.linked_settlement_id &&
+    (tx.kind === "income" || tx.kind === "expense" || tx.kind === "transfer")
+  );
+}
+
 const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December",
@@ -56,6 +66,7 @@ export function RecordsTabView() {
   const { data: accounts } = usePersonalAccounts();
   const { data: categories } = usePersonalCategories();
   const deleteTransaction = useDeletePersonalTransaction();
+  const [editing, setEditing] = useState<PersonalTransaction | null>(null);
   const [month, setMonth] = useState(() => {
     const now = new Date();
     return { year: now.getFullYear(), month: now.getMonth() };
@@ -139,7 +150,7 @@ export function RecordsTabView() {
         const isCredit = tx.kind === "income" || tx.kind === "group_reimbursement";
         const groupInfo = tx.groups;
         return (
-          <Pressable key={tx.id} onLongPress={() => onDelete(tx.id)}>
+          <Pressable key={tx.id} onPress={() => isEditable(tx) && setEditing(tx)} onLongPress={() => onDelete(tx.id)}>
             <Card className="flex-row items-center gap-3 py-3">
               <TransactionIcon kind={tx.kind} />
               <View className="min-w-0 flex-1">
@@ -167,6 +178,12 @@ export function RecordsTabView() {
           </Pressable>
         );
       })}
+
+      <AddTransactionSheet
+        visible={editing !== null}
+        onClose={() => setEditing(null)}
+        transaction={editing ?? undefined}
+      />
     </View>
   );
 }

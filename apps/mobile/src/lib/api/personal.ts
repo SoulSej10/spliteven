@@ -160,6 +160,29 @@ export async function createPersonalTransaction(
   return data as PersonalTransaction;
 }
 
+export async function updatePersonalTransaction(
+  transactionId: string,
+  input: CreatePersonalTransactionInput
+): Promise<PersonalTransaction> {
+  const supabase = getSupabaseClient();
+  const { data, error } = await supabase
+    .from("personal_transactions")
+    .update({
+      account_id: input.account_id,
+      transfer_account_id: input.transfer_account_id ?? null,
+      category_id: input.category_id ?? null,
+      kind: input.kind,
+      amount: input.amount,
+      note: input.note ?? null,
+      occurred_at: input.occurred_at,
+    })
+    .eq("id", transactionId)
+    .select()
+    .single();
+  if (error) throw error;
+  return data as PersonalTransaction;
+}
+
 export async function deletePersonalTransaction(transactionId: string): Promise<void> {
   const supabase = getSupabaseClient();
   const { error } = await supabase.from("personal_transactions").delete().eq("id", transactionId);

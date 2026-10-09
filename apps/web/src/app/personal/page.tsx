@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { toast } from "sonner";
-import { ArrowDownLeft, ArrowUpRight, ArrowsLeftRight as ArrowLeftRight, Receipt, Trash as Trash2 } from "@phosphor-icons/react";
+import { ArrowDownLeft, ArrowUpRight, ArrowsLeftRight as ArrowLeftRight, PencilSimple as Pencil, Receipt, Trash as Trash2 } from "@phosphor-icons/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { TablePagination } from "@/components/ui/table-pagination";
@@ -21,6 +21,32 @@ function TransactionIcon({ kind }: { kind: PersonalTransaction["kind"] }) {
   if (kind === "income" || kind === "group_reimbursement") return <ArrowDownLeft className="h-4 w-4 text-positive" />;
   if (kind === "transfer") return <ArrowLeftRight className="h-4 w-4 text-muted-foreground" />;
   return <ArrowUpRight className="h-4 w-4 text-negative" />;
+}
+
+/** Rows created by a group expense or settlement are edited from the group, not here. */
+function isEditable(tx: PersonalTransaction) {
+  return (
+    !tx.linked_expense_id &&
+    !tx.linked_settlement_id &&
+    (tx.kind === "income" || tx.kind === "expense" || tx.kind === "transfer")
+  );
+}
+
+function EditButton({ tx }: { tx: PersonalTransaction }) {
+  if (!isEditable(tx)) return <span className="h-9 w-9 shrink-0 md:h-8 md:w-8" aria-hidden="true" />;
+  return (
+    <AddTransactionDialog
+      transaction={tx}
+      trigger={
+        <button
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted-foreground active:bg-muted md:h-8 md:w-8 md:hover:bg-muted md:hover:text-foreground"
+          aria-label="Edit transaction"
+        >
+          <Pencil className="h-4 w-4" />
+        </button>
+      }
+    />
+  );
 }
 
 function transactionLabel(tx: PersonalTransaction, category: string | null, accountName: (id: string) => string): string {
@@ -118,6 +144,7 @@ export default function PersonalRecordsPage() {
                   {isCredit ? "+" : isDebit ? "-" : ""}
                   {formatMoney(tx.amount, account?.currency ?? "USD")}
                 </p>
+                <EditButton tx={tx} />
                 <button
                   onClick={() => onDelete(tx.id)}
                   className="-mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted-foreground active:bg-muted active:text-destructive"
@@ -182,6 +209,8 @@ export default function PersonalRecordsPage() {
                       {formatMoney(tx.amount, account?.currency ?? "USD")}
                     </TableCell>
                     <TableCell className="pl-0">
+                      <div className="flex items-center justify-end gap-0.5">
+                      <EditButton tx={tx} />
                       <button
                         onClick={() => onDelete(tx.id)}
                         className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-destructive"
@@ -189,6 +218,7 @@ export default function PersonalRecordsPage() {
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 );

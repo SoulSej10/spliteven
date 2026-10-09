@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Plus } from "@phosphor-icons/react";
+import type { PersonalTransaction } from "@evensplit/shared";
 import { createPersonalTransactionSchema, type CreatePersonalTransactionInput } from "@evensplit/shared";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,7 +22,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { usePersonalAccounts, usePersonalCategories, useCreatePersonalTransaction } from "@/hooks/use-personal";
+import {
+  usePersonalAccounts,
+  usePersonalCategories,
+  useCreatePersonalTransaction,
+  useUpdatePersonalTransaction,
+} from "@/hooks/use-personal";
 import { localDateKey } from "@evensplit/shared";
 
 const KINDS = [
@@ -33,16 +39,22 @@ const KINDS = [
 export function AddTransactionDialog({
   trigger,
   initialKind = "expense",
+  transaction,
 }: {
   /** Custom trigger element (e.g. a Home quick-action tile). Defaults to the standalone "Add transaction" button. */
   trigger?: ReactNode;
   /** Pre-selects a kind when the dialog opens. Manual entry is never group_advance/group_reimbursement (system-only kinds). */
   initialKind?: "income" | "expense" | "transfer";
+  /** When set, the dialog edits this transaction instead of adding a new one. */
+  transaction?: PersonalTransaction;
 }) {
   const [open, setOpen] = useState(false);
   const { data: accounts } = usePersonalAccounts();
   const { data: categories } = usePersonalCategories();
   const createTransaction = useCreatePersonalTransaction();
+  const updateTransaction = useUpdatePersonalTransaction();
+  const editing = !!transaction;
+  const saving = createTransaction.isPending || updateTransaction.isPending;
 
   const { register, handleSubmit, reset, watch, setValue, formState } = useForm<CreatePersonalTransactionInput>({
     resolver: zodResolver(createPersonalTransactionSchema),
@@ -60,24 +72,48 @@ export function AddTransactionDialog({
   const kind = watch("kind");
 
   useEffect(() => {
-    if (open) setValue("kind", initialKind);
+    if (!open) return;
+    if (transaction) {
+      // Edit mode: start from the saved values every time the dialog opens.
+      reset({
+        kind: transaction.kind === "income" || transaction.kind === "transfer" ? transaction.kind : "expense",
+        account_id: transaction.account_id,
+        category_id: transaction.category_id,
+        transfer_account_id: transaction.transfer_account_id,
+        amount: transaction.amount,
+        note: transaction.note ?? "",
+        occurred_at: localDateKey(transaction.occurred_at),
+      });
+    } else {
+      setValue("kind", initialKind);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, initialKind]);
+  }, [open, initialKind, transaction]);
   const visibleCategories = categories?.filter((c) => c.kind === (kind === "income" ? "income" : "expense"));
 
   async function onSubmit(values: CreatePersonalTransactionInput) {
     try {
-      await createTransaction.mutateAsync({
+      const input = {
         ...values,
         category_id: kind === "transfer" ? null : values.category_id,
         // Local noon of the chosen day, so the date can never slip across midnight in any time zone.
-        occurred_at: new Date(`${values.occurred_at}T12:00:00`).toISOString(),
-      });
-      toast.success("Transaction added");
+        // An edit that keeps the same day keeps its original time too.
+        occurred_at:
+          transaction && localDateKey(transaction.occurred_at) === values.occurred_at
+            ? transaction.occurred_at
+            : new Date(`${values.occurred_at}T12:00:00`).toISOString(),
+      };
+      if (transaction) {
+        await updateTransaction.mutateAsync({ transactionId: transaction.id, input });
+        toast.success("Transaction updated");
+      } else {
+        await createTransaction.mutateAsync(input);
+        toast.success("Transaction added");
+      }
       setOpen(false);
-      reset();
+      if (!transaction) reset();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not add transaction");
+      toast.error(err instanceof Error ? err.message : editing ? "Could not update transaction" : "Could not add transaction");
     }
   }
 
@@ -92,8 +128,10 @@ export function AddTransactionDialog({
       </DialogTrigger>
       <DialogContent className="rounded-2xl sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Add a transaction</DialogTitle>
-          <DialogDescription>Log an expense, income, or transfer between accounts.</DialogDescription>
+          <DialogTitle>{editing ? "Edit transaction" : "Add a transaction"}</DialogTitle>
+          <DialogDescription>
+            {editing ? "Change any detail, then save." : "Log an expense, income, or transfer between accounts."}
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-1.5">
@@ -200,8 +238,8 @@ export function AddTransactionDialog({
           </div>
 
           <DialogFooter>
-            <Button type="submit" className="w-full" disabled={createTransaction.isPending}>
-              Save
+            <Button type="submit" className="w-full" disabled={saving}>
+              {editing ? "Save changes" : "Save"}
             </Button>
           </DialogFooter>
         </form>

@@ -22,6 +22,7 @@ import {
   fetchPersonalTransactions,
   updatePersonalAccount,
   updatePersonalCategory,
+  updatePersonalTransaction,
   upsertPersonalBudget,
 } from "@/lib/api/personal";
 
@@ -122,6 +123,16 @@ export function useCreatePersonalTransaction() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (input: CreatePersonalTransactionInput) => createPersonalTransaction(authUser!.id, input),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["personal-transactions", authUser?.id] }),
+  });
+}
+
+export function useUpdatePersonalTransaction() {
+  const { authUser } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ transactionId, input }: { transactionId: string; input: CreatePersonalTransactionInput }) =>
+      updatePersonalTransaction(transactionId, input),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["personal-transactions", authUser?.id] }),
   });
 }
