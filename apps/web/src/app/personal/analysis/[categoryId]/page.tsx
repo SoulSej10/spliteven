@@ -8,6 +8,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { usePersonalAccounts, usePersonalCategories, usePersonalTransactions } from "@/hooks/use-personal";
 import { formatDate, formatMoney } from "@/lib/format";
 import { AppIcon } from "@/components/ui/app-icon";
+import { localMonthKey } from "@evensplit/shared";
+import { useBaseTransactions } from "@/hooks/use-personal-totals";
 
 const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
@@ -29,16 +31,15 @@ export default function CategoryTrailPage({
   const { categoryId } = use(params);
   const { month, kind: kindParam } = use(searchParams);
 
-  const { data: transactions, isLoading } = usePersonalTransactions();
+  const { base: currency, transactions, isLoading } = useBaseTransactions();
   const { data: accounts } = usePersonalAccounts();
   const { data: categories } = usePersonalCategories();
 
   const kind: "income" | "expense" = kindParam === "income" ? "income" : "expense";
   const category = categoryId !== "none" ? categoryId : null;
-  const currency = accounts?.[0]?.currency ?? "PHP";
 
   const monthTransactions = useMemo(
-    () => (transactions ?? []).filter((t) => month && t.occurred_at.slice(0, 7) === month),
+    () => transactions.filter((t) => month && localMonthKey(t.occurred_at) === month),
     [transactions, month]
   );
   const trail = useMemo(() => computeCategoryTrail(monthTransactions, category, kind), [monthTransactions, category, kind]);

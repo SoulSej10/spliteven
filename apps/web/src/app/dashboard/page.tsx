@@ -33,6 +33,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useAllExpenses, useAllSettlements, useMyGroups } from "@/hooks/use-groups";
 import { usePersonalAccounts, usePersonalBudgets, usePersonalCategories, usePersonalTransactions } from "@/hooks/use-personal";
 import { formatMoney } from "@/lib/format";
+import { useBaseTransactions } from "@/hooks/use-personal-totals";
 
 const GROUPS_PREVIEW_COUNT = 2;
 const UPCOMING_PREVIEW_COUNT = 3;
@@ -70,7 +71,7 @@ function DashboardContent() {
   const { data: accounts } = usePersonalAccounts();
   const { data: budgets } = usePersonalBudgets();
   const { data: categories } = usePersonalCategories();
-  const { data: transactions } = usePersonalTransactions();
+  const { base: baseCurrency, transactions: baseTransactions } = useBaseTransactions();
 
   const preview = (groups ?? []).slice(0, GROUPS_PREVIEW_COUNT);
 
@@ -92,11 +93,11 @@ function DashboardContent() {
     const progress = computeBudgetProgress(
       budgets,
       categories ?? [],
-      filterTransactionsForCurrentMonth(transactions ?? [])
+      filterTransactionsForCurrentMonth(baseTransactions)
     );
     if (progress.length === 0) return null;
     return progress.reduce((max, p) => (p.percent > max.percent ? p : max), progress[0]);
-  }, [budgets, categories, transactions]);
+  }, [budgets, categories, baseTransactions]);
 
   const upcomingRecurring = useMemo(() => {
     return (allExpenses ?? [])
@@ -181,8 +182,8 @@ function DashboardContent() {
               <PiggyBank className="h-4 w-4 text-primary-deep" />
               <p className="flex-1 text-sm font-semibold">{budgetHighlight.category_name} budget</p>
               <p className="text-xs text-muted-foreground">
-                {formatMoney(budgetHighlight.spent, accounts?.[0]?.currency ?? "PHP")} /{" "}
-                {formatMoney(budgetHighlight.limit, accounts?.[0]?.currency ?? "PHP")}
+                {formatMoney(budgetHighlight.spent, baseCurrency)} /{" "}
+                {formatMoney(budgetHighlight.limit, baseCurrency)}
               </p>
             </div>
             <div className="h-1.5 overflow-hidden rounded-full bg-muted">

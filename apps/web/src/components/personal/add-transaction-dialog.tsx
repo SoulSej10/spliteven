@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePersonalAccounts, usePersonalCategories, useCreatePersonalTransaction } from "@/hooks/use-personal";
+import { localDateKey } from "@evensplit/shared";
 
 const KINDS = [
   { value: "expense", label: "Expense" },
@@ -52,7 +53,7 @@ export function AddTransactionDialog({
       transfer_account_id: null,
       amount: 0,
       note: "",
-      occurred_at: new Date().toISOString().slice(0, 10),
+      occurred_at: localDateKey(new Date().toISOString()),
     },
   });
 
@@ -69,7 +70,8 @@ export function AddTransactionDialog({
       await createTransaction.mutateAsync({
         ...values,
         category_id: kind === "transfer" ? null : values.category_id,
-        occurred_at: new Date(values.occurred_at).toISOString(),
+        // Local noon of the chosen day, so the date can never slip across midnight in any time zone.
+        occurred_at: new Date(`${values.occurred_at}T12:00:00`).toISOString(),
       });
       toast.success("Transaction added");
       setOpen(false);

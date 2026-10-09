@@ -1,9 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
 import { ArrowDownLeft, ArrowUpRight, TrendDown, TrendUp } from "@phosphor-icons/react";
-import { computeAllAccountBalances, computeMonthlyCashFlow } from "@evensplit/shared";
-import { usePersonalAccounts, usePersonalTransactions } from "@/hooks/use-personal";
+import { usePersonalTotals } from "@/hooks/use-personal-totals";
 import { formatMoney } from "@/lib/format";
 
 const MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -15,22 +13,11 @@ const BAR_AREA_HEIGHT = 96;
  * transactions, not group data.
  */
 export function CashFlowCard() {
-  const { data: accounts } = usePersonalAccounts();
-  const { data: transactions } = usePersonalTransactions();
-
-  const { total, currency, months, current, max } = useMemo(() => {
-    const balances = computeAllAccountBalances(accounts ?? [], transactions ?? []);
-    const months = computeMonthlyCashFlow(transactions ?? [], 6);
-    return {
-      total: balances.reduce((sum, b) => sum + b.balance, 0),
-      currency: accounts?.[0]?.currency ?? "PHP",
-      months,
-      current: months[months.length - 1],
-      max: Math.max(1, ...months.flatMap((m) => [m.income, m.expense])),
-    };
-  }, [accounts, transactions]);
-
-  if (!accounts || accounts.length === 0) return null;
+  const totals = usePersonalTotals();
+  if (!totals) return null;
+  const { months, current, base: currency, missing } = totals;
+  const total = totals.total.total;
+  const max = Math.max(1, ...months.flatMap((m) => [m.income, m.expense]));
 
   const positive = current.net >= 0;
   const TrendIcon = positive ? TrendUp : TrendDown;
@@ -41,7 +28,7 @@ export function CashFlowCard() {
       <div className="grid gap-6 p-6 lg:grid-cols-[1fr_1.1fr] lg:items-center">
         <div className="space-y-5">
           <div>
-            <p className="text-xs font-medium opacity-70">Total balance</p>
+            <p className="text-xs font-medium opacity-70">{missing.length > 0 ? "Total balance · set rates in Settings" : "Total balance"}</p>
             <p className="mt-1 text-3xl font-semibold tabular-nums">{formatMoney(total, currency)}</p>
             <span className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1 text-xs font-semibold">
               <TrendIcon className="h-3.5 w-3.5" weight="bold" />

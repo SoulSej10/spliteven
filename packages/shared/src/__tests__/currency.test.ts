@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  convertAmount,
   computeTotalInBase,
   convertToBase,
   convertTransactionsToBase,
@@ -48,5 +49,17 @@ describe("currency conversion", () => {
     });
     expect(out.transactions.map((t) => t.amount)).toEqual([100, 100]);
     expect(convertTransactionsToBase([tx("b", "expense", 2)], accounts, "PHP", {}).missing).toEqual(["USD"]);
+  });
+
+  it("keeps the original amount and currency on converted rows", () => {
+    const out = convertTransactionsToBase([tx("b", "expense", 2), tx("a", "expense", 7)], accounts, "PHP", { USD: 50 });
+    expect(out.transactions[0]).toMatchObject({ amount: 100, original: { amount: 2, currency: "USD" } });
+    expect(out.transactions[1].original).toBeUndefined();
+  });
+
+  it("converts a single amount for display", () => {
+    expect(convertAmount(10, "USD", "PHP", { USD: 58 })).toEqual({ converted: 580, original: { amount: 10, currency: "USD" } });
+    expect(convertAmount(10, "USD", "PHP", {})).toEqual({ converted: null, original: { amount: 10, currency: "USD" } });
+    expect(convertAmount(10, "PHP", "PHP", {})).toEqual({ converted: 10, original: null });
   });
 });

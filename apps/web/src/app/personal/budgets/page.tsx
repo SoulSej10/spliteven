@@ -19,25 +19,26 @@ import {
   useUpsertPersonalBudget,
 } from "@/hooks/use-personal";
 import { formatMoney } from "@/lib/format";
+import { useBaseTransactions } from "@/hooks/use-personal-totals";
 
 export default function PersonalBudgetsPage() {
   const { data: budgets, isLoading } = usePersonalBudgets();
   const { data: categories } = usePersonalCategories();
-  const { data: transactions } = usePersonalTransactions();
+  // Budgets are in the default currency: spending from accounts in another currency is converted first.
+  const { base: currency, transactions } = useBaseTransactions();
   const { data: accounts } = usePersonalAccounts();
   const deleteBudget = useDeletePersonalBudget();
   const upsertBudget = useUpsertPersonalBudget();
-  const currency = accounts?.[0]?.currency ?? "USD";
 
   const thisMonthTransactions = useMemo(
-    () => filterTransactionsForCurrentMonth(transactions ?? []),
+    () => filterTransactionsForCurrentMonth(transactions),
     [transactions]
   );
 
   const progress = computeBudgetProgress(budgets ?? [], categories ?? [], thisMonthTransactions);
 
   const suggestions = useMemo(
-    () => computeBudgetSuggestions(categories ?? [], budgets ?? [], transactions ?? []),
+    () => computeBudgetSuggestions(categories ?? [], budgets ?? [], transactions),
     [categories, budgets, transactions]
   );
 

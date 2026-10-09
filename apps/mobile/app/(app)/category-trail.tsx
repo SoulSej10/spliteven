@@ -12,6 +12,7 @@ import { usePersonalAccounts, usePersonalCategories } from "@/hooks/use-personal
 import { useBaseTransactions } from "@/hooks/use-personal-totals";
 import { formatDate, formatMoney } from "@/lib/format";
 import { palette } from "@/theme/palette";
+import { localMonthKey } from "@evensplit/shared";
 
 const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
@@ -40,7 +41,7 @@ export default function CategoryTrailScreen() {
   const category = categoryId && categoryId !== "none" ? categoryId : null;
 
   const monthTransactions = useMemo(
-    () => transactions.filter((t) => month && t.occurred_at.slice(0, 7) === month),
+    () => transactions.filter((t) => month && localMonthKey(t.occurred_at) === month),
     [transactions, month]
   );
 

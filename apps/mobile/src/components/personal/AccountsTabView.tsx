@@ -6,6 +6,8 @@ import { Pencil, Plus, Sparkle, Wallet } from "phosphor-react-native";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { MoneyText } from "@/components/ui/MoneyText";
+import { usePersonalTotals } from "@/hooks/use-personal-totals";
+import { formatMoney } from "@/lib/format";
 import { SkeletonCardRows } from "@/components/ui/Skeleton";
 import { ErrorState } from "@/components/ui/ErrorState";
 import {
@@ -14,7 +16,6 @@ import {
   usePersonalTransactions,
 } from "@/hooks/use-personal";
 import { AddAccountSheet, type AccountPrefill } from "@/components/personal/AddAccountSheet";
-import { CurrencyRatesCard } from "@/components/personal/CurrencyRatesCard";
 import { palette } from "@/theme/palette";
 import { AppIcon } from "@/components/ui/AppIcon";
 
@@ -42,6 +43,7 @@ export function AccountsTabView() {
   const suggestions = ACCOUNT_SUGGESTIONS.filter((s) => !existingTypes.has(s.type));
 
   const balances = computeAllAccountBalances(accounts ?? [], transactions ?? []);
+  const totals = usePersonalTotals();
 
   function onArchive(accountId: string, name: string) {
     Alert.alert(`Archive ${name}?`, "It'll be hidden from your accounts list.", [
@@ -55,7 +57,6 @@ export function AccountsTabView() {
 
   return (
     <View className="gap-3">
-      <CurrencyRatesCard />
       {accounts?.length === 0 && (
         <View className="items-center gap-2 py-14">
           <View className="h-14 w-14 items-center justify-center rounded-full bg-primary-light">
@@ -77,7 +78,17 @@ export function AccountsTabView() {
                 <Text className="font-medium text-neutral-900 dark:text-neutral-100">{account.name}</Text>
                 <Text className="text-xs capitalize text-neutral-500">{account.type}</Text>
               </View>
-              <MoneyText amount={balance} currency={account.currency} tone="neutral" />
+              <View className="items-end">
+                <MoneyText amount={balance} currency={account.currency} tone="neutral" />
+                {totals && account.currency !== totals.base ? (
+                  <Text className="text-[10px] text-neutral-500">
+                    {(() => {
+                      const row = totals.total.accounts.find((r) => r.account_id === account.id);
+                      return row?.converted == null ? `No rate set for ${account.currency}` : `≈ ${formatMoney(row.converted, totals.base)}`;
+                    })()}
+                  </Text>
+                ) : null}
+              </View>
               <Pressable onPress={() => setEditing(account)} hitSlop={10} className="ml-1">
                 <Pencil color={palette.muted} size={16} />
               </Pressable>

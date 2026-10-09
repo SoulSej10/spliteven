@@ -28,6 +28,7 @@ import { CreateGroupSheet } from "@/components/groups/CreateGroupSheet";
 import { JoinGroupSheet } from "@/components/groups/JoinGroupSheet";
 import { PageTour, usePageTour } from "@/components/onboarding/PageTour";
 import { palette } from "@/theme/palette";
+import { useBaseTransactions } from "@/hooks/use-personal-totals";
 
 const GROUPS_PREVIEW_COUNT = 2;
 const UPCOMING_PREVIEW_COUNT = 3;
@@ -48,7 +49,7 @@ export default function HomeScreen() {
   const { data: accounts } = usePersonalAccounts();
   const { data: budgets } = usePersonalBudgets();
   const { data: categories } = usePersonalCategories();
-  const { data: transactions } = usePersonalTransactions();
+  const { base: baseCurrency, transactions: baseTransactions } = useBaseTransactions();
 
   const [sheetOpen, setSheetOpen] = useState(false);
   const [joinSheetOpen, setJoinSheetOpen] = useState(false);
@@ -80,11 +81,11 @@ export default function HomeScreen() {
     const progress = computeBudgetProgress(
       budgets,
       categories ?? [],
-      filterTransactionsForCurrentMonth(transactions ?? [])
+      filterTransactionsForCurrentMonth(baseTransactions)
     );
     if (progress.length === 0) return null;
     return progress.reduce((max, p) => (p.percent > max.percent ? p : max), progress[0]);
-  }, [budgets, categories, transactions]);
+  }, [budgets, categories, baseTransactions]);
 
   const upcomingRecurring = useMemo(() => {
     return (allExpenses ?? [])
@@ -173,8 +174,8 @@ export default function HomeScreen() {
                   {budgetHighlight.category_name} budget
                 </Text>
                 <Text className="text-xs text-neutral-500">
-                  {formatMoney(budgetHighlight.spent, accounts?.[0]?.currency ?? "PHP")} /{" "}
-                  {formatMoney(budgetHighlight.limit, accounts?.[0]?.currency ?? "PHP")}
+                  {formatMoney(budgetHighlight.spent, baseCurrency)} /{" "}
+                  {formatMoney(budgetHighlight.limit, baseCurrency)}
                 </Text>
               </View>
               <View className="h-1.5 overflow-hidden rounded-full bg-neutral-100 dark:bg-white/10">

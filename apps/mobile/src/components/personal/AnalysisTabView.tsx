@@ -18,6 +18,7 @@ import { useBaseTransactions } from "@/hooks/use-personal-totals";
 import { formatMoney } from "@/lib/format";
 import { palette } from "@/theme/palette";
 import { DONUT_COLORS } from "@/theme/chartColors";
+import { localMonthKey } from "@evensplit/shared";
 
 const CATEGORY_ALL = "__all__";
 const MONTH_NAMES = [
@@ -65,11 +66,11 @@ export function AnalysisTabView() {
   const monthKey = `${calendarDate.getFullYear()}-${String(calendarDate.getMonth() + 1).padStart(2, "0")}`;
   // Converted into the base currency so every total here matches the Home totals; per-account activity below stays in each account's own currency.
   const monthTransactions = useMemo(
-    () => baseTransactions.filter((t) => t.occurred_at.slice(0, 7) === monthKey),
+    () => baseTransactions.filter((t) => localMonthKey(t.occurred_at) === monthKey),
     [baseTransactions, monthKey]
   );
   const rawMonthTransactions = useMemo(
-    () => (transactions ?? []).filter((t) => t.occurred_at.slice(0, 7) === monthKey),
+    () => (transactions ?? []).filter((t) => localMonthKey(t.occurred_at) === monthKey),
     [transactions, monthKey]
   );
 

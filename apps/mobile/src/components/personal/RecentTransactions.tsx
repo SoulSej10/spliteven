@@ -9,6 +9,7 @@ import { usePersonalAccounts, usePersonalCategories, usePersonalTransactions } f
 import { formatDate } from "@/lib/format";
 import { TransactionIcon, transactionLabel } from "./RecordsTabView";
 import { palette } from "@/theme/palette";
+import { TransactionAmount } from "@/components/personal/TransactionAmount";
 
 const RECENT_COUNT = 6;
 
@@ -65,9 +66,9 @@ export function RecentTransactions() {
                 {formatDate(tx.occurred_at)} · {accountName(tx.account_id)}
               </Text>
             </View>
-            <MoneyText
+            <TransactionAmount
               amount={isDebit ? -tx.amount : tx.amount}
-              currency={account?.currency ?? "PHP"}
+              accountId={tx.account_id}
               tone={isCredit || isDebit ? "auto" : "neutral"}
             />
           </Card>

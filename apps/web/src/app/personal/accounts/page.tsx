@@ -12,11 +12,13 @@ import { usePersonalAccounts, usePersonalTransactions, useArchivePersonalAccount
 import { usePagination } from "@/hooks/use-pagination";
 import { formatMoney } from "@/lib/format";
 import { AppIcon } from "@/components/ui/app-icon";
+import { usePersonalTotals } from "@/hooks/use-personal-totals";
 
 export default function PersonalAccountsPage() {
   const { data: accounts, isLoading } = usePersonalAccounts();
   const { data: transactions } = usePersonalTransactions();
   const archiveAccount = useArchivePersonalAccount();
+  const totals = usePersonalTotals();
 
   const balances = computeAllAccountBalances(accounts ?? [], transactions ?? []);
   const total = balances.reduce((sum, b) => sum + b.balance, 0);
@@ -89,6 +91,14 @@ export default function PersonalAccountsPage() {
                     <TableCell className="capitalize text-muted-foreground">{account.type}</TableCell>
                     <TableCell className="text-right font-semibold tabular-nums">
                       {formatMoney(balance, account.currency)}
+                      {totals && account.currency !== totals.base ? (
+                        <span className="block text-[10px] font-normal text-muted-foreground">
+                          {(() => {
+                            const row = totals.total.accounts.find((r) => r.account_id === account.id);
+                            return row?.converted == null ? `No rate set for ${account.currency}` : `≈ ${formatMoney(row.converted, totals.base)}`;
+                          })()}
+                        </span>
+                      ) : null}
                     </TableCell>
                     <TableCell className="pl-0">
                       <div className="flex items-center justify-end gap-1">

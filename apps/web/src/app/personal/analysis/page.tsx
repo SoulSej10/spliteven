@@ -23,6 +23,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { MonthCalendar } from "@/components/personal/month-calendar";
 import { usePersonalAccounts, usePersonalCategories, usePersonalTransactions } from "@/hooks/use-personal";
 import { formatMoney } from "@/lib/format";
+import { localMonthKey } from "@evensplit/shared";
+import { useBaseTransactions } from "@/hooks/use-personal-totals";
 
 const CATEGORY_ALL = "__all__";
 const MONTH_NAMES = [
@@ -67,13 +69,13 @@ function fullMonthSeries(
 }
 
 export default function PersonalAnalysisPage() {
-  const { data: transactions, isLoading } = usePersonalTransactions();
+  // Converted into the default currency so every figure here matches the dashboard totals.
+  const { base: currency, transactions, isLoading } = useBaseTransactions();
   const { data: categories } = usePersonalCategories();
   const { data: accounts } = usePersonalAccounts();
   const [viewType, setViewType] = useState<ViewType>("expense-overview");
   const [categoryFilter, setCategoryFilter] = useState<string>(CATEGORY_ALL);
   const [calendarDate, setCalendarDate] = useState(() => new Date());
-  const currency = accounts?.[0]?.currency ?? "USD";
 
   const kind: "expense" | "income" = viewType === "income-overview" || viewType === "income-flow" ? "income" : "expense";
 
@@ -81,7 +83,7 @@ export default function PersonalAnalysisPage() {
   const isCurrentMonth = calendarDate.getFullYear() === today.getFullYear() && calendarDate.getMonth() === today.getMonth();
   const monthKey = `${calendarDate.getFullYear()}-${String(calendarDate.getMonth() + 1).padStart(2, "0")}`;
   const monthTransactions = useMemo(
-    () => (transactions ?? []).filter((t) => t.occurred_at.slice(0, 7) === monthKey),
+    () => transactions.filter((t) => localMonthKey(t.occurred_at) === monthKey),
     [transactions, monthKey]
   );
 

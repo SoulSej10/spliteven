@@ -16,6 +16,8 @@ import {
 import { formatDate } from "@/lib/format";
 import type { PersonalTransaction } from "@evensplit/shared";
 import { palette } from "@/theme/palette";
+import { localMonthKey } from "@evensplit/shared";
+import { TransactionAmount } from "@/components/personal/TransactionAmount";
 
 /** income/group_reimbursement both mean "cash came in" - positive tint. expense/group_advance both mean "cash left" - negative tint. transfer is neutral. */
 export function TransactionIcon({ kind }: { kind: PersonalTransaction["kind"] }) {
@@ -61,7 +63,7 @@ export function RecordsTabView() {
 
   const monthKey = `${month.year}-${String(month.month + 1).padStart(2, "0")}`;
   const monthTransactions = useMemo(
-    () => (transactions ?? []).filter((t) => t.occurred_at.slice(0, 7) === monthKey),
+    () => (transactions ?? []).filter((t) => localMonthKey(t.occurred_at) === monthKey),
     [transactions, monthKey]
   );
 
@@ -156,9 +158,9 @@ export function RecordsTabView() {
                   </Pressable>
                 )}
               </View>
-              <MoneyText
+              <TransactionAmount
                 amount={isDebit ? -tx.amount : tx.amount}
-                currency={account?.currency ?? "USD"}
+                accountId={tx.account_id}
                 tone={isCredit || isDebit ? "auto" : "neutral"}
               />
             </Card>

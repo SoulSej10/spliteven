@@ -22,7 +22,7 @@ export function FinancesSummaryCard() {
     <View className="mb-4 overflow-hidden rounded-card border border-neutral-200 bg-primary-light">
       <View className="gap-4 px-5 py-5">
         <View>
-          <Text className="text-xs font-medium text-primary-deep/80">{missing.length > 0 ? "Total balance · add a rate in Accounts" : "Total balance"}</Text>
+          <Text className="text-xs font-medium text-primary-deep/80">{missing.length > 0 ? "Total balance · set rates in Settings" : "Total balance"}</Text>
           <Text className="mt-1 text-3xl font-extrabold text-primary-deep">{formatMoney(total, currency)}</Text>
         </View>
         <View className="flex-row gap-4">

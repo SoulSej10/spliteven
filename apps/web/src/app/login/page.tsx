@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { logInSchema, signUpSchema, type LogInInput, type SignUpInput } from "@evensplit/shared";
+import { logInSchema, signUpSchema, signupHitExistingAccount, type LogInInput, type SignUpInput } from "@evensplit/shared";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
@@ -60,7 +60,7 @@ export default function LoginPage() {
       }
 
       const supabase = getSupabaseBrowserClient();
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
         options: { emailRedirectTo: `${window.location.origin}/onboarding` },

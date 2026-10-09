@@ -7,7 +7,7 @@ import { useColorScheme } from "nativewind";
 import { ArrowLeft } from "phosphor-react-native";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { signUpSchema, type SignUpInput } from "@evensplit/shared";
+import { signUpSchema, signupHitExistingAccount, type SignUpInput } from "@evensplit/shared";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { BottomActionBar } from "@/components/ui/BottomActionBar";
@@ -64,6 +64,19 @@ export default function SignUpScreen() {
         options: { emailRedirectTo: Linking.createURL("auth/callback") },
       });
       if (error) throw error;
+      if (signupHitExistingAccount(data.user)) {
+        // Supabase sends no email for an address that is already registered, so say so
+        // instead of asking them to wait for a confirmation that will never arrive.
+        Alert.alert(
+          "This email is already registered",
+          "No confirmation email is sent for an existing account. Log in instead, or reset your password if you have forgotten it.",
+          [
+            { text: "Reset password", onPress: () => router.replace("/(auth)/forgot-password") },
+            { text: "Log in", onPress: () => router.replace("/(auth)/login") },
+          ]
+        );
+        return;
+      }
       if (!data.session) {
         // Email confirmation is required: signUp() succeeds but returns no
         // session, so there's no authenticated user yet to run profile

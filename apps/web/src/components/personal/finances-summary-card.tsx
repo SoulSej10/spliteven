@@ -1,9 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
-import { computeAllAccountBalances, filterTransactionsForCurrentMonth } from "@evensplit/shared";
 import { ArrowDownLeft, ArrowUpRight } from "@phosphor-icons/react";
-import { usePersonalAccounts, usePersonalTransactions } from "@/hooks/use-personal";
+import { usePersonalTotals } from "@/hooks/use-personal-totals";
 import { formatMoney } from "@/lib/format";
 
 /**
@@ -12,28 +10,16 @@ import { formatMoney } from "@/lib/format";
  * so the section reads as a real financial overview, not just CRUD tabs.
  */
 export function FinancesSummaryCard() {
-  const { data: accounts } = usePersonalAccounts();
-  const { data: transactions } = usePersonalTransactions();
-
-  const { total, currency, monthIncome, monthExpense } = useMemo(() => {
-    const balances = computeAllAccountBalances(accounts ?? [], transactions ?? []);
-    const total = balances.reduce((sum, b) => sum + b.balance, 0);
-
-    let monthIncome = 0;
-    let monthExpense = 0;
-    for (const tx of filterTransactionsForCurrentMonth(transactions ?? [])) {
-      if (tx.kind === "income") monthIncome += tx.amount;
-      if (tx.kind === "expense") monthExpense += tx.amount;
-    }
-
-    return { total, currency: accounts?.[0]?.currency ?? "PHP", monthIncome, monthExpense };
-  }, [accounts, transactions]);
-
-  if (!accounts || accounts.length === 0) return null;
+  const totals = usePersonalTotals();
+  if (!totals) return null;
+  const { base: currency, missing } = totals;
+  const total = totals.total.total;
+  const monthIncome = totals.current.income;
+  const monthExpense = totals.current.expense;
 
   return (
     <div className="mb-6 overflow-hidden rounded-2xl border bg-primary-light px-6 py-5 text-primary-deep">
-      <p className="text-xs font-medium text-primary-deep/80">Total balance</p>
+      <p className="text-xs font-medium text-primary-deep/80">{missing.length > 0 ? "Total balance · set rates in Settings" : "Total balance"}</p>
       <p className="mt-1 text-3xl font-extrabold">{formatMoney(total, currency)}</p>
       <div className="mt-4 grid grid-cols-2 gap-3 sm:max-w-sm">
         <div className="flex items-center gap-2 rounded-lg bg-white/10 px-3 py-2.5">

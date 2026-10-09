@@ -26,6 +26,7 @@ import { createExpense, updateExpense, uploadReceipt, type ExpenseWithShares } f
 import { fetchPersonalAccounts } from "@/lib/api/personal";
 import { formatMoney, initials } from "@/lib/format";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { localDateKey } from "@evensplit/shared";
 
 const NO_ACCOUNT = "__none__";
 
@@ -94,7 +95,7 @@ export function ExpenseFormDialog({
   const [splitType, setSplitType] = useState<SplitType>(existingExpense?.split_type ?? "equal");
   const [category, setCategory] = useState(existingExpense?.category ?? "other");
   const [expenseDate, setExpenseDate] = useState(
-    existingExpense?.expense_date ?? new Date().toISOString().slice(0, 10)
+    existingExpense?.expense_date ?? localDateKey(new Date().toISOString())
   );
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [paidFromAccountId, setPaidFromAccountId] = useState<string | null>(
@@ -129,7 +130,7 @@ export function ExpenseFormDialog({
     setPaidBy(existingExpense?.paid_by ?? currentUserId);
     setSplitType(existingExpense?.split_type ?? "equal");
     setCategory(existingExpense?.category ?? "other");
-    setExpenseDate(existingExpense?.expense_date ?? new Date().toISOString().slice(0, 10));
+    setExpenseDate(existingExpense?.expense_date ?? localDateKey(new Date().toISOString()));
     setReceiptFile(null);
     setPaidFromAccountId(existingExpense?.paid_from_account_id ?? null);
     const recurrence = parseRecurrenceRule(existingExpense?.recurrence_rule);

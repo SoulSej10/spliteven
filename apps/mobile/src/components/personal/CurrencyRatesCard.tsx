@@ -41,8 +41,9 @@ export function CurrencyRatesCard() {
         <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">Currency rates</Text>
       </View>
       <Text className="text-xs text-neutral-500">
-        You hold more than one currency. Enter today's rate so your totals are shown in {base}. Rates are saved on this
-        device.
+        You hold accounts in more than one currency. Enter an approximate rate for each and everything (totals,
+        budgets, analysis) is converted to your default currency, {base}, while the original amount is still shown.
+        Rates are saved on this device.
       </Text>
 
       {foreign.map((currency) => {

@@ -24,6 +24,7 @@ import { upsertProfile } from "@/lib/api/profile";
 import { saveColorScheme } from "@/lib/appearance";
 import { EditProfileSheet } from "./EditProfileSheet";
 import { UpdateDialog } from "@/components/UpdatePrompt";
+import { CurrencyRatesCard } from "@/components/personal/CurrencyRatesCard";
 import { fetchAvailableUpdate, installedVersion } from "@/lib/app-update";
 import { AppearancePicker } from "./AppearancePicker";
 import {
@@ -374,6 +375,8 @@ export function SettingsPanelContent({ onClose }: { onClose: () => void }) {
             ))}
           </View>
         </Card>
+
+        <CurrencyRatesCard />
 
         <Card>
           <Text className="mb-3 font-semibold text-neutral-900 dark:text-neutral-100">Manage</Text>

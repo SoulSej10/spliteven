@@ -25,7 +25,7 @@ export function CashFlowCard() {
       <View className="gap-4 px-5 py-5">
         <View className="flex-row items-start justify-between">
           <View className="flex-1">
-            <Text className="text-xs font-medium text-primary-deep/80">{missing.length > 0 ? "Total balance · add a rate below" : "Total balance"}</Text>
+            <Text className="text-xs font-medium text-primary-deep/80">{missing.length > 0 ? "Total balance · set rates in Settings" : "Total balance"}</Text>
             <Text className="mt-1 text-3xl font-extrabold text-primary-deep" numberOfLines={1} adjustsFontSizeToFit>
               {formatMoney(total, currency)}
             </Text>

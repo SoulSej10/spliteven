@@ -1,3 +1,4 @@
+import { localDateKey, localMonthKey } from "./dateKeys";
 import type { PersonalAccount, PersonalBudget, PersonalCategory, PersonalTransaction, UUID } from "./types";
 
 /**
@@ -114,7 +115,7 @@ export function computeExpenseTrend(
     // group_reimbursement are shared-money movements, not personal income or
     // spending (see computeSharedFinanceSummary) - none belong in this trend.
     if (tx.kind !== "income" && tx.kind !== "expense") continue;
-    const key = tx.occurred_at.slice(0, 10);
+    const key = localDateKey(tx.occurred_at);
     const entry = buckets.get(key) ?? { income: 0, expense: 0 };
     if (tx.kind === "income") entry.income += tx.amount;
     else entry.expense += tx.amount;
@@ -157,7 +158,7 @@ export function filterTransactionsForMonth<T extends Pick<PersonalTransaction, "
   month: number
 ): T[] {
   const monthKey = `${year}-${String(month + 1).padStart(2, "0")}`;
-  return transactions.filter((tx) => tx.occurred_at.slice(0, 7) === monthKey);
+  return transactions.filter((tx) => localMonthKey(tx.occurred_at) === monthKey);
 }
 
 export interface BudgetProgress {
@@ -246,7 +247,7 @@ export function computeBudgetSuggestions(
   const spentByCategory = new Map<UUID, number>();
   for (const tx of transactions) {
     if (tx.kind !== "expense" || !tx.category_id) continue;
-    if (tx.occurred_at.slice(0, 7) !== prevMonthKey) continue;
+    if (localMonthKey(tx.occurred_at) !== prevMonthKey) continue;
     spentByCategory.set(tx.category_id, (spentByCategory.get(tx.category_id) ?? 0) + tx.amount);
   }
 
@@ -304,7 +305,7 @@ export function computeDailyTotals(
   for (const tx of transactions) {
     if (tx.kind !== "income" && tx.kind !== "expense") continue;
     if (categoryId && tx.category_id !== categoryId) continue;
-    const key = tx.occurred_at.slice(0, 10);
+    const key = localDateKey(tx.occurred_at);
     const entry = totals.get(key) ?? { expense: 0, income: 0 };
     if (tx.kind === "income") entry.income += tx.amount;
     else entry.expense += tx.amount;
@@ -384,7 +385,7 @@ export function computeMonthlyCashFlow(
 
   for (const tx of transactions) {
     if (tx.kind !== "income" && tx.kind !== "expense") continue;
-    const bucket = byKey.get(tx.occurred_at.slice(0, 7));
+    const bucket = byKey.get(localMonthKey(tx.occurred_at));
     if (!bucket) continue;
     if (tx.kind === "income") bucket.income += tx.amount;
     else bucket.expense += tx.amount;

@@ -75,9 +75,16 @@ export function computeTotalInBase(
   return { base, total, accounts: rows, missing };
 }
 
+/** What a converted row used to be, so screens can still show the original currency. */
+export interface OriginalAmount {
+  amount: number;
+  currency: string;
+}
+
 /**
  * Transactions with each amount converted into the base currency using the
- * currency of the account it was booked on. Rows in a currency with no rate are
+ * currency of the account it was booked on. Converted rows keep their original
+ * amount and currency in `original`. Rows in a currency with no rate are
  * dropped (and reported in `missing`) rather than being silently added at 1:1.
  */
 export function convertTransactionsToBase<T extends Pick<PersonalTransaction, "account_id" | "amount">>(
@@ -85,10 +92,10 @@ export function convertTransactionsToBase<T extends Pick<PersonalTransaction, "a
   accounts: Pick<PersonalAccount, "id" | "currency">[],
   base: string,
   rates: FxRates
-): { transactions: T[]; missing: string[] } {
+): { transactions: (T & { original?: OriginalAmount })[]; missing: string[] } {
   const currencyOf = new Map(accounts.map((a) => [a.id, a.currency]));
   const missing = new Set<string>();
-  const out: T[] = [];
+  const out: (T & { original?: OriginalAmount })[] = [];
   for (const tx of transactions) {
     const currency = currencyOf.get(tx.account_id) ?? base;
     const converted = convertToBase(tx.amount, currency, base, rates);
@@ -96,7 +103,21 @@ export function convertTransactionsToBase<T extends Pick<PersonalTransaction, "a
       missing.add(currency);
       continue;
     }
-    out.push(currency === base ? tx : { ...tx, amount: round2(converted) });
+    out.push(currency === base ? tx : { ...tx, amount: round2(converted), original: { amount: tx.amount, currency } });
   }
   return { transactions: out, missing: [...missing].sort() };
+}
+
+export interface ConvertedAmount {
+  /** The amount in the base currency, or null while that currency has no rate. */
+  converted: number | null;
+  /** Set only when the amount was not already in the base currency. */
+  original: OriginalAmount | null;
+}
+
+/** One amount in its own currency -> base currency, keeping the original for display. */
+export function convertAmount(amount: number, currency: string, base: string, rates: FxRates): ConvertedAmount {
+  if (currency === base) return { converted: amount, original: null };
+  const value = convertToBase(amount, currency, base, rates);
+  return { converted: value === null ? null : round2(value), original: { amount, currency } };
 }

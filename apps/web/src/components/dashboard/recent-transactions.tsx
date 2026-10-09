@@ -11,6 +11,7 @@ import {
 import type { PersonalTransaction } from "@evensplit/shared";
 import { usePersonalAccounts, usePersonalCategories, usePersonalTransactions } from "@/hooks/use-personal";
 import { formatDate, formatMoney } from "@/lib/format";
+import { TransactionAmount } from "@/components/personal/transaction-amount";
 
 const RECENT_COUNT = 6;
 
@@ -66,7 +67,6 @@ export function RecentTransactions() {
       ) : (
         <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
           {recent.map((tx, i) => {
-            const account = accounts?.find((a) => a.id === tx.account_id);
             const category = categories?.find((c) => c.id === tx.category_id)?.name ?? null;
             const debit = tx.kind === "expense" || tx.kind === "group_advance";
             const credit = tx.kind === "income" || tx.kind === "group_reimbursement";
@@ -88,7 +88,7 @@ export function RecentTransactions() {
                   }`}
                 >
                   {debit ? "-" : credit ? "+" : ""}
-                  {formatMoney(tx.amount, account?.currency ?? "PHP")}
+                  <TransactionAmount amount={tx.amount} accountId={tx.account_id} className="inline-block text-right" />
                 </span>
               </div>
             );

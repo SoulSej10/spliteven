@@ -19,6 +19,8 @@ import { formatDate, formatMoney } from "@/lib/format";
 import type { PersonalTransaction } from "@evensplit/shared";
 import { palette } from "@/theme/palette";
 import { AppIcon } from "@/components/ui/AppIcon";
+import { TransactionAmount } from "@/components/personal/TransactionAmount";
+import { useBaseTransactions } from "@/hooks/use-personal-totals";
 
 const RECENT_COUNT = 5;
 
@@ -43,6 +45,7 @@ function TransactionIcon({ kind }: { kind: PersonalTransaction["kind"] }) {
 export function OverviewTabView({ onNavigateTab }: { onNavigateTab: (tab: "accounts" | "records" | "budgets") => void }) {
   const { data: accounts, isLoading: accountsLoading } = usePersonalAccounts();
   const { data: transactions, isLoading: transactionsLoading } = usePersonalTransactions();
+  const { base: baseCurrency, transactions: baseTransactions } = useBaseTransactions();
   const { data: budgets } = usePersonalBudgets();
   const { data: categories } = usePersonalCategories();
 
@@ -53,11 +56,11 @@ export function OverviewTabView({ onNavigateTab }: { onNavigateTab: (tab: "accou
     const progress = computeBudgetProgress(
       budgets,
       categories ?? [],
-      filterTransactionsForCurrentMonth(transactions ?? [])
+      filterTransactionsForCurrentMonth(baseTransactions)
     );
     if (progress.length === 0) return null;
     return progress.reduce((max, p) => (p.percent > max.percent ? p : max), progress[0]);
-  }, [budgets, categories, transactions]);
+  }, [budgets, categories, baseTransactions]);
 
   const recentTransactions = (transactions ?? []).slice(0, RECENT_COUNT);
 
@@ -105,8 +108,8 @@ export function OverviewTabView({ onNavigateTab }: { onNavigateTab: (tab: "accou
                 {budgetHighlight.category_name} budget
               </Text>
               <Text className="text-xs text-neutral-500">
-                {formatMoney(budgetHighlight.spent, accounts?.[0]?.currency ?? "PHP")} /{" "}
-                {formatMoney(budgetHighlight.limit, accounts?.[0]?.currency ?? "PHP")}
+                {formatMoney(budgetHighlight.spent, baseCurrency)} /{" "}
+                {formatMoney(budgetHighlight.limit, baseCurrency)}
               </Text>
             </View>
             <View className="h-1.5 overflow-hidden rounded-full bg-neutral-100 dark:bg-white/10">
@@ -150,9 +153,7 @@ export function OverviewTabView({ onNavigateTab }: { onNavigateTab: (tab: "accou
                 {formatDate(tx.occurred_at)} · {accountName(tx.account_id)}
               </Text>
             </View>
-            <Text className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-              {formatMoney(tx.amount, accounts?.find((a) => a.id === tx.account_id)?.currency ?? "PHP")}
-            </Text>
+            <TransactionAmount amount={tx.amount} accountId={tx.account_id} />
           </Card>
         ))}
       </View>

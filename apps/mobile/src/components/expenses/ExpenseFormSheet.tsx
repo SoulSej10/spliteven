@@ -19,6 +19,7 @@ import { notifyLocal } from "@/lib/notifications";
 import { usePlan } from "@/hooks/use-plan";
 import { handlePlanLimitError, showUpgradePrompt } from "@/lib/plan-prompt";
 import { palette } from "@/theme/palette";
+import { localDateKey } from "@evensplit/shared";
 
 const SPLIT_LABELS: Record<SplitType, string> = {
   equal: "Equal",
@@ -173,7 +174,7 @@ export function ExpenseFormSheet({
         paid_by: paidBy,
         split_type: splitType,
         category,
-        expense_date: date.toISOString().slice(0, 10),
+        expense_date: localDateKey(date.toISOString()),
         receipt_url: existingExpense?.receipt_url ?? null,
         participants,
         is_recurring: isRecurring,

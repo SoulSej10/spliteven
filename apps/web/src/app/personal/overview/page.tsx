@@ -20,6 +20,8 @@ import {
 import { formatDate, formatMoney } from "@/lib/format";
 import type { PersonalTransaction } from "@evensplit/shared";
 import { AppIcon } from "@/components/ui/app-icon";
+import { useBaseTransactions } from "@/hooks/use-personal-totals";
+import { TransactionAmount } from "@/components/personal/transaction-amount";
 
 function TransactionIcon({ kind }: { kind: PersonalTransaction["kind"] }) {
   if (kind === "income" || kind === "group_reimbursement") return <ArrowDownLeft className="h-4 w-4 text-positive" />;
@@ -37,6 +39,7 @@ const RECENT_COUNT = 5;
 export default function PersonalOverviewPage() {
   const { data: accounts, isLoading: accountsLoading } = usePersonalAccounts();
   const { data: transactions, isLoading: transactionsLoading } = usePersonalTransactions();
+  const { base: baseCurrency, transactions: baseTransactions } = useBaseTransactions();
   const { data: budgets } = usePersonalBudgets();
   const { data: categories } = usePersonalCategories();
 
@@ -47,11 +50,11 @@ export default function PersonalOverviewPage() {
     const progress = computeBudgetProgress(
       budgets,
       categories ?? [],
-      filterTransactionsForCurrentMonth(transactions ?? [])
+      filterTransactionsForCurrentMonth(baseTransactions)
     );
     if (progress.length === 0) return null;
     return progress.reduce((max, p) => (p.percent > max.percent ? p : max), progress[0]);
-  }, [budgets, categories, transactions]);
+  }, [budgets, categories, baseTransactions]);
 
   const recentTransactions = (transactions ?? []).slice(0, RECENT_COUNT);
 
@@ -115,8 +118,8 @@ export default function PersonalOverviewPage() {
               <PiggyBank className="h-4 w-4 text-primary-deep" />
               <p className="flex-1 text-sm font-semibold">{budgetHighlight.category_name} budget</p>
               <p className="text-xs text-muted-foreground">
-                {formatMoney(budgetHighlight.spent, accounts?.[0]?.currency ?? "PHP")} /{" "}
-                {formatMoney(budgetHighlight.limit, accounts?.[0]?.currency ?? "PHP")}
+                {formatMoney(budgetHighlight.spent, baseCurrency)} /{" "}
+                {formatMoney(budgetHighlight.limit, baseCurrency)}
               </p>
             </div>
             <div className="h-1.5 overflow-hidden rounded-full bg-muted">
@@ -189,7 +192,7 @@ export default function PersonalOverviewPage() {
                           isCredit ? "text-positive" : isDebit ? "text-negative" : ""
                         }`}
                       >
-                        {formatMoney(tx.amount, account?.currency ?? "PHP")}
+                        <TransactionAmount amount={tx.amount} accountId={tx.account_id} className="inline-block text-right" />
                       </TableCell>
                     </TableRow>
                   );
